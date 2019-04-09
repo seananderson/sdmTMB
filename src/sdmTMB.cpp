@@ -255,12 +255,7 @@ Type objective_function<Type>::operator()()
   for (int i = 0; i < n_t; i++)
     epsilon_st_A.col(i) = A_st * Array1DToVector(epsilon_st.col(i));
   for (int i = 0; i < n_t; i++) {
-    if (i == 0 || !ar1_fields) {
-      epsilon_st_A.col(i) = epsilon_st_A.col(i);
-    } else {  // AR1 and not first time slice:
-      epsilon_st_A.col(i) = minus_one_to_one(ar1_phi) * epsilon_st_A.col(i - 1) +
-        epsilon_st_A.col(i);
-    }
+    epsilon_st_A.col(i) = epsilon_st_A.col(i);
   }
   vector<Type> omega_s_A = A * omega_s;
   vector<Type> omega_s_trend_A = A * omega_s_trend;
@@ -303,8 +298,13 @@ Type objective_function<Type>::operator()()
     nll_omega_trend += SCALE(GMRF(Q), 1.0 / exp(ln_tau_O_trend))(omega_s_trend);
   // Spatiotemporal effects:
   if (!spatial_only) {
-    for (int t = 0; t < n_t; t++)
-      nll_epsilon += SCALE(GMRF(Q), 1.0 / exp(ln_tau_E))(epsilon_st.col(t));
+    if (!ar1_fields) {
+      for (int t = 0; t < n_t; t++)
+        nll_epsilon += SCALE(GMRF(Q), 1.0 / exp(ln_tau_E))(epsilon_st.col(t));
+    } else {
+      nll_epsilon = SCALE(SEPARABLE(AR1(minus_one_to_one(ar1_phi)), GMRF(Q)),
+        1.0/exp(ln_tau_E))(epsilon_st);
+    }
   }
 
   // ------------------ Probability of data given random effects ---------------
