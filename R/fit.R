@@ -167,6 +167,7 @@ sdmTMB <- function(formula, data, time = NULL, spde,
   nlminb_loops = 1,
   newton_steps = 0,
   mgcv = TRUE,
+  time2 = NULL,
   quadratic_roots = FALSE) {
 
   if (isTRUE(normalize)) {
@@ -180,6 +181,14 @@ sdmTMB <- function(formula, data, time = NULL, spde,
   } else {
     if (sum(is.na(data[[time]])) > 1)
       stop("There is at least one NA value in the time column. ",
+        "Please remove it.", call. = FALSE)
+  }
+  if (is.null(time2)) {
+    time2 <- "_sdmTMB_time2"
+    data[[time2]] <- 0L
+  } else {
+    if (sum(is.na(data[[time2]])) > 1)
+      stop("There is at least one NA value in the time2 column. ",
         "Please remove it.", call. = FALSE)
   }
 
@@ -241,12 +250,14 @@ sdmTMB <- function(formula, data, time = NULL, spde,
   tmb_data <- list(
     y_i        = y_i,
     n_t        = length(unique(data[[time]])),
+    n_t2       = length(unique(data[[time2]])),
     t_i        = t_i,
     offset_i   = offset,
     A          = spde$A,
     A_st       = A_st,
     A_spatial_index = data$sdm_spatial_id - 1L,
     year_i     = make_year_i(data[[time]]),
+    year2_i     = make_year_i(data[[time2]]),
     ar1_fields = as.integer(ar1_fields),
     X_ij       = X_ij,
     X_rw_ik    = X_rw_ik,
@@ -291,6 +302,7 @@ sdmTMB <- function(formula, data, time = NULL, spde,
     ln_tau_O   = 0,
     ln_tau_O_trend = 0,
     ln_tau_E   = 0,
+    ln_tau_G   = 0,
     ln_kappa   = 0,
     thetaf     = 0,
     ln_phi     = 0,
@@ -299,6 +311,7 @@ sdmTMB <- function(formula, data, time = NULL, spde,
     b_rw_t     = matrix(0, nrow = tmb_data$n_t, ncol = ncol(X_rw_ik)),
     omega_s    = rep(0, n_s),
     omega_s_trend = rep(0, n_s),
+    gamma_st   = matrix(0, nrow = n_s, ncol = tmb_data$n_t2),
     epsilon_st = matrix(0, nrow = n_s, ncol = tmb_data$n_t),
     b_threshold = b_thresh
   )
@@ -332,6 +345,7 @@ sdmTMB <- function(formula, data, time = NULL, spde,
     not_phase1 <- c(tmb_map, list(
       ln_tau_O   = as.factor(NA),
       ln_tau_E   = as.factor(NA),
+      ln_tau_G   = as.factor(NA),
       ln_tau_V   = factor(rep(NA, ncol(X_rw_ik))),
       ln_tau_O_trend = as.factor(NA),
       omega_s_trend  = factor(rep(NA, length(tmb_params$omega_s_trend))),
@@ -364,8 +378,10 @@ sdmTMB <- function(formula, data, time = NULL, spde,
   if (spatial_only) {
     tmb_random <- "omega_s"
   } else {
-    if (include_spatial) {
+    if (include_spatial && identical(time2, "_sdmTMB_time2")) {
       tmb_random <- c("omega_s", "epsilon_st")
+    } else if (include_spatial && !identical(time2, "_sdmTMB_time2")) {
+      tmb_random <- c("omega_s", "epsilon_st", "gamma_st")
     } else {
       tmb_random <- "epsilon_st"
     }
@@ -377,6 +393,11 @@ sdmTMB <- function(formula, data, time = NULL, spde,
     tmb_map <- c(tmb_map, list(
       ln_tau_O = as.factor(NA),
       omega_s  = factor(rep(NA, length(tmb_params$omega_s)))))
+  }
+  if (identical(time2, "_sdmTMB_time2")) {
+    tmb_map <- c(tmb_map, list(
+      ln_tau_G = as.factor(NA),
+      gamma_st  = factor(rep(NA, length(tmb_params$gamma_st)))))
   }
   if (!spatial_trend) {
     tmb_map <- c(tmb_map, list(
@@ -436,6 +457,7 @@ sdmTMB <- function(formula, data, time = NULL, spde,
     threshold_function = thresh$threshold_func,
     mgcv_mod   = mgcv_mod,
     time       = time,
+    time2      = time2,
     family     = family,
     response   = y_i,
     tmb_data   = tmb_data,

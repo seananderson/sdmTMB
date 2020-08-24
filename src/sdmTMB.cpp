@@ -174,6 +174,7 @@ Type objective_function<Type>::operator()()
   // DATA_VECTOR(offset_i); // optional offset
 
   DATA_INTEGER(n_t);  // number of years
+  DATA_INTEGER(n_t2);  // number of years (second time slice)
 
   DATA_SPARSE_MATRIX(A); // INLA 'A' projection matrix for original data
   DATA_SPARSE_MATRIX(A_st); // INLA 'A' projection matrix for unique stations
@@ -236,6 +237,7 @@ Type objective_function<Type>::operator()()
   PARAMETER(ln_tau_O);    // spatial process
   PARAMETER(ln_tau_O_trend);    // optional spatial process on the trend
   PARAMETER(ln_tau_E);    // spatio-temporal process
+  PARAMETER(ln_tau_G);    // spatio-temporal process 2
   PARAMETER(ln_kappa);    // Matern parameter
 
   PARAMETER(thetaf);           // tweedie only
@@ -248,6 +250,7 @@ Type objective_function<Type>::operator()()
   PARAMETER_VECTOR(omega_s);    // spatial effects; n_s length
   PARAMETER_VECTOR(omega_s_trend);    // spatial effects on trend; n_s length
   PARAMETER_ARRAY(epsilon_st);  // spatio-temporal effects; n_s by n_t matrix
+  PARAMETER_ARRAY(gamma_st);  // spatio-temporal effects 2; n_s by n_t2 matrix
 
   PARAMETER_VECTOR(b_threshold);  // coefficients for threshold relationship (3)
 
@@ -307,6 +310,8 @@ Type objective_function<Type>::operator()()
   }
   Type sigma_E = 1 / sqrt(Type(4.0) * M_PI * exp(Type(2.0) * ln_tau_E) *
                           exp(Type(2.0) * ln_kappa));
+  Type sigma_G = 1 / sqrt(Type(4.0) * M_PI * exp(Type(2.0) * ln_tau_G) *
+                          exp(Type(2.0) * ln_kappa));
 
   Eigen::SparseMatrix<Type> Q; // Precision matrix
   if (anisotropy) {
@@ -323,11 +328,15 @@ Type objective_function<Type>::operator()()
   // Here we are projecting the spatiotemporal and spatial random effects to the
   // locations of the data using the INLA 'A' matrices.
   array<Type> epsilon_st_A(A_st.rows(), n_t);
+  array<Type> gamma_st_A(A_st.rows(), n_t2);
   for (int i = 0; i < n_t; i++)
     epsilon_st_A.col(i) = A_st * vector<Type>(epsilon_st.col(i));
+  for (int i = 0; i < n_t2; i++)
+    gamma_st_A.col(i) = A_st * vector<Type>(gamma_st.col(i));
   vector<Type> omega_s_A = A * omega_s;
   vector<Type> omega_s_trend_A = A * omega_s_trend;
   vector<Type> epsilon_st_A_vec(n_i);
+  vector<Type> gamma_st_A_vec(n_i);
 
   // ------------------ Linear predictor ---------------------------------------
 
@@ -366,7 +375,9 @@ Type objective_function<Type>::operator()()
           eta_i(i) += omega_s_trend_A(i) * t_i(i); // spatial trend
       }
       epsilon_st_A_vec(i) = epsilon_st_A(A_spatial_index(i), year_i(i)); // record it
+      gamma_st_A_vec(i) = gamma_st_A(A_spatial_index(i), year_i(i)); // record it
       eta_i(i) += epsilon_st_A_vec(i); // spatiotemporal
+      eta_i(i) += gamma_st_A_vec(i); // spatiotemporal 2
 
       if (family == 1 && link == 2) {
         // binomial(link = "logit"); don't touch (using robust density function in logit space)
@@ -400,6 +411,8 @@ Type objective_function<Type>::operator()()
     jnll += SCALE(GMRF(Q, s), 1.0 / exp(ln_tau_O_trend))(omega_s_trend);
   // Spatiotemporal random effects:
   if (!spatial_only) {
+    for (int t = 0; t < n_t2; t++)
+      jnll += SCALE(GMRF(Q, s), 1. / exp(ln_tau_G))(gamma_st.col(t));
     if (!ar1_fields) {
       for (int t = 0; t < n_t; t++)
         jnll += SCALE(GMRF(Q, s), 1. / exp(ln_tau_E))(epsilon_st.col(t));
