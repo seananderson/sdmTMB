@@ -29,6 +29,18 @@ Type dlnorm(Type x, Type meanlog, Type sdlog, int give_log = 0)
     return exp(logres);
 }
 
+// Simulate from tweedie distribution; from glmmTMB
+template<class Type>
+Type rtweedie(Type mu, Type phi, Type p) {
+  // Copied from R function tweedie::rtweedie
+  Type lambda = pow(mu, 2. - p) / (phi * (2. - p));
+  Type alpha  = (2. - p) / (1. - p);
+  Type gam = phi * (p - 1.) * pow(mu, p - 1.);
+  int N = (int) asDouble(rpois(lambda));
+  Type ans = rgamma(N, -alpha /* shape */, gam /* scale */).sum();
+  return ans;
+}
+
 template <class Type>
 Type minus_one_to_one(Type x)
 {
@@ -430,36 +442,49 @@ Type objective_function<Type>::operator()()
       switch (family) {
         case gaussian_family:
           jnll -= keep(i) * dnorm(y_i(i), mu_i(i), exp(ln_phi), true) * weights_i(i);
+          SIMULATE{y_i(i) = rnorm(mu_i(i), exp(ln_phi));}
           break;
         case tweedie_family:
           s1 = invlogit(thetaf) + Type(1.0);
           jnll -= keep(i) * dtweedie(y_i(i), mu_i(i), exp(ln_phi), s1, true) * weights_i(i);
+          SIMULATE{y_i(i) = rtweedie(mu_i(i), exp(ln_phi), s1);}
           break;
         case binomial_family:  // in logit space not inverse logit
           jnll -= keep(i) * dbinom_robust(y_i(i), Type(1.0) /*size*/, mu_i(i), true) * weights_i(i);
+          SIMULATE{y_i(i) = rbinom(Type(1.0), mu_i(i));}
           break;
         case poisson_family:
           jnll -= keep(i) * dpois(y_i(i), mu_i(i), true) * weights_i(i);
+          SIMULATE{y_i(i) = rpois(mu_i(i));}
           break;
         case Gamma_family:
           s1 = Type(1) / (pow(exp(ln_phi), Type(2)));  // s1=shape,ln_phi=CV,shape=1/CV^2
           jnll -= keep(i) * dgamma(y_i(i), s1, mu_i(i) / s1, true) * weights_i(i);
+          SIMULATE{y_i(i) = rgamma(s1, mu_i(i) / s1);}
           break;
         case nbinom2_family:
           s1 = log(mu_i(i)); // log(mu_i)
           s2 = 2. * s1 - ln_phi; // log(var - mu)
           jnll -= keep(i) * dnbinom_robust(y_i(i), s1, s2, true) * weights_i(i);
+          SIMULATE {
+            s1 = mu_i(i);
+            s2 = mu_i(i) * (Type(1) + mu_i(i) / exp(ln_phi));
+            y_i(i) = rnbinom2(s1, s2);
+          }
           break;
         case lognormal_family:
           jnll -= keep(i) * dlnorm(y_i(i), mu_i(i) - pow(exp(ln_phi), Type(2)) / Type(2), exp(ln_phi), true) * weights_i(i);
+          SIMULATE{y_i(i) = rlnorm(mu_i(i) - pow(exp(ln_phi), Type(2)) / Type(2), exp(ln_phi));}
           break;
         case student_family:
           jnll -= keep(i) * dstudent(y_i(i), mu_i(i), exp(ln_phi), Type(3) /*df*/, true) * weights_i(i);
+          // SIMULATE{y_i(i) = rstudent(mu_i(i), exp(ln_phi), Type(3));} // Not done!
           break;
         case Beta_family: // Ferrari and Cribari-Neto 2004; betareg package
           s1 = mu_i(i) * exp(ln_phi);
           s2 = (Type(1) - mu_i(i)) * exp(ln_phi);
           jnll -= keep(i) * dbeta(y_i(i), s1, s2, true) * weights_i(i);
+          SIMULATE{y_i(i) = rbeta(s1, s2);}
           break;
         default:
           error("Family not implemented.");
