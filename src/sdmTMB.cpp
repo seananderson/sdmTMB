@@ -31,13 +31,22 @@ Type dlnorm(Type x, Type meanlog, Type sdlog, int give_log = 0)
 
 // Simulate from tweedie distribution; from glmmTMB
 template<class Type>
-Type rtweedie(Type mu, Type phi, Type p) {
+Type rtweedie(Type mu, Type phi, Type p)
+{
   // Copied from R function tweedie::rtweedie
   Type lambda = pow(mu, 2. - p) / (phi * (2. - p));
   Type alpha  = (2. - p) / (1. - p);
   Type gam = phi * (p - 1.) * pow(mu, p - 1.);
   int N = (int) asDouble(rpois(lambda));
   Type ans = rgamma(N, -alpha /* shape */, gam /* scale */).sum();
+  return ans;
+}
+
+// Simulate from tweedie distribution; from glmmTMB
+template<class Type>
+Type rstudent(Type x, Type mean, Type sigma, Type df)
+{
+  Type ans = mean + sigma * rt(df); // metRology::rt.scaled
   return ans;
 }
 
@@ -474,7 +483,7 @@ Type objective_function<Type>::operator()()
           break;
         case lognormal_family:
           jnll -= keep(i) * dlnorm(y_i(i), mu_i(i) - pow(exp(ln_phi), Type(2)) / Type(2), exp(ln_phi), true) * weights_i(i);
-          SIMULATE{y_i(i) = rlnorm(mu_i(i) - pow(exp(ln_phi), Type(2)) / Type(2), exp(ln_phi));}
+          // SIMULATE{y_i(i) = rlnorm(mu_i(i) - pow(exp(ln_phi), Type(2)) / Type(2), exp(ln_phi));}
           break;
         case student_family:
           jnll -= keep(i) * dstudent(y_i(i), mu_i(i), exp(ln_phi), Type(3) /*df*/, true) * weights_i(i);
