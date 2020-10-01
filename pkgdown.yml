@@ -1,0 +1,9 @@
+pandoc: 2.7.3
+pkgdown: 1.6.1
+pkgdown_sha: ~
+articles:
+  index-standardization: index-standardization.html
+  spatial-trend-models: spatial-trend-models.html
+  threshold-models: threshold-models.html
+last_built: 2020-10-01T23:22Z
+
