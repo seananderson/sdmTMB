@@ -3,7 +3,8 @@ pkgdown: 1.6.1
 pkgdown_sha: ~
 articles:
   index-standardization: index-standardization.html
+  model-description: model-description.html
   spatial-trend-models: spatial-trend-models.html
   threshold-models: threshold-models.html
-last_built: 2020-10-05T19:25Z
+last_built: 2020-10-05T19:44Z
 
