@@ -107,7 +107,7 @@
 <a href="#notation-conventions" class="anchor"></a>Notation conventions</h2>
 <ul>
 <li><p>Bold lowercase for vectors</p></li>
-<li><p>Subscript <span class="math inline">\(\boldsymbol{s}\)</span> since x, y</p></li>
+<li><p>Bold subscript <span class="math inline">\(\boldsymbol{s}\)</span> since x, y</p></li>
 <li><p>Bold uppercase for matrices</p></li>
 <li><p><span class="math inline">\(\phi\)</span> for all ‘dispersion’ parameters for consistency with code</p></li>
 <li><p>Family titles link to TMB or sdmTMB source code</p></li>
@@ -126,6 +126,11 @@
   \boldsymbol{\epsilon}_t &amp;\sim \operatorname{MVNormal} \left( \boldsymbol{0}, \boldsymbol{\Sigma}_{\epsilon} \right).
 \end{align}
 \]</span> where <span class="math inline">\(g\)</span> is a link function and <span class="math inline">\(g^{-1}\)</span> is the inverse link.</p>
+<ul>
+<li><p><span class="math inline">\(\boldsymbol{X} \boldsymbol{\beta}\)</span> is defined by the <code>formula</code> argument</p></li>
+<li><p><span class="math inline">\(\omega_s\)</span> are included if <code>include_spatial = TRUE</code></p></li>
+<li><p><span class="math inline">\(\epsilon_{\boldsymbol{s},t}\)</span> are included if there are multiple time elements and <code>spatial_only = FALSE</code> (the default if there are multiple time elements)</p></li>
+</ul>
 </div>
 <div id="time-varying-regression-parameters" class="section level2">
 <h2 class="hasAnchor">
@@ -150,7 +155,7 @@
 <div id="ar1-spatiotemporal-random-fields" class="section level2">
 <h2 class="hasAnchor">
 <a href="#ar1-spatiotemporal-random-fields" class="anchor"></a>AR1 spatiotemporal random fields</h2>
-<p>Dropping the <span class="math inline">\(\omega_s\)</span> for simplicity:</p>
+<p>Dropping the optional <span class="math inline">\(\omega_s\)</span> for simplicity:</p>
 <p><span class="math display">\[
 \begin{align}
 \mu_{\boldsymbol{s},t} &amp;= g^{-1} \left( \boldsymbol{X} \boldsymbol{\beta} + \delta_{\boldsymbol{s},t} \right),\\
@@ -160,25 +165,58 @@
 \end{align}
 \]</span></p>
 </div>
+<div id="offset-terms" class="section level2">
+<h2 class="hasAnchor">
+<a href="#offset-terms" class="anchor"></a>Offset terms</h2>
+<p>Offset terms can be included with the reserved word <code>offset</code> in the formula. E.g., <code>y ~ x + offset</code>.</p>
+<p>These are included in the linear predictor as</p>
+<p><span class="math display">\[
+\begin{align}
+  \mu_{\boldsymbol{s},t} &amp;= g^{-1} \left( \ldots + O_{\boldsymbol{s},t} + \ldots \right),
+\end{align}
+\]</span> where <span class="math inline">\(O_{\boldsymbol{s},t}\)</span> is an offset term—a <strong>log transformed</strong> variable without a coefficient. Offsets only make sense if the link is log.</p>
+</div>
+<div id="threshold-models" class="section level2">
+<h2 class="hasAnchor">
+<a href="#threshold-models" class="anchor"></a>Threshold models</h2>
+<div id="linear-breakpoint-threshold-models" class="section level3">
+<h3 class="hasAnchor">
+<a href="#linear-breakpoint-threshold-models" class="anchor"></a>Linear breakpoint threshold models</h3>
+<p>TODO</p>
+<p>These models can be fit by including <code>+ breakpt(x)</code> in the model formula, where <code>x</code> is a covariate.</p>
+</div>
+<div id="logistic-threshold-models" class="section level3">
+<h3 class="hasAnchor">
+<a href="#logistic-threshold-models" class="anchor"></a>Logistic threshold models</h3>
+<p>The form is</p>
+<p><span class="math display">\[
+s(x)=\tau + \psi\ { \left[ 1+{ e }^{ -\ln\ \left(19\right) \cdot \left( x-s50 \right) 
+     / \left(s95 - s50 \right) } \right] }^{-1},
+\]</span> where <span class="math inline">\(\psi\)</span> is a scaling parameter (controlling the height of the y-axis for the response, and is unconstrained), <span class="math inline">\(\tau\)</span> is an intercept, <span class="math inline">\(s50\)</span> is a parameter controlling the point at which the function reaches 50% of the maximum (<span class="math inline">\(\psi\)</span>), and <span class="math inline">\(s95\)</span> is a parameter controlling the point at which the function reaches 95%. The parameter <span class="math inline">\(s50\)</span> is unconstrained, and <span class="math inline">\(s95\)</span> is constrained to be larger than <span class="math inline">\(s50\)</span>.</p>
+<p>These models can be fit by including <code>+ logistic(x)</code> in the model formula, where <code>x</code> is a covariate.</p>
+</div>
+</div>
 <div id="observation-model-families" class="section level2">
 <h2 class="hasAnchor">
 <a href="#observation-model-families" class="anchor"></a>Observation model families</h2>
-<div id="gaussian" class="section level3">
+<div id="binomial" class="section level3">
 <h3 class="hasAnchor">
-<a href="#gaussian" class="anchor"></a><a href="https://kaskr.github.io/adcomp/dnorm_8hpp.html">Gaussian</a>
+<a href="#binomial" class="anchor"></a><a href="https://kaskr.github.io/adcomp/group__R__style__distribution.html#gaee11f805f02bc1febc6d7bf0487671be">Binomial</a>
 </h3>
-<p><span class="math display">\[
-\operatorname{Normal} \left( \mu, \phi \right)
-\]</span> where <span class="math inline">\(\phi\)</span> is the standard deviation (following Stan convention of SD not variance).</p>
+<p>Internally parameterized as the <a href="https://kaskr.github.io/adcomp/group__R__style__distribution.html#gaecb5a18095a320b42e2d20c4b120f5f5">robust version</a>.</p>
 </div>
-<div id="tweedie" class="section level3">
+<div id="beta" class="section level3">
 <h3 class="hasAnchor">
-<a href="#tweedie" class="anchor"></a><a href="https://kaskr.github.io/adcomp/group__R__style__distribution.html#ga262f3c2d1cf36f322a62d902a608aae0">Tweedie</a>
+<a href="#beta" class="anchor"></a><a href="https://kaskr.github.io/adcomp/group__R__style__distribution.html#ga5324c83759d5211c7c2fbbad37fa8e59">Beta</a>
 </h3>
-<p><a href="https://kaskr.github.io/adcomp/tweedie_8cpp_source.html">Source code</a> as in <a href="https://CRAN.R-project.org/package=cplm">cplm</a> package. <a href="https://link.springer.com/article/10.1007/s11222-012-9343-7" class="uri">https://link.springer.com/article/10.1007/s11222-012-9343-7</a></p>
 <p><span class="math display">\[
-\operatorname{Tweedie} \left(\mu, p, \phi \right), \: 1 &lt; p &lt; 2
+\operatorname{Beta} \left(\mu \phi, 1 - \mu \phi \right)
 \]</span></p>
+<p>where <span class="math inline">\(\phi\)</span> is variance.</p>
+<p><span class="math display">\[
+\operatorname{Binomial} \left( N, \mu \right)
+\]</span></p>
+<p><span class="math inline">\(N = 1\)</span> (i.e., ‘size’ currently fixed) and <span class="math inline">\(\mu\)</span> is probability</p>
 </div>
 <div id="gamma" class="section level3">
 <h3 class="hasAnchor">
@@ -190,22 +228,20 @@
 \]</span></p>
 <p>where <span class="math inline">\(\phi\)</span> represents the CV.</p>
 </div>
-<div id="binomial" class="section level3">
+<div id="gaussian" class="section level3">
 <h3 class="hasAnchor">
-<a href="#binomial" class="anchor"></a><a href="https://kaskr.github.io/adcomp/group__R__style__distribution.html#gaee11f805f02bc1febc6d7bf0487671be">Binomial</a>
+<a href="#gaussian" class="anchor"></a><a href="https://kaskr.github.io/adcomp/dnorm_8hpp.html">Gaussian</a>
 </h3>
-<p>Internally parameterized as the <a href="https://kaskr.github.io/adcomp/group__R__style__distribution.html#gaecb5a18095a320b42e2d20c4b120f5f5">robust version</a>.</p>
 <p><span class="math display">\[
-\operatorname{Binomial} \left( N, \mu \right)
-\]</span></p>
-<p><span class="math inline">\(N = 1\)</span> (i.e., ‘size’ currently fixed) and <span class="math inline">\(\mu\)</span> is probability</p>
+\operatorname{Normal} \left( \mu, \phi \right)
+\]</span> where <span class="math inline">\(\phi\)</span> is the standard deviation (following Stan convention of SD not variance).</p>
 </div>
-<div id="poisson" class="section level3">
+<div id="lognormal" class="section level3">
 <h3 class="hasAnchor">
-<a href="#poisson" class="anchor"></a><a href="https://kaskr.github.io/adcomp/group__R__style__distribution.html#gaa1ed15503e1441a381102a8c4c9baaf1">Poisson</a>
+<a href="#lognormal" class="anchor"></a><a href="https://github.com/pbs-assess/sdmTMB/blob/28a93496a93b12e5a2f73f703bc96afbf14d86c1/src/sdmTMB.cpp#L22-L30">Lognormal</a>
 </h3>
 <p><span class="math display">\[
-\operatorname{Poisson} \left( \mu \right)
+\operatorname{Lognormal} \left( \log \mu - \frac{\phi^2}{2}, \phi \right)
 \]</span></p>
 </div>
 <div id="negative-binomial" class="section level3">
@@ -218,12 +254,12 @@
 \]</span></p>
 <p>Variance scales quadratically with mean <span class="math inline">\(\mathrm{Var}[y] = \mu + \mu^2 / \phi\)</span>.</p>
 </div>
-<div id="lognormal" class="section level3">
+<div id="poisson" class="section level3">
 <h3 class="hasAnchor">
-<a href="#lognormal" class="anchor"></a><a href="https://github.com/pbs-assess/sdmTMB/blob/28a93496a93b12e5a2f73f703bc96afbf14d86c1/src/sdmTMB.cpp#L22-L30">Lognormal</a>
+<a href="#poisson" class="anchor"></a><a href="https://kaskr.github.io/adcomp/group__R__style__distribution.html#gaa1ed15503e1441a381102a8c4c9baaf1">Poisson</a>
 </h3>
 <p><span class="math display">\[
-\operatorname{Lognormal} \left( \log \mu - \frac{\phi^2}{2}, \phi \right)
+\operatorname{Poisson} \left( \mu \right)
 \]</span></p>
 </div>
 <div id="student-t" class="section level3">
@@ -235,14 +271,14 @@
 \]</span></p>
 <p>where <span class="math inline">\(\nu\)</span>, the degrees of freedom, is currently fixed at 3.</p>
 </div>
-<div id="beta" class="section level3">
+<div id="tweedie" class="section level3">
 <h3 class="hasAnchor">
-<a href="#beta" class="anchor"></a><a href="https://kaskr.github.io/adcomp/group__R__style__distribution.html#ga5324c83759d5211c7c2fbbad37fa8e59">Beta</a>
+<a href="#tweedie" class="anchor"></a><a href="https://kaskr.github.io/adcomp/group__R__style__distribution.html#ga262f3c2d1cf36f322a62d902a608aae0">Tweedie</a>
 </h3>
+<p><a href="https://kaskr.github.io/adcomp/tweedie_8cpp_source.html">Source code</a> as in <a href="https://CRAN.R-project.org/package=cplm">cplm</a> package. <a href="https://link.springer.com/article/10.1007/s11222-012-9343-7" class="uri">https://link.springer.com/article/10.1007/s11222-012-9343-7</a></p>
 <p><span class="math display">\[
-\operatorname{Beta} \left(\mu \phi, 1 - \mu \phi \right)
+\operatorname{Tweedie} \left(\mu, p, \phi \right), \: 1 &lt; p &lt; 2
 \]</span></p>
-<p>where <span class="math inline">\(\phi\)</span> is variance.</p>
 </div>
 </div>
   </div>
