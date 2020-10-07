@@ -183,10 +183,10 @@ this scaling factor before applying the projection from <code>barrier_sf</code>.
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>A list similar to <code><a href='make_mesh.html'>make_mesh()</a></code> but with <code>spde_barrier</code> and
-<code>range_fraction</code> elements added.</p>
+    <p>A list similar to <code><a href='make_mesh.html'>make_mesh()</a></code> but with <code>spde_barrier</code> and a
+couple other helper list elements added.</p>
 <p>If <code>plot = TRUE</code>, then a basic plot will be created as a side effect. Each
-grey dot represents the center of a "normal" mesh triange. Each red cross
+grey dot represents the center of a "normal" mesh triangle. Each red cross
 represents the center of a "barrier" mesh triangle.</p>
     <h2 class="hasAnchor" id="references"><a class="anchor" href="#references"></a>References</h2>
 
@@ -237,8 +237,11 @@ Non-stationary Gaussian models with physical barriers.
   <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/ggsf.html'>geom_sf</a></span><span class='op'>(</span><span class='op'>)</span> <span class='op'>+</span>
   <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/ggsf.html'>geom_sf</a></span><span class='op'>(</span>data <span class='op'>=</span> <span class='va'>survey</span>, size <span class='op'>=</span> <span class='fl'>0.5</span><span class='op'>)</span>
 </div><div class='img'><img src='add_barrier_mesh-1.png' alt='' width='700' height='433' /></div><div class='input'>
+<span class='co'># Note that a barrier mesh won't don't much here for this</span>
+<span class='co'># example data set, but we nonetheless use it as an example.</span>
+
 <span class='co'># Prepare for making the mesh</span>
-<span class='co'># First or will extract the coordinates:</span>
+<span class='co'># First, we will extract the coordinates:</span>
 <span class='va'>surv_utm_coords</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://r-spatial.github.io/sf/reference/st_coordinates.html'>st_coordinates</a></span><span class='op'>(</span><span class='va'>survey</span><span class='op'>)</span>
 
 <span class='co'># Then we will scale coordinates to km so the range parameter</span>
@@ -272,7 +275,7 @@ Non-stationary Gaussian models with physical barriers.
 <span class='co'># Now, when we fit our model with the new mesh, it will automatically</span>
 <span class='co'># include a barrier structure in the spatial correlation:</span>
 <span class='va'>fit</span> <span class='op'>&lt;-</span> <span class='fu'><a href='sdmTMB.html'>sdmTMB</a></span><span class='op'>(</span><span class='va'>density</span> <span class='op'>~</span> <span class='fu'>s</span><span class='op'>(</span><span class='va'>depth</span>, k <span class='op'>=</span> <span class='fl'>3</span><span class='op'>)</span>, data <span class='op'>=</span> <span class='va'>pcod</span>, spde <span class='op'>=</span> <span class='va'>bspde</span>,
-  family <span class='op'>=</span> <span class='fu'><a href='Beta.html'>tweedie</a></span><span class='op'>(</span>link <span class='op'>=</span> <span class='st'>"log"</span><span class='op'>)</span><span class='op'>)</span>
+  family <span class='op'>=</span> <span class='fu'><a href='Families.html'>tweedie</a></span><span class='op'>(</span>link <span class='op'>=</span> <span class='st'>"log"</span><span class='op'>)</span><span class='op'>)</span>
 <span class='va'>fit</span>
 </div><div class='output co'>#&gt; Spatiotemporal model fit by ML ['sdmTMB']
 #&gt; Formula: density ~ s(depth, k = 3)

@@ -139,7 +139,7 @@
 <span class="va">m</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/sdmTMB.html">sdmTMB</a></span><span class="op">(</span>
   data <span class="op">=</span> <span class="va">pcod</span>, 
   formula <span class="op">=</span> <span class="va">density</span> <span class="op">~</span> <span class="fl">0</span> <span class="op">+</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html">as.factor</a></span><span class="op">(</span><span class="va">year</span><span class="op">)</span>,
-  time <span class="op">=</span> <span class="st">"year"</span>, spde <span class="op">=</span> <span class="va">pcod_spde</span>, family <span class="op">=</span> <span class="fu"><a href="../reference/Beta.html">tweedie</a></span><span class="op">(</span>link <span class="op">=</span> <span class="st">"log"</span><span class="op">)</span><span class="op">)</span></pre></div>
+  time <span class="op">=</span> <span class="st">"year"</span>, spde <span class="op">=</span> <span class="va">pcod_spde</span>, family <span class="op">=</span> <span class="fu"><a href="../reference/Families.html">tweedie</a></span><span class="op">(</span>link <span class="op">=</span> <span class="st">"log"</span><span class="op">)</span><span class="op">)</span></pre></div>
 <p>We can inspect randomized quantile residuals::</p>
 <div class="sourceCode" id="cb5"><pre class="downlit">
 <span class="va">pcod</span><span class="op">$</span><span class="va">resids</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/residuals.html">residuals</a></span><span class="op">(</span><span class="va">m</span><span class="op">)</span> <span class="co"># randomized quantile residuals</span>

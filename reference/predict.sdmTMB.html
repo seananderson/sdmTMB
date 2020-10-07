@@ -235,7 +235,7 @@ are included for other functions.</p>
 <span class='va'>pcod_spde</span> <span class='op'>&lt;-</span> <span class='fu'><a href='make_mesh.html'>make_mesh</a></span><span class='op'>(</span><span class='va'>d</span>, <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"X"</span>, <span class='st'>"Y"</span><span class='op'>)</span>, cutoff <span class='op'>=</span> <span class='fl'>30</span><span class='op'>)</span> <span class='co'># a coarse mesh for example speed</span>
 <span class='va'>m</span> <span class='op'>&lt;-</span> <span class='fu'><a href='sdmTMB.html'>sdmTMB</a></span><span class='op'>(</span>
  data <span class='op'>=</span> <span class='va'>d</span>, formula <span class='op'>=</span> <span class='va'>density</span> <span class='op'>~</span> <span class='fl'>0</span> <span class='op'>+</span> <span class='fu'><a href='https://rdrr.io/r/base/factor.html'>as.factor</a></span><span class='op'>(</span><span class='va'>year</span><span class='op'>)</span> <span class='op'>+</span> <span class='va'>depth_scaled</span> <span class='op'>+</span> <span class='va'>depth_scaled2</span>,
- time <span class='op'>=</span> <span class='st'>"year"</span>, spde <span class='op'>=</span> <span class='va'>pcod_spde</span>, family <span class='op'>=</span> <span class='fu'><a href='Beta.html'>tweedie</a></span><span class='op'>(</span>link <span class='op'>=</span> <span class='st'>"log"</span><span class='op'>)</span>
+ time <span class='op'>=</span> <span class='st'>"year"</span>, spde <span class='op'>=</span> <span class='va'>pcod_spde</span>, family <span class='op'>=</span> <span class='fu'><a href='Families.html'>tweedie</a></span><span class='op'>(</span>link <span class='op'>=</span> <span class='st'>"log"</span><span class='op'>)</span>
 <span class='op'>)</span>
 
 <span class='co'># Predictions at original data locations -------------------------------</span>
@@ -303,7 +303,6 @@ are included for other functions.</p>
   <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/scale_gradient.html'>scale_fill_gradient2</a></span><span class='op'>(</span><span class='op'>)</span>
 </div><div class='img'><img src='predict.sdmTMB-8.png' alt='' width='700' height='433' /></div><div class='input'>
 <span class='co'># Visualizing a marginal effect ----------------------------------------</span>
-<span class='co'># Also demonstrates getting standard errors on population-level predictions</span>
 
 <span class='va'>nd</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/data.frame.html'>data.frame</a></span><span class='op'>(</span>depth_scaled <span class='op'>=</span>
   <span class='fu'><a href='https://rdrr.io/r/base/seq.html'>seq</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/Extremes.html'>min</a></span><span class='op'>(</span><span class='va'>d</span><span class='op'>$</span><span class='va'>depth_scaled</span><span class='op'>)</span>, <span class='fu'><a href='https://rdrr.io/r/base/Extremes.html'>max</a></span><span class='op'>(</span><span class='va'>d</span><span class='op'>$</span><span class='va'>depth_scaled</span><span class='op'>)</span>, length.out <span class='op'>=</span> <span class='fl'>100</span><span class='op'>)</span><span class='op'>)</span>
@@ -321,7 +320,7 @@ are included for other functions.</p>
 
 <span class='va'>m_gam</span> <span class='op'>&lt;-</span> <span class='fu'><a href='sdmTMB.html'>sdmTMB</a></span><span class='op'>(</span>
  data <span class='op'>=</span> <span class='va'>d</span>, formula <span class='op'>=</span> <span class='va'>density</span> <span class='op'>~</span> <span class='fl'>0</span> <span class='op'>+</span> <span class='fu'><a href='https://rdrr.io/r/base/factor.html'>as.factor</a></span><span class='op'>(</span><span class='va'>year</span><span class='op'>)</span> <span class='op'>+</span> <span class='fu'>s</span><span class='op'>(</span><span class='va'>depth_scaled</span>, k <span class='op'>=</span> <span class='fl'>3</span><span class='op'>)</span>,
- time <span class='op'>=</span> <span class='st'>"year"</span>, spde <span class='op'>=</span> <span class='va'>pcod_spde</span>, family <span class='op'>=</span> <span class='fu'><a href='Beta.html'>tweedie</a></span><span class='op'>(</span>link <span class='op'>=</span> <span class='st'>"log"</span><span class='op'>)</span>
+ time <span class='op'>=</span> <span class='st'>"year"</span>, spde <span class='op'>=</span> <span class='va'>pcod_spde</span>, family <span class='op'>=</span> <span class='fu'><a href='Families.html'>tweedie</a></span><span class='op'>(</span>link <span class='op'>=</span> <span class='st'>"log"</span><span class='op'>)</span>
 <span class='op'>)</span>
 <span class='va'>nd</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/data.frame.html'>data.frame</a></span><span class='op'>(</span>depth_scaled <span class='op'>=</span>
   <span class='fu'><a href='https://rdrr.io/r/base/seq.html'>seq</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/Extremes.html'>min</a></span><span class='op'>(</span><span class='va'>d</span><span class='op'>$</span><span class='va'>depth_scaled</span><span class='op'>)</span>, <span class='fu'><a href='https://rdrr.io/r/base/Extremes.html'>max</a></span><span class='op'>(</span><span class='va'>d</span><span class='op'>$</span><span class='va'>depth_scaled</span><span class='op'>)</span>, length.out <span class='op'>=</span> <span class='fl'>100</span><span class='op'>)</span><span class='op'>)</span>
@@ -340,7 +339,7 @@ are included for other functions.</p>
   ar1_fields <span class='op'>=</span> <span class='cn'>TRUE</span>, <span class='co'># using an AR1 to have something to forecast with</span>
   extra_time <span class='op'>=</span> <span class='fl'>2019L</span>,
   include_spatial <span class='op'>=</span> <span class='cn'>FALSE</span>,
-  time <span class='op'>=</span> <span class='st'>"year"</span>, spde <span class='op'>=</span> <span class='va'>pcod_spde</span>, family <span class='op'>=</span> <span class='fu'><a href='Beta.html'>tweedie</a></span><span class='op'>(</span>link <span class='op'>=</span> <span class='st'>"log"</span><span class='op'>)</span>
+  time <span class='op'>=</span> <span class='st'>"year"</span>, spde <span class='op'>=</span> <span class='va'>pcod_spde</span>, family <span class='op'>=</span> <span class='fu'><a href='Families.html'>tweedie</a></span><span class='op'>(</span>link <span class='op'>=</span> <span class='st'>"log"</span><span class='op'>)</span>
 <span class='op'>)</span>
 
 <span class='co'># Add a year to our grid:</span>
@@ -358,7 +357,7 @@ are included for other functions.</p>
 
 <span class='va'>pcod_spde</span> <span class='op'>&lt;-</span> <span class='fu'><a href='make_mesh.html'>make_mesh</a></span><span class='op'>(</span><span class='va'>pcod</span>, <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"X"</span>, <span class='st'>"Y"</span><span class='op'>)</span>, cutoff <span class='op'>=</span> <span class='fl'>25</span><span class='op'>)</span>
 <span class='va'>m</span> <span class='op'>&lt;-</span> <span class='fu'><a href='sdmTMB.html'>sdmTMB</a></span><span class='op'>(</span>data <span class='op'>=</span> <span class='va'>pcod</span>, formula <span class='op'>=</span> <span class='va'>density</span> <span class='op'>~</span> <span class='va'>depth_scaled</span> <span class='op'>+</span> <span class='va'>depth_scaled2</span>,
-  spde <span class='op'>=</span> <span class='va'>pcod_spde</span>, family <span class='op'>=</span> <span class='fu'><a href='Beta.html'>tweedie</a></span><span class='op'>(</span>link <span class='op'>=</span> <span class='st'>"log"</span><span class='op'>)</span>,
+  spde <span class='op'>=</span> <span class='va'>pcod_spde</span>, family <span class='op'>=</span> <span class='fu'><a href='Families.html'>tweedie</a></span><span class='op'>(</span>link <span class='op'>=</span> <span class='st'>"log"</span><span class='op'>)</span>,
   spatial_trend <span class='op'>=</span> <span class='cn'>TRUE</span>, time <span class='op'>=</span> <span class='st'>"year"</span>, spatial_only <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>
 <span class='va'>p</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/stats/predict.html'>predict</a></span><span class='op'>(</span><span class='va'>m</span>, newdata <span class='op'>=</span> <span class='va'>qcs_grid</span><span class='op'>)</span>
 

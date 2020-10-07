@@ -192,8 +192,10 @@ model.</p></td>
     </tr>
     <tr>
       <th>family</th>
-      <td><p>The family and link. Supports <code><a href='https://rdrr.io/r/stats/family.html'>gaussian()</a></code>, <code><a href='Beta.html'>Gamma()</a></code>,
-<code><a href='https://rdrr.io/r/stats/family.html'>binomial()</a></code>, <code><a href='https://rdrr.io/r/stats/family.html'>poisson()</a></code>, <code><a href='Beta.html'>Beta()</a></code>, <code><a href='Beta.html'>nbinom2()</a></code>, and <code><a href='Beta.html'>tweedie()</a></code>.</p></td>
+      <td><p>The family and link. Supports <code><a href='https://rdrr.io/r/stats/family.html'>gaussian()</a></code>, <code><a href='https://rdrr.io/r/stats/family.html'>Gamma()</a></code>,
+<code><a href='https://rdrr.io/r/stats/family.html'>binomial()</a></code>, <code><a href='https://rdrr.io/r/stats/family.html'>poisson()</a></code>, <code><a href='Families.html'>Beta()</a></code>,
+<code><a href='Families.html'>nbinom2()</a></code>, and
+<code><a href='Families.html'>tweedie()</a></code>].</p></td>
     </tr>
     <tr>
       <th>time_varying</th>
@@ -333,7 +335,7 @@ provide mechanisms to predict over missing time slices.</p>
 </div><div class='img'><img src='sdmTMB-1.png' alt='' width='700' height='433' /></div><div class='input'>
 <span class='co'># Tweedie:</span>
 <span class='va'>m</span> <span class='op'>&lt;-</span> <span class='fu'>sdmTMB</span><span class='op'>(</span><span class='va'>density</span> <span class='op'>~</span> <span class='fl'>0</span> <span class='op'>+</span> <span class='va'>depth_scaled</span> <span class='op'>+</span> <span class='va'>depth_scaled2</span> <span class='op'>+</span> <span class='fu'><a href='https://rdrr.io/r/base/factor.html'>as.factor</a></span><span class='op'>(</span><span class='va'>year</span><span class='op'>)</span>,
-  data <span class='op'>=</span> <span class='va'>d</span>, time <span class='op'>=</span> <span class='st'>"year"</span>, spde <span class='op'>=</span> <span class='va'>pcod_spde</span>, family <span class='op'>=</span> <span class='fu'><a href='Beta.html'>tweedie</a></span><span class='op'>(</span>link <span class='op'>=</span> <span class='st'>"log"</span><span class='op'>)</span><span class='op'>)</span>
+  data <span class='op'>=</span> <span class='va'>d</span>, time <span class='op'>=</span> <span class='st'>"year"</span>, spde <span class='op'>=</span> <span class='va'>pcod_spde</span>, family <span class='op'>=</span> <span class='fu'><a href='Families.html'>tweedie</a></span><span class='op'>(</span>link <span class='op'>=</span> <span class='st'>"log"</span><span class='op'>)</span><span class='op'>)</span>
 <span class='fu'><a href='https://rdrr.io/r/base/print.html'>print</a></span><span class='op'>(</span><span class='va'>m</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; Spatiotemporal model fit by ML ['sdmTMB']
 #&gt; Formula: density ~ 0 + depth_scaled + depth_scaled2 + as.factor(year)
@@ -361,49 +363,12 @@ provide mechanisms to predict over missing time slices.</p>
 #&gt; 4 as.factor(year)2013  3.873061 0.33816658 -3.717999 11.464122
 #&gt; 5 as.factor(year)2015  3.781375 0.33823534 -3.629983 11.192732
 #&gt; 6 as.factor(year)2017  3.051192 0.35024414 -2.929034  9.031417</div><div class='input'><span class='fu'><a href='https://rdrr.io/pkg/generics/man/tidy.html'>tidy</a></span><span class='op'>(</span><span class='va'>m</span>, effects <span class='op'>=</span> <span class='st'>"ran_par"</span><span class='op'>)</span>
-</div><div class='output co'>#&gt;       term  estimate   std.error
-#&gt; 1  sigma_O  2.649666  3.55022096
-#&gt; 2  sigma_E  1.835268  2.36310702
-#&gt; 3  sigma_Z  1.424922  2.09758701
-#&gt; 4 ln_tau_V  0.000000          NA
-#&gt; 5    range 14.287000 21.03148364
-#&gt; 6   ln_phi  2.650139  0.04887713</div><div class='input'>
-<span class='co'># Contents of the output object:</span>
-<span class='fu'><a href='https://rdrr.io/r/base/names.html'>names</a></span><span class='op'>(</span><span class='va'>m</span><span class='op'>)</span>
-</div><div class='output co'>#&gt;  [1] "model"               "data"                "spde"               
-#&gt;  [4] "formula"             "time_varying"        "threshold_parameter"
-#&gt;  [7] "threshold_function"  "mgcv_mod"            "time"               
-#&gt; [10] "family"              "response"            "tmb_data"           
-#&gt; [13] "tmb_params"          "tmb_map"             "tmb_random"         
-#&gt; [16] "tmb_obj"             "reml"                "mgcv"               
-#&gt; [19] "gradients"           "bad_eig"             "call"               
-#&gt; [22] "sd_report"          </div><div class='input'><span class='va'>m</span><span class='op'>$</span><span class='va'>model</span>
-</div><div class='output co'>#&gt; $par
-#&gt;        b_j        b_j        b_j        b_j        b_j        b_j   ln_tau_O 
-#&gt; -1.5763311 -1.1089977  3.6719544  3.8730614  3.7813745  3.0511917 -0.6203163 
-#&gt;   ln_tau_E   ln_kappa     thetaf     ln_phi 
-#&gt; -0.2530737 -1.6196292  0.3100971  2.6501386 
-#&gt; 
-#&gt; $objective
-#&gt; [1] 2955.205
-#&gt; 
-#&gt; $convergence
-#&gt; [1] 0
-#&gt; 
-#&gt; $iterations
-#&gt; [1] 52
-#&gt; 
-#&gt; $evaluations
-#&gt; function gradient 
-#&gt;       78       53 
-#&gt; 
-#&gt; $message
-#&gt; [1] "relative convergence (4)"
-#&gt; </div><div class='input'><span class='va'>r</span> <span class='op'>&lt;-</span> <span class='va'>m</span><span class='op'>$</span><span class='va'>tmb_obj</span><span class='op'>$</span><span class='fu'>report</span><span class='op'>(</span><span class='op'>)</span>
-<span class='fu'><a href='https://rdrr.io/r/base/names.html'>names</a></span><span class='op'>(</span><span class='va'>r</span><span class='op'>)</span>
-</div><div class='output co'>#&gt;  [1] "range"            "b_rw_t"           "sigma_E"          "eta_rw_i"        
-#&gt;  [5] "sigma_O_trend"    "eta_i"            "eta_fixed_i"      "sigma_O"         
-#&gt;  [9] "omega_s_trend_A"  "rho"              "omega_s_A"        "epsilon_st_A_vec"</div><div class='input'>
+</div><div class='output co'>#&gt;      term  estimate   std.error
+#&gt; 1 sigma_O  2.649666  3.55022096
+#&gt; 2 sigma_E  1.835268  2.36310702
+#&gt; 3 sigma_Z  1.424922  2.09758701
+#&gt; 4   range 14.287000 21.03148364
+#&gt; 5  ln_phi  2.650139  0.04887713</div><div class='input'>
 <span class='co'># Run extra optimization steps to help convergence:</span>
 <span class='va'>m1</span> <span class='op'>&lt;-</span> <span class='fu'><a href='run_extra_optimization.html'>run_extra_optimization</a></span><span class='op'>(</span><span class='va'>m</span>, nlminb_loops <span class='op'>=</span> <span class='fl'>0</span>, newton_steps <span class='op'>=</span> <span class='fl'>1</span><span class='op'>)</span>
 <span class='fu'><a href='https://rdrr.io/r/base/Extremes.html'>max</a></span><span class='op'>(</span><span class='va'>m</span><span class='op'>$</span><span class='va'>gradients</span><span class='op'>)</span>
@@ -488,7 +453,7 @@ provide mechanisms to predict over missing time slices.</p>
 <span class='co'># Fit a spatial only model:</span>
 <span class='va'>m</span> <span class='op'>&lt;-</span> <span class='fu'>sdmTMB</span><span class='op'>(</span>
   <span class='va'>density</span> <span class='op'>~</span> <span class='va'>depth_scaled</span> <span class='op'>+</span> <span class='va'>depth_scaled2</span>, data <span class='op'>=</span> <span class='va'>d</span>,
-  spde <span class='op'>=</span> <span class='va'>pcod_spde</span>, family <span class='op'>=</span> <span class='fu'><a href='Beta.html'>tweedie</a></span><span class='op'>(</span>link <span class='op'>=</span> <span class='st'>"log"</span><span class='op'>)</span><span class='op'>)</span>
+  spde <span class='op'>=</span> <span class='va'>pcod_spde</span>, family <span class='op'>=</span> <span class='fu'><a href='Families.html'>tweedie</a></span><span class='op'>(</span>link <span class='op'>=</span> <span class='st'>"log"</span><span class='op'>)</span><span class='op'>)</span>
 <span class='fu'><a href='https://rdrr.io/r/base/print.html'>print</a></span><span class='op'>(</span><span class='va'>m</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; Spatiotemporal model fit by ML ['sdmTMB']
 #&gt; Formula: density ~ depth_scaled + depth_scaled2
@@ -508,225 +473,19 @@ provide mechanisms to predict over missing time slices.</p>
 #&gt; ML criterion at convergence: 2974.181</div><div class='input'>
 <span class='co'># Spatial-trend example:</span>
 <span class='va'>m</span> <span class='op'>&lt;-</span> <span class='fu'>sdmTMB</span><span class='op'>(</span><span class='va'>density</span> <span class='op'>~</span> <span class='va'>depth_scaled</span>, data <span class='op'>=</span> <span class='va'>d</span>,
-  spde <span class='op'>=</span> <span class='va'>pcod_spde</span>, family <span class='op'>=</span> <span class='fu'><a href='Beta.html'>tweedie</a></span><span class='op'>(</span>link <span class='op'>=</span> <span class='st'>"log"</span><span class='op'>)</span>,
+  spde <span class='op'>=</span> <span class='va'>pcod_spde</span>, family <span class='op'>=</span> <span class='fu'><a href='Families.html'>tweedie</a></span><span class='op'>(</span>link <span class='op'>=</span> <span class='st'>"log"</span><span class='op'>)</span>,
   spatial_trend <span class='op'>=</span> <span class='cn'>TRUE</span>, time <span class='op'>=</span> <span class='st'>"year"</span><span class='op'>)</span>
-<span class='fu'><a href='https://rdrr.io/r/base/print.html'>print</a></span><span class='op'>(</span><span class='va'>m</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; Spatiotemporal model fit by ML ['sdmTMB']
-#&gt; Formula: density ~ depth_scaled
-#&gt; Time column: "year"
-#&gt; SPDE: pcod_spde
-#&gt; Data: d
-#&gt; Family: tweedie(link = 'log')
-#&gt;              coef.est coef.se
-#&gt; (Intercept)      2.86    0.42
-#&gt; depth_scaled    -0.73    0.15
-#&gt; 
-#&gt; Matern range parameter: 24.78
-#&gt; Dispersion parameter: 15.51
-#&gt; Spatial SD (sigma_O): 2.58
-#&gt; Spatiotemporal SD (sigma_E): 0.87
-#&gt; ML criterion at convergence: 3029.274</div><div class='input'>
-<span class='va'>r</span> <span class='op'>&lt;-</span> <span class='va'>m</span><span class='op'>$</span><span class='va'>tmb_obj</span><span class='op'>$</span><span class='fu'>report</span><span class='op'>(</span><span class='op'>)</span>
-<span class='va'>r</span><span class='op'>$</span><span class='va'>ln_tau_O_trend</span>
-</div><div class='output co'>#&gt; NULL</div><div class='input'><span class='va'>r</span><span class='op'>$</span><span class='va'>omega_s_trend</span>
-</div><div class='output co'>#&gt;   [1] -1.854228e-01  9.342521e-02  7.504181e-02 -2.850046e-01 -3.042243e-02
-#&gt;   [6] -1.111689e-01 -4.896972e-02 -5.731173e-02 -1.454910e-01 -2.058167e-01
-#&gt;  [11]  7.576031e-02  7.757394e-02 -1.634451e-01 -1.771303e-01  8.074426e-02
-#&gt;  [16] -1.802637e-01  7.001206e-02 -9.956246e-02  6.757865e-02  9.658866e-02
-#&gt;  [21] -1.993944e-01 -1.958322e-01  6.239692e-02  4.719004e-02 -3.018153e-03
-#&gt;  [26] -5.834115e-02 -2.163982e-01 -4.442676e-02  4.728522e-02  6.992862e-02
-#&gt;  [31] -2.344908e-01 -2.289426e-01 -1.902823e-01 -3.968335e-02  5.432327e-02
-#&gt;  [36]  5.772901e-02 -2.530333e-01 -2.102195e-01 -5.911556e-02 -7.050139e-02
-#&gt;  [41]  5.897739e-02 -8.164055e-02  7.345104e-02 -5.603797e-03  8.388562e-02
-#&gt;  [46]  1.007029e-01  1.657595e-01  1.025525e-01 -2.264892e-01  2.776753e-02
-#&gt;  [51]  1.109214e-01  9.055607e-02  1.159997e-01  6.819350e-02 -9.565039e-02
-#&gt;  [56] -2.569802e-01 -2.301589e-01  8.722688e-02  1.033009e-01 -1.272152e-01
-#&gt;  [61] -3.247484e-01  1.025761e-01  2.026798e-01 -2.097547e-01 -5.932075e-03
-#&gt;  [66]  1.086617e-01  7.678936e-02 -1.364490e-01  8.685806e-02  1.263311e-01
-#&gt;  [71] -1.939853e-01  1.060685e-01 -9.458753e-02 -1.283703e-01  5.087895e-02
-#&gt;  [76] -3.363470e-02 -7.489694e-02 -8.514979e-02 -2.196958e-02 -9.374220e-02
-#&gt;  [81] -7.874798e-02  3.519242e-02 -9.318866e-02  2.124137e-02 -7.495566e-02
-#&gt;  [86] -3.076249e-02  4.204271e-02 -8.816860e-02 -3.550170e-02 -1.761666e-01
-#&gt;  [91] -1.664983e-01  1.426819e-01 -9.204107e-03 -1.652592e-01  1.279074e-04
-#&gt;  [96]  1.392130e-01  6.178806e-02  7.784837e-02  1.085369e-01  1.232670e-01
-#&gt; [101]  1.540805e-01 -1.029171e-01 -2.705254e-01 -2.099307e-01  1.517480e-01
-#&gt; [106]  3.589123e-02 -2.193029e-01 -3.500866e-02  1.070415e-01  5.009636e-02
-#&gt; [111]  1.197670e-01 -1.434684e-01 -1.531090e-01 -1.005868e-01  2.481701e-02
-#&gt; [116] -1.403229e-01 -1.416353e-01 -5.361376e-02 -2.055745e-01  1.013941e-01
-#&gt; [121]  2.517375e-02 -7.062542e-02 -6.267893e-02 -3.474536e-02 -2.334707e-01
-#&gt; [126] -1.139919e-01 -2.079619e-01 -6.439079e-02  6.308760e-02 -2.509815e-01
-#&gt; [131] -2.619403e-01 -1.089778e-01  2.039508e-02 -2.007016e-02  1.099891e-01
-#&gt; [136] -1.694344e-02 -4.432829e-02 -1.730283e-01 -1.436766e-01  2.803944e-04
-#&gt; [141]  2.188243e-02 -9.407727e-02  9.694226e-02  8.019438e-02 -4.163222e-02
-#&gt; [146]  4.998091e-02 -4.520866e-02 -2.828571e-02 -2.086332e-01  3.319325e-02
-#&gt; [151]  6.055664e-02  2.303760e-02  4.264842e-02 -1.688454e-01 -7.798809e-02
-#&gt; [156]  4.390605e-02 -9.033569e-02 -1.971639e-01 -5.319621e-02 -2.049907e-01
-#&gt; [161] -1.895602e-01  6.257285e-02  7.587090e-02 -1.681834e-01 -1.993457e-01
-#&gt; [166]  9.007102e-02  1.517657e-01 -2.404709e-01 -7.856407e-03  9.264680e-02
-#&gt; [171]  1.235424e-01  6.981007e-02 -9.080306e-02 -1.720721e-01 -2.189748e-01
-#&gt; [176]  5.686198e-03  4.999425e-02 -7.868453e-02 -6.391308e-03  3.926101e-02
-#&gt; [181]  5.014342e-02 -7.247569e-02 -3.528706e-03  3.140196e-02  5.075193e-02
-#&gt; [186]  1.129004e-02 -8.049825e-03 -1.361336e-01 -8.163295e-02  2.132052e-02
-#&gt; [191]  1.124221e-01  1.105903e-01  1.120024e-01 -5.438817e-02 -1.041323e-01
-#&gt; [196] -3.626879e-02  8.932393e-02  8.594936e-02  1.653860e-02  3.707010e-02
-#&gt; [201]  7.680940e-02 -1.903692e-02 -2.935247e-02 -1.366099e-01 -3.909788e-02
-#&gt; [206] -1.083458e-01 -8.923700e-02  9.111946e-03 -1.138029e-02 -2.501893e-02
-#&gt; [211] -1.090904e-01 -2.548853e-03 -3.528560e-02 -1.992911e-03  4.294523e-02
-#&gt; [216]  6.699496e-02 -1.302070e-01 -1.149214e-01  1.224951e-02  4.228320e-02
-#&gt; [221] -1.198668e-01 -1.049437e-01 -4.035011e-02  3.637949e-02  4.975255e-02
-#&gt; [226] -9.643659e-02 -3.136917e-02 -1.284994e-02 -5.036465e-02 -4.841070e-02
-#&gt; [231] -1.046953e-02  4.834061e-02 -1.430944e-01 -4.823287e-02 -1.223209e-01
-#&gt; [236]  4.440618e-02 -8.566846e-02 -3.696332e-02  5.903537e-03 -9.658878e-02
-#&gt; [241] -1.366286e-01  7.095218e-02 -4.504997e-02 -1.007989e-01 -1.360247e-01
-#&gt; [246]  7.881749e-02  8.984088e-02 -1.678557e-01 -1.364766e-01 -1.418386e-01
-#&gt; [251] -4.202076e-02  5.689445e-02  1.050069e-01 -6.780956e-02  6.759349e-02
-#&gt; [256]  3.943720e-02  1.092224e-01  6.005784e-02 -4.401159e-02  5.865092e-02
-#&gt; [261] -1.657898e-02  1.801137e-02 -6.870441e-02 -5.460304e-02 -4.136443e-02
-#&gt; [266]  6.771389e-02 -8.570933e-02 -5.374685e-02 -3.080481e-02 -7.907299e-02
-#&gt; [271] -1.800155e-01  1.157426e-01 -7.200871e-02 -1.349239e-02  7.499896e-02
-#&gt; [276]  9.723462e-02 -9.552250e-02 -1.113188e-01 -9.743753e-02 -8.037780e-02
-#&gt; [281]  1.084600e-01 -5.226590e-02  4.804864e-02  9.816266e-02  1.146380e-01
-#&gt; [286] -4.242320e-03  2.159686e-02  7.843295e-02 -7.599480e-02 -6.301646e-02
-#&gt; [291] -1.163804e-03 -1.214887e-01 -4.114373e-03 -7.068837e-02 -3.213518e-02
-#&gt; [296]  2.807914e-02 -4.369928e-02 -9.748546e-02 -6.901032e-02 -4.908143e-02
-#&gt; [301] -1.988656e-02  1.067577e-02 -2.916971e-02  5.297582e-02  4.303524e-02
-#&gt; [306] -7.214424e-02 -1.265689e-01  3.855001e-03  5.090408e-03  6.634975e-03
-#&gt; [311] -6.221931e-03 -1.152899e-01  3.479250e-02  1.524049e-02 -1.218286e-01
-#&gt; [316]  1.055823e-02  9.617996e-02  1.340421e-01 -1.626056e-01  1.112828e-01
-#&gt; [321] -9.351371e-03  1.106964e-01  9.466398e-02  5.120061e-02  9.597921e-02
-#&gt; [326]  3.134528e-02 -1.484216e-01 -1.895983e-01 -1.178992e-01 -1.293618e-01
-#&gt; [331] -1.045103e-01 -2.221725e-02  3.054296e-02 -2.011835e-01 -1.745075e-01
-#&gt; [336]  8.234838e-02  7.363976e-02 -1.855518e-01  1.004859e-01 -2.076937e-01
-#&gt; [341]  2.821595e-02  5.014267e-03 -1.209886e-01 -2.524330e-01 -7.876931e-02
-#&gt; [346]  8.119309e-02  8.603256e-02  1.979530e-03 -2.786722e-01  7.836554e-02
-#&gt; [351]  1.480460e-01 -8.349438e-02 -1.859971e-01  4.430375e-02  2.195152e-02
-#&gt; [356]  2.431670e-02  1.570197e-02  8.520138e-02  9.364471e-02  1.951372e-01
-#&gt; [361]  1.117609e-01 -2.840767e-01 -2.630454e-02  9.632603e-02  1.394934e-01
-#&gt; [366] -2.364682e-01  6.475450e-02 -8.054497e-02 -7.084184e-02 -9.729199e-02
-#&gt; [371] -2.226617e-01 -2.092373e-01 -2.134388e-01 -6.140118e-02 -6.196652e-02
-#&gt; [376] -1.386563e-01 -2.390115e-01 -2.541512e-01 -2.602266e-01 -1.320546e-01
-#&gt; [381] -1.369300e-01 -1.574359e-01 -1.565334e-01 -1.539049e-01 -6.004562e-02
-#&gt; [386]  9.074272e-02 -2.510235e-01 -1.540496e-01  1.495949e-02  7.826002e-02
-#&gt; [391] -1.319627e-01 -6.153687e-02  8.591945e-02  1.872318e-01 -1.998729e-01
-#&gt; [396] -2.064827e-01 -2.074831e-02  4.331712e-02  7.807928e-03 -1.347309e-01
-#&gt; [401] -2.471225e-01 -2.318899e-01 -1.927832e-01  1.066319e-01  1.072525e-01
-#&gt; [406] -2.223786e-01  1.688235e-02 -1.761641e-01 -1.985846e-01  9.209123e-02
-#&gt; [411] -2.333355e-01 -2.371568e-01 -1.329211e-01 -4.286216e-04  6.736946e-02
-#&gt; [416]  1.471295e-02  4.730534e-02 -1.319181e-01 -1.814248e-02  6.018639e-02
-#&gt; [421] -1.558198e-01 -1.485227e-01 -2.020557e-01 -1.928398e-01  7.087994e-02
-#&gt; [426]  7.346729e-02 -1.838495e-01 -2.072411e-01 -1.204729e-01  7.001387e-02
-#&gt; [431]  4.530411e-02 -3.935520e-02 -1.898331e-01 -2.240195e-01 -2.008822e-01
-#&gt; [436] -1.793181e-01  6.994195e-02  1.210379e-05 -1.455488e-01 -1.622641e-01
-#&gt; [441]  1.806590e-02 -2.386672e-01 -2.084785e-01 -2.394116e-01  4.283142e-02
-#&gt; [446]  1.048125e-01 -2.047931e-01 -2.406813e-01 -2.571868e-01  5.885945e-02
-#&gt; [451] -1.768845e-02  5.387527e-02 -5.883399e-02 -1.062123e-02 -1.437575e-01
-#&gt; [456]  4.645073e-02 -3.811013e-02 -5.381572e-02  4.920088e-02 -1.356494e-01
-#&gt; [461] -1.090402e-01 -4.112255e-02 -1.098678e-01  9.046599e-02  6.862325e-03
-#&gt; [466] -6.826068e-02 -1.556949e-01 -1.296386e-01  6.463510e-02 -7.797771e-02
-#&gt; [471]  6.769777e-02  1.131707e-01 -9.261654e-02 -1.579061e-01  8.574777e-02
-#&gt; [476] -8.368957e-02  6.082206e-02  8.863594e-02 -3.537423e-02 -4.871357e-02
-#&gt; [481] -7.533225e-02 -9.264771e-02  1.082877e-01  7.540256e-02 -2.349563e-02
-#&gt; [486] -4.557292e-02 -1.072039e-01 -6.290348e-02 -6.134754e-02 -5.533998e-02
-#&gt; [491] -5.125275e-02  8.362724e-02  9.417974e-02  8.750992e-02  9.752773e-02
-#&gt; [496]  9.920098e-02  9.716969e-02  6.504655e-02 -1.753031e-01 -1.828986e-01
-#&gt; [501] -3.178350e-02 -4.306417e-02 -3.387917e-02 -2.708820e-02  4.057648e-04
-#&gt; [506]  9.910253e-04  5.033993e-02  4.899558e-02  5.372467e-02 -4.113260e-02
-#&gt; [511] -5.918155e-02  7.380999e-02  4.137940e-02 -9.103289e-02 -1.422756e-01
-#&gt; [516] -6.497737e-02 -1.476548e-01 -7.822342e-02 -1.257230e-01 -4.553485e-02
-#&gt; [521] -2.457023e-02  2.806437e-02 -6.673754e-02 -1.986112e-01 -2.145850e-01
-#&gt; [526] -1.836103e-01 -1.426445e-01 -1.569662e-01 -1.597164e-01 -1.693563e-01
-#&gt; [531] -1.322247e-01 -8.530174e-02 -1.253747e-01  1.151654e-01 -3.818467e-02
-#&gt; [536]  9.741127e-02  5.494089e-02  3.150703e-02  4.060691e-02  7.936496e-02
-#&gt; [541]  3.505082e-02  8.151741e-02  6.409956e-02  8.617169e-02  3.505121e-02
-#&gt; [546] -9.715946e-03  1.189544e-02 -7.865011e-02 -7.052793e-02  1.751883e-02
-#&gt; [551] -5.152456e-02 -6.869729e-02 -2.264102e-02 -4.681757e-02 -1.872177e-02
-#&gt; [556] -7.243755e-02  4.681580e-02  4.541093e-02 -3.567818e-02  1.322561e-02
-#&gt; [561]  4.650905e-02  1.232056e-02 -2.232289e-01 -3.514787e-02 -1.800365e-01
-#&gt; [566] -1.916506e-02 -6.849094e-02 -1.586334e-02  3.365585e-02 -2.772213e-02
-#&gt; [571] -8.314555e-02 -1.753082e-01 -1.174519e-01 -1.637984e-01 -5.175227e-02
-#&gt; [576] -4.325393e-02 -1.131356e-01 -1.083292e-01 -3.751525e-02 -3.225003e-02
-#&gt; [581]  8.899134e-02  1.563597e-01  1.844795e-01  1.788768e-01  1.612105e-01
-#&gt; [586]  7.726248e-02 -1.283711e-02 -3.450372e-03  5.342532e-02  5.605850e-03
-#&gt; [591]  1.789145e-02  1.253172e-02 -1.666762e-02 -2.427470e-01 -2.445065e-01
-#&gt; [596] -1.948990e-01 -2.293192e-01 -2.151170e-01 -2.544114e-01 -7.653041e-02
-#&gt; [601] -2.271737e-02  1.753458e-02  5.886519e-02  6.318442e-02  2.471178e-02
-#&gt; [606] -6.648979e-02 -7.210496e-02 -8.424744e-02 -5.214622e-02  1.233539e-01
-#&gt; [611]  1.222800e-01  1.042712e-01 -8.427781e-02 -5.485101e-02 -9.900914e-02
-#&gt; [616] -6.797434e-02 -6.916978e-02 -6.300917e-02 -2.190633e-02 -3.244365e-02
-#&gt; [621] -9.407061e-02  2.347377e-02 -3.090324e-02  1.015424e-01  5.340225e-02
-#&gt; [626]  1.563032e-02  7.353684e-02 -4.412009e-02  8.122780e-02  6.252797e-02
-#&gt; [631]  7.345549e-02  4.450461e-02  8.071944e-02  4.527620e-02  7.954951e-02
-#&gt; [636]  4.509143e-02  7.354718e-02  1.055812e-01  1.565787e-01  1.736987e-01
-#&gt; [641]  8.555234e-02 -2.666254e-02 -5.794943e-03 -2.303315e-02  6.477529e-02
-#&gt; [646] -9.999396e-04  3.912898e-02  2.804554e-02 -5.038455e-02 -2.100620e-02
-#&gt; [651]  2.686047e-03 -2.930811e-02  2.035236e-02  3.607715e-02 -1.437008e-01
-#&gt; [656] -7.090830e-02 -1.060366e-01 -8.762642e-02  8.092480e-02 -1.936294e-01
-#&gt; [661] -1.565049e-01 -1.607862e-01 -2.105480e-01 -2.179609e-01  7.713273e-02
-#&gt; [666]  1.303135e-01  5.150021e-02  2.959404e-02 -3.655746e-03 -2.319173e-01
-#&gt; [671] -2.549434e-01 -2.152571e-01 -2.225871e-01  3.551023e-02  1.467532e-01
-#&gt; [676] -1.722348e-01 -2.622799e-01 -2.720280e-01 -2.995145e-01 -2.836268e-01
-#&gt; [681] -2.463878e-01 -3.176632e-01 -1.349257e-01 -1.513156e-01 -1.897376e-01
-#&gt; [686] -5.663575e-02 -1.832383e-01 -1.542080e-01 -2.026396e-01 -1.041460e-01
-#&gt; [691] -1.266857e-01  1.132775e-01  1.058878e-01  9.044575e-02  7.225048e-02
-#&gt; [696]  5.996299e-02  4.962156e-02  3.301936e-02  3.155242e-02 -2.485027e-01
-#&gt; [701] -2.219452e-01 -2.225932e-01 -2.019075e-01 -1.855629e-01 -2.948971e-02
-#&gt; [706] -5.515022e-02 -1.972126e-01  3.255197e-02  3.268754e-02 -2.597254e-01
-#&gt; [711]  4.149646e-03  4.177729e-03 -1.085528e-01 -1.405646e-01  2.080488e-02
-#&gt; [716] -8.812594e-02 -7.156725e-02 -1.599974e-02 -4.441914e-02 -5.876582e-02
-#&gt; [721] -1.205775e-01 -2.579106e-02  4.444972e-02  7.808080e-02  2.142704e-02
-#&gt; [726] -6.703047e-02 -1.719272e-01 -1.442946e-01 -1.805357e-01 -2.476655e-01
-#&gt; [731] -2.296644e-01 -2.137344e-01 -1.844703e-01 -1.548310e-01 -1.540131e-01
-#&gt; [736]  2.977533e-02  6.230771e-02 -1.652721e-01 -1.900185e-01 -2.053562e-01
-#&gt; [741] -3.845429e-02 -1.288369e-01 -7.887438e-02 -1.588481e-02  2.880401e-02
-#&gt; [746]  2.107201e-02  5.975000e-02  7.111010e-02  7.618654e-02  6.547765e-02
-#&gt; [751]  7.082784e-02  8.594553e-02  8.652779e-02 -1.700385e-01 -2.133368e-01
-#&gt; [756] -1.082432e-01 -1.549613e-01 -1.969347e-01 -2.247917e-01 -2.532799e-01
-#&gt; [761] -2.576422e-01 -2.458157e-01 -1.236141e-01 -1.657128e-01 -2.404437e-01
-#&gt; [766] -1.321621e-01 -1.108454e-01 -1.327289e-01 -9.552562e-02 -7.757998e-02
-#&gt; [771]  7.090907e-02  8.368848e-02 -1.933921e-01 -2.203340e-01 -2.205696e-01
-#&gt; [776] -2.168078e-01 -2.457705e-01 -1.881934e-01 -2.175421e-01 -1.033921e-01
-#&gt; [781] -3.165263e-02 -6.804031e-02 -6.342140e-02 -1.122721e-01  7.198646e-02
-#&gt; [786] -1.123143e-02  5.805518e-02  4.963597e-02  9.752615e-02 -1.480232e-01
-#&gt; [791] -6.974505e-02 -1.106919e-01 -1.137357e-01 -1.463203e-01 -2.688396e-01
-#&gt; [796] -2.298128e-01 -2.465379e-01 -1.937647e-01 -2.198971e-01 -2.164700e-01
-#&gt; [801] -2.658339e-01 -2.655880e-01 -2.751404e-01 -2.621921e-01 -2.900717e-01
-#&gt; [806]  5.250184e-03  2.066642e-02  4.949939e-02  4.183587e-02 -4.373261e-02
-#&gt; [811]  3.184828e-02  2.290847e-02 -5.642365e-02 -1.882176e-01 -1.044429e-01
-#&gt; [816] -1.447610e-01  9.730702e-02  6.085512e-02  1.732468e-02  8.955113e-03
-#&gt; [821]  3.788071e-03 -9.059218e-03  7.938700e-02  8.608269e-02  2.979169e-02
-#&gt; [826] -6.637217e-02 -9.649285e-02 -6.434107e-03 -2.300979e-02 -1.408574e-02
-#&gt; [831]  4.922346e-02  1.736008e-02  1.191631e-01 -9.530328e-03 -6.446331e-02
-#&gt; [836] -8.470028e-02 -6.471826e-02 -5.138673e-02 -1.228578e-01 -4.688107e-02
-#&gt; [841] -1.233226e-01  6.570501e-02  7.147298e-02  7.534795e-02  1.173732e-01
-#&gt; [846]  8.752662e-02  1.181505e-01  5.447877e-02  6.394676e-02  7.819593e-02
-#&gt; [851]  9.677138e-02 -1.800441e-01 -7.833773e-02 -1.611298e-01  5.009293e-02
-#&gt; [856]  7.779626e-02  7.010447e-02  6.621993e-02  1.281959e-01 -1.590727e-01
-#&gt; [861]  5.447654e-02  1.420557e-01  1.460430e-02  1.264372e-01  1.020915e-01
-#&gt; [866]  1.584546e-01  5.894895e-02  4.742665e-02  5.743976e-02  4.851475e-02
-#&gt; [871]  5.418982e-02 -4.479868e-03 -3.476395e-02 -9.105237e-04 -1.635394e-02
-#&gt; [876]  4.867956e-02  4.899975e-02  2.116289e-02  1.316885e-01  1.459736e-01
-#&gt; [881]  1.892049e-01 -3.020124e-02 -3.891832e-04  9.737425e-02 -8.877210e-02
-#&gt; [886]  1.473363e-01 -1.466495e-01 -8.927616e-02 -1.442359e-01 -1.642713e-01
-#&gt; [891] -5.078670e-02 -8.159302e-02 -1.159637e-01 -7.659628e-02 -9.149602e-02
-#&gt; [896] -8.321769e-02 -8.065197e-02 -5.005399e-02 -3.045106e-02 -1.141713e-02
-#&gt; [901] -9.779209e-03  4.029486e-03  2.227703e-02  1.826997e-02 -7.690113e-02
-#&gt; [906] -2.325759e-02 -1.240066e-01  4.942236e-02 -6.324486e-02 -4.931556e-02
-#&gt; [911] -4.373563e-02 -7.501185e-02  1.901537e-02  1.060212e-01  6.054068e-02
-#&gt; [916]  1.031439e-01  7.155146e-02  9.819781e-02  8.825228e-02  1.273402e-02
-#&gt; [921]  3.961564e-02  2.212547e-02  7.402720e-02 -1.972586e-03  5.380795e-02
-#&gt; [926]  4.331842e-02  5.351125e-02  1.880026e-02  3.787538e-02  5.934283e-02
-#&gt; [931]  3.712373e-02 -6.131224e-03 -6.558040e-02  1.029718e-02  4.060147e-02
-#&gt; [936] -9.603844e-02 -1.104245e-01 -1.357353e-01 -3.862019e-02  9.171806e-02
-#&gt; [941]  1.230205e-01  8.277040e-02 -9.282686e-02 -8.391089e-02 -1.345408e-01
-#&gt; [946]  1.296906e-01 -9.255268e-02 -3.602523e-02 -8.183917e-02 -9.213787e-02
-#&gt; [951] -7.330574e-02 -4.791030e-02 -1.301969e-02 -3.360050e-02 -3.609728e-02
-#&gt; [956]  1.338290e-01 -1.545080e-01  4.418935e-02 -5.939629e-02 -2.070572e-01
-#&gt; [961] -1.962619e-01 -1.906418e-01 -1.523989e-01 -1.301718e-01 -1.679937e-01
-#&gt; [966] -1.085233e-01  1.232510e-01  6.209504e-02  3.665490e-02</div><div class='input'>
+<span class='fu'><a href='https://rdrr.io/pkg/generics/man/tidy.html'>tidy</a></span><span class='op'>(</span><span class='va'>m</span>, effects <span class='op'>=</span> <span class='st'>"ran_par"</span><span class='op'>)</span>
+</div><div class='output co'>#&gt;      term   estimate   std.error
+#&gt; 1 sigma_O  2.5786217  1.30244889
+#&gt; 2 sigma_E  0.8739983  0.52751464
+#&gt; 3 sigma_Z  0.3300048  0.18774233
+#&gt; 4   range 24.7819975 17.96337051
+#&gt; 5  ln_phi  2.7411705  0.04682977</div><div class='input'>
 <span class='co'># Time-varying effects of depth and depth squared:</span>
 <span class='va'>m</span> <span class='op'>&lt;-</span> <span class='fu'>sdmTMB</span><span class='op'>(</span><span class='va'>density</span> <span class='op'>~</span> <span class='fl'>0</span> <span class='op'>+</span> <span class='fu'><a href='https://rdrr.io/r/base/factor.html'>as.factor</a></span><span class='op'>(</span><span class='va'>year</span><span class='op'>)</span>,
   time_varying <span class='op'>=</span> <span class='op'>~</span> <span class='fl'>0</span> <span class='op'>+</span> <span class='va'>depth_scaled</span> <span class='op'>+</span> <span class='va'>depth_scaled2</span>,
-  data <span class='op'>=</span> <span class='va'>d</span>, time <span class='op'>=</span> <span class='st'>"year"</span>, spde <span class='op'>=</span> <span class='va'>pcod_spde</span>, family <span class='op'>=</span> <span class='fu'><a href='Beta.html'>tweedie</a></span><span class='op'>(</span>link <span class='op'>=</span> <span class='st'>"log"</span><span class='op'>)</span><span class='op'>)</span>
+  data <span class='op'>=</span> <span class='va'>d</span>, time <span class='op'>=</span> <span class='st'>"year"</span>, spde <span class='op'>=</span> <span class='va'>pcod_spde</span>, family <span class='op'>=</span> <span class='fu'><a href='Families.html'>tweedie</a></span><span class='op'>(</span>link <span class='op'>=</span> <span class='st'>"log"</span><span class='op'>)</span><span class='op'>)</span>
 <span class='fu'><a href='https://rdrr.io/r/base/print.html'>print</a></span><span class='op'>(</span><span class='va'>m</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; Spatiotemporal model fit by ML ['sdmTMB']
 #&gt; Formula: density ~ 0 + as.factor(year)
@@ -757,6 +516,7 @@ provide mechanisms to predict over missing time slices.</p>
 #&gt; Spatiotemporal SD (sigma_E): 3.65
 #&gt; ML criterion at convergence: 2943.572</div><div class='input'>
 <span class='co'># See the b_rw_t estimates; these are the time-varying (random walk) effects.</span>
+<span class='co'># These could be added to tidy.sdmTMB() eventually.</span>
 <span class='fu'><a href='https://rdrr.io/r/base/summary.html'>summary</a></span><span class='op'>(</span><span class='va'>m</span><span class='op'>$</span><span class='va'>sd_report</span><span class='op'>)</span><span class='op'>[</span><span class='fl'>1</span><span class='op'>:</span><span class='fl'>19</span>,<span class='op'>]</span>
 </div><div class='output co'>#&gt;            Estimate  Std. Error
 #&gt; b_j       4.0090857  0.31751952
@@ -782,7 +542,27 @@ provide mechanisms to predict over missing time slices.</p>
 <span class='va'>m_pos</span> <span class='op'>&lt;-</span> <span class='fu'>sdmTMB</span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/Log.html'>log</a></span><span class='op'>(</span><span class='va'>density</span><span class='op'>)</span> <span class='op'>~</span> <span class='fl'>0</span> <span class='op'>+</span> <span class='fu'><a href='https://rdrr.io/r/base/factor.html'>as.factor</a></span><span class='op'>(</span><span class='va'>year</span><span class='op'>)</span> <span class='op'>+</span>
     <span class='fu'>breakpt</span><span class='op'>(</span><span class='va'>depth_scaled</span><span class='op'>)</span> <span class='op'>+</span> <span class='va'>depth_scaled2</span>, data <span class='op'>=</span> <span class='va'>pcod_gaus</span>,
   time <span class='op'>=</span> <span class='st'>"year"</span>, spde <span class='op'>=</span> <span class='va'>pcod_spde_gaus</span><span class='op'>)</span>
-<span class='co'># }</span>
+<span class='fu'><a href='https://rdrr.io/r/base/print.html'>print</a></span><span class='op'>(</span><span class='va'>m_pos</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; Spatiotemporal model fit by ML ['sdmTMB']
+#&gt; Formula: log(density) ~ 0 + as.factor(year) + breakpt(depth_scaled) + 
+#&gt; Formula:     depth_scaled2
+#&gt; Time column: "year"
+#&gt; SPDE: pcod_spde_gaus
+#&gt; Data: pcod_gaus
+#&gt; Family: gaussian(link = 'identity')
+#&gt;                      coef.est coef.se
+#&gt; as.factor(year)2013      4.24    0.20
+#&gt; as.factor(year)2015      4.30    0.21
+#&gt; as.factor(year)2017      4.03    0.23
+#&gt; depth_scaled2            0.21    0.19
+#&gt; depth_scaled-slope       1.35    0.43
+#&gt; depth_scaled-breakpt    -0.72    0.14
+#&gt; 
+#&gt; Matern range parameter: 0.21
+#&gt; Dispersion parameter: 1.33
+#&gt; Spatial SD (sigma_O): 0.01
+#&gt; Spatiotemporal SD (sigma_E): 0.01
+#&gt; ML criterion at convergence: 592.503</div><div class='input'><span class='co'># }</span>
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">

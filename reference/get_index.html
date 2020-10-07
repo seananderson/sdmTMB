@@ -166,40 +166,41 @@
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='co'># \donttest{</span>
 <span class='co'># Use a small number of knots for this example to make it fast:</span>
-<span class='va'>pcod_spde</span> <span class='op'>&lt;-</span> <span class='fu'><a href='make_mesh.html'>make_mesh</a></span><span class='op'>(</span><span class='va'>pcod</span>, <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"X"</span>, <span class='st'>"Y"</span><span class='op'>)</span>, n_knots <span class='op'>=</span> <span class='fl'>50</span>, type <span class='op'>=</span> <span class='st'>"kmeans"</span><span class='op'>)</span>
+<span class='va'>pcod_spde</span> <span class='op'>&lt;-</span> <span class='fu'><a href='make_mesh.html'>make_mesh</a></span><span class='op'>(</span><span class='va'>pcod</span>, <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"X"</span>, <span class='st'>"Y"</span><span class='op'>)</span>, n_knots <span class='op'>=</span> <span class='fl'>60</span>, type <span class='op'>=</span> <span class='st'>"kmeans"</span><span class='op'>)</span>
 <span class='va'>m</span> <span class='op'>&lt;-</span> <span class='fu'><a href='sdmTMB.html'>sdmTMB</a></span><span class='op'>(</span>
  data <span class='op'>=</span> <span class='va'>pcod</span>,
  formula <span class='op'>=</span> <span class='va'>density</span> <span class='op'>~</span> <span class='fl'>0</span> <span class='op'>+</span> <span class='fu'><a href='https://rdrr.io/r/base/factor.html'>as.factor</a></span><span class='op'>(</span><span class='va'>year</span><span class='op'>)</span>,
- time <span class='op'>=</span> <span class='st'>"year"</span>, spde <span class='op'>=</span> <span class='va'>pcod_spde</span>, family <span class='op'>=</span> <span class='fu'><a href='Beta.html'>tweedie</a></span><span class='op'>(</span>link <span class='op'>=</span> <span class='st'>"log"</span><span class='op'>)</span>
+ time <span class='op'>=</span> <span class='st'>"year"</span>, spde <span class='op'>=</span> <span class='va'>pcod_spde</span>, family <span class='op'>=</span> <span class='fu'><a href='Families.html'>tweedie</a></span><span class='op'>(</span>link <span class='op'>=</span> <span class='st'>"log"</span><span class='op'>)</span>
 <span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='warning'>Warning: The model may not have converged. Maximum final gradient: 0.0136487865319497.</span></div><div class='input'><span class='va'>predictions</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/stats/predict.html'>predict</a></span><span class='op'>(</span><span class='va'>m</span>, newdata <span class='op'>=</span> <span class='va'>qcs_grid</span>, return_tmb_object <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>
+<span class='co'># Note `return_tmb_object = TRUE` and the prediction grid:</span>
+<span class='va'>predictions</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/stats/predict.html'>predict</a></span><span class='op'>(</span><span class='va'>m</span>, newdata <span class='op'>=</span> <span class='va'>qcs_grid</span>, return_tmb_object <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>
 <span class='va'>ind</span> <span class='op'>&lt;-</span> <span class='fu'>get_index</span><span class='op'>(</span><span class='va'>predictions</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='warning'>Warning: The model may not have converged. Maximum final gradient: 0.0136487865319319.</span></div><div class='input'>
+
 <span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='http://ggplot2.tidyverse.org'>ggplot2</a></span><span class='op'>)</span>
 <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/ggplot.html'>ggplot</a></span><span class='op'>(</span><span class='va'>ind</span>, <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/aes.html'>aes</a></span><span class='op'>(</span><span class='va'>year</span>, <span class='va'>est</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>+</span> <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/geom_path.html'>geom_line</a></span><span class='op'>(</span><span class='op'>)</span> <span class='op'>+</span>
   <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/geom_ribbon.html'>geom_ribbon</a></span><span class='op'>(</span><span class='fu'><a href='https://ggplot2.tidyverse.org/reference/aes.html'>aes</a></span><span class='op'>(</span>ymin <span class='op'>=</span> <span class='va'>lwr</span>, ymax <span class='op'>=</span> <span class='va'>upr</span><span class='op'>)</span>, alpha <span class='op'>=</span> <span class='fl'>0.4</span><span class='op'>)</span>
 </div><div class='img'><img src='get_index-1.png' alt='' width='700' height='433' /></div><div class='input'>
 <span class='va'>cog</span> <span class='op'>&lt;-</span> <span class='fu'>get_cog</span><span class='op'>(</span><span class='va'>predictions</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='warning'>Warning: The model may not have converged. Maximum final gradient: 0.0136487865319319.</span></div><div class='input'><span class='va'>cog</span>
+<span class='va'>cog</span>
 </div><div class='output co'>#&gt;    year       est       lwr       upr        se max_gradient bad_eig coord
-#&gt; 1  2003  461.5513  444.2659  478.8368  8.819269   0.01364879   FALSE     X
-#&gt; 2  2004  479.0068  468.1300  489.8835  5.549455   0.01364879   FALSE     X
-#&gt; 3  2005  471.3204  458.5116  484.1292  6.535216   0.01364879   FALSE     X
-#&gt; 4  2007  482.6373  465.0972  500.1774  8.949190   0.01364879   FALSE     X
-#&gt; 5  2009  480.0475  461.0065  499.0884  9.714946   0.01364879   FALSE     X
-#&gt; 6  2011  468.9341  455.4872  482.3810  6.860787   0.01364879   FALSE     X
-#&gt; 7  2013  471.9339  456.5472  487.3207  7.850526   0.01364879   FALSE     X
-#&gt; 8  2015  463.1947  449.4539  476.9354  7.010719   0.01364879   FALSE     X
-#&gt; 9  2017  466.6957  452.0955  481.2958  7.449203   0.01364879   FALSE     X
-#&gt; 10 2003 5759.1596 5740.4769 5777.8424  9.532186   0.01364879   FALSE     Y
-#&gt; 11 2004 5730.3451 5717.2426 5743.4476  6.685079   0.01364879   FALSE     Y
-#&gt; 12 2005 5762.6345 5749.3579 5775.9112  6.773921   0.01364879   FALSE     Y
-#&gt; 13 2007 5737.0708 5714.3469 5759.7948 11.594065   0.01364879   FALSE     Y
-#&gt; 14 2009 5731.2778 5709.9888 5752.5668 10.861939   0.01364879   FALSE     Y
-#&gt; 15 2011 5747.3914 5733.3611 5761.4217  7.158443   0.01364879   FALSE     Y
-#&gt; 16 2013 5748.4016 5730.1126 5766.6905  9.331266   0.01364879   FALSE     Y
-#&gt; 17 2015 5753.2808 5735.6838 5770.8779  8.978265   0.01364879   FALSE     Y
-#&gt; 18 2017 5756.3072 5738.1905 5774.4240  9.243414   0.01364879   FALSE     Y</div><div class='input'><span class='co'># }</span>
+#&gt; 1  2003  463.5260  446.4141  480.6380  8.730751  0.004340675   FALSE     X
+#&gt; 2  2004  476.7402  466.4506  487.0298  5.249898  0.004340675   FALSE     X
+#&gt; 3  2005  470.6887  457.7493  483.6281  6.601835  0.004340675   FALSE     X
+#&gt; 4  2007  480.8949  464.5560  497.2338  8.336337  0.004340675   FALSE     X
+#&gt; 5  2009  477.2028  457.9182  496.4874  9.839268  0.004340675   FALSE     X
+#&gt; 6  2011  470.5112  457.6004  483.4221  6.587303  0.004340675   FALSE     X
+#&gt; 7  2013  471.9877  455.6076  488.3677  8.357328  0.004340675   FALSE     X
+#&gt; 8  2015  463.0289  449.6441  476.4136  6.829060  0.004340675   FALSE     X
+#&gt; 9  2017  470.5220  455.4189  485.6251  7.705796  0.004340675   FALSE     X
+#&gt; 10 2003 5757.8611 5739.8545 5775.8677  9.187187  0.004340675   FALSE     Y
+#&gt; 11 2004 5732.5035 5720.8786 5744.1284  5.931175  0.004340675   FALSE     Y
+#&gt; 12 2005 5763.0315 5750.1526 5775.9105  6.571025  0.004340675   FALSE     Y
+#&gt; 13 2007 5738.2312 5716.8425 5759.6200 10.912838  0.004340675   FALSE     Y
+#&gt; 14 2009 5734.0287 5713.3605 5754.6970 10.545220  0.004340675   FALSE     Y
+#&gt; 15 2011 5747.1037 5733.6282 5760.5793  6.875406  0.004340675   FALSE     Y
+#&gt; 16 2013 5747.6447 5728.9691 5766.3204  9.528583  0.004340675   FALSE     Y
+#&gt; 17 2015 5753.9699 5736.8439 5771.0958  8.737907  0.004340675   FALSE     Y
+#&gt; 18 2017 5755.9729 5739.6443 5772.3016  8.331093  0.004340675   FALSE     Y</div><div class='input'><span class='co'># }</span>
 
 </div></pre>
   </div>

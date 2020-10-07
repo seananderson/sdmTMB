@@ -121,19 +121,19 @@
 <p>Let’s fit three models. First we will fit a model that includes a single intercept spatial random field and another random field for spatially varying slopes the represent trends over time in space. Our model just estimates and intercept and accounts for all other variation through the random effects.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit">
 <span class="va">m1</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/sdmTMB.html">sdmTMB</a></span><span class="op">(</span><span class="va">density</span> <span class="op">~</span> <span class="fl">1</span>, data <span class="op">=</span> <span class="va">pcod</span>,
-  spde <span class="op">=</span> <span class="va">pcod_spde</span>, family <span class="op">=</span> <span class="fu"><a href="../reference/Beta.html">tweedie</a></span><span class="op">(</span>link <span class="op">=</span> <span class="st">"log"</span><span class="op">)</span>,
+  spde <span class="op">=</span> <span class="va">pcod_spde</span>, family <span class="op">=</span> <span class="fu"><a href="../reference/Families.html">tweedie</a></span><span class="op">(</span>link <span class="op">=</span> <span class="st">"log"</span><span class="op">)</span>,
   spatial_trend <span class="op">=</span> <span class="cn">TRUE</span>, time <span class="op">=</span> <span class="st">"year"</span>,
   spatial_only <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></pre></div>
 <p>In the second model we will add independent spatiotemporal random fields for each year:</p>
 <div class="sourceCode" id="cb4"><pre class="downlit">
 <span class="va">m2</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/sdmTMB.html">sdmTMB</a></span><span class="op">(</span><span class="va">density</span> <span class="op">~</span> <span class="fl">1</span>, data <span class="op">=</span> <span class="va">pcod</span>,
-  spde <span class="op">=</span> <span class="va">pcod_spde</span>, family <span class="op">=</span> <span class="fu"><a href="../reference/Beta.html">tweedie</a></span><span class="op">(</span>link <span class="op">=</span> <span class="st">"log"</span><span class="op">)</span>,
+  spde <span class="op">=</span> <span class="va">pcod_spde</span>, family <span class="op">=</span> <span class="fu"><a href="../reference/Families.html">tweedie</a></span><span class="op">(</span>link <span class="op">=</span> <span class="st">"log"</span><span class="op">)</span>,
   spatial_trend <span class="op">=</span> <span class="cn">TRUE</span>, time <span class="op">=</span> <span class="st">"year"</span>,
   spatial_only <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></pre></div>
 <p>In the third model we make the spatiotemporal random fields follow an AR1 process:</p>
 <div class="sourceCode" id="cb5"><pre class="downlit">
 <span class="va">m3</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/sdmTMB.html">sdmTMB</a></span><span class="op">(</span><span class="va">density</span> <span class="op">~</span> <span class="fl">1</span>, data <span class="op">=</span> <span class="va">pcod</span>,
-  spde <span class="op">=</span> <span class="va">pcod_spde</span>, family <span class="op">=</span> <span class="fu"><a href="../reference/Beta.html">tweedie</a></span><span class="op">(</span>link <span class="op">=</span> <span class="st">"log"</span><span class="op">)</span>,
+  spde <span class="op">=</span> <span class="va">pcod_spde</span>, family <span class="op">=</span> <span class="fu"><a href="../reference/Families.html">tweedie</a></span><span class="op">(</span>link <span class="op">=</span> <span class="st">"log"</span><span class="op">)</span>,
   spatial_trend <span class="op">=</span> <span class="cn">TRUE</span>, time <span class="op">=</span> <span class="st">"year"</span>,
   spatial_only <span class="op">=</span> <span class="cn">FALSE</span>, ar1_fields <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></pre></div>
 <p>Let’s look at the residuals:</p>
