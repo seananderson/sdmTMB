@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Construct an SPDE mesh — make_spde • sdmTMB</title>
+<title>Construct an SPDE mesh (depreciated) — make_spde • sdmTMB</title>
 
 
 <!-- jquery -->
@@ -39,8 +39,8 @@
 
 
 
-<meta property="og:title" content="Construct an SPDE mesh — make_spde" />
-<meta property="og:description" content="Construct an SPDE mesh" />
+<meta property="og:title" content="Construct an SPDE mesh (depreciated) — make_spde" />
+<meta property="og:description" content="Depreciated; please use make_mesh() instead." />
 
 
 
@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">sdmTMB</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.6.9009</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.7.9000</span>
       </span>
     </div>
 
@@ -132,13 +132,13 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Construct an SPDE mesh</h1>
+    <h1>Construct an SPDE mesh (depreciated)</h1>
     <small class="dont-index">Source: <a href='https://github.com/seananderson/sdmTMB/blob/master/R/mesh.R'><code>R/mesh.R</code></a></small>
     <div class="hidden name"><code>make_spde.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Construct an SPDE mesh</p>
+    <p><strong>Depreciated; please use <code><a href='make_mesh.html'>make_mesh()</a></code> instead.</strong></p>
     </div>
 
     <pre class="usage"><span class='fu'>make_spde</span><span class='op'>(</span><span class='va'>x</span>, <span class='va'>y</span>, <span class='va'>n_knots</span>, seed <span class='op'>=</span> <span class='fl'>42</span>, mesh <span class='op'>=</span> <span class='cn'>NULL</span><span class='op'>)</span>
@@ -168,7 +168,8 @@
       <th>mesh</th>
       <td><p>An optional mesh created via INLA. If supplied, this mesh will be
 used instead of creating one with <code><a href='https://rdrr.io/r/stats/kmeans.html'>stats::kmeans()</a></code> and the <code>n_knots</code>
-argument.</p></td>
+argument.
+up</p></td>
     </tr>
     <tr>
       <th>object</th>
@@ -178,10 +179,11 @@ argument.</p></td>
 
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='va'>sp</span> <span class='op'>&lt;-</span> <span class='fu'>make_spde</span><span class='op'>(</span><span class='va'>pcod</span><span class='op'>$</span><span class='va'>X</span>, <span class='va'>pcod</span><span class='op'>$</span><span class='va'>Y</span>, n_knots <span class='op'>=</span> <span class='fl'>25</span><span class='op'>)</span>
-<span class='fu'>plot_spde</span><span class='op'>(</span><span class='va'>sp</span><span class='op'>)</span>
-</div><div class='img'><img src='make_spde-1.png' alt='' width='700' height='433' /></div><div class='input'>
+    <pre class="examples"><div class='input'><span class='co'># **Depreciated; please use `make_mesh()` instead.**</span>
 <span class='co'># \donttest{</span>
+<span class='va'>sp</span> <span class='op'>&lt;-</span> <span class='fu'>make_spde</span><span class='op'>(</span><span class='va'>pcod</span><span class='op'>$</span><span class='va'>X</span>, <span class='va'>pcod</span><span class='op'>$</span><span class='va'>Y</span>, n_knots <span class='op'>=</span> <span class='fl'>25</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; <span class='warning'>Warning: make_spde() is depreciated. Please use make_mesh() instead.</span></div><div class='input'><span class='fu'>plot_spde</span><span class='op'>(</span><span class='va'>sp</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; <span class='warning'>Warning: plot_spde() is depreciated. Please use make_mesh() and plot()</span></div><div class='img'><img src='make_spde-1.png' alt='' width='700' height='433' /></div><div class='input'>
 <span class='va'>loc_xy</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/cbind.html'>cbind</a></span><span class='op'>(</span><span class='va'>pcod</span><span class='op'>$</span><span class='va'>X</span>, <span class='va'>pcod</span><span class='op'>$</span><span class='va'>Y</span><span class='op'>)</span>
 <span class='va'>bnd</span> <span class='op'>&lt;-</span> <span class='fu'>INLA</span><span class='fu'>::</span><span class='fu'><a href='https://rdrr.io/pkg/INLA/man/inla.nonconvex.hull.html'>inla.nonconvex.hull</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/matrix.html'>as.matrix</a></span><span class='op'>(</span><span class='va'>loc_xy</span><span class='op'>)</span>, convex <span class='op'>=</span> <span class='op'>-</span><span class='fl'>0.05</span><span class='op'>)</span>
 <span class='va'>mesh</span> <span class='op'>&lt;-</span> <span class='fu'>INLA</span><span class='fu'>::</span><span class='fu'><a href='https://rdrr.io/pkg/INLA/man/inla.mesh.2d.html'>inla.mesh.2d</a></span><span class='op'>(</span>
@@ -192,8 +194,8 @@ argument.</p></td>
   min.angle <span class='op'>=</span> <span class='fl'>10</span>
 <span class='op'>)</span>
 <span class='va'>sp2</span> <span class='op'>&lt;-</span> <span class='fu'>make_spde</span><span class='op'>(</span><span class='va'>pcod</span><span class='op'>$</span><span class='va'>X</span>, <span class='va'>pcod</span><span class='op'>$</span><span class='va'>Y</span>, mesh <span class='op'>=</span> <span class='va'>mesh</span><span class='op'>)</span>
-<span class='fu'>plot_spde</span><span class='op'>(</span><span class='va'>sp2</span><span class='op'>)</span>
-</div><div class='img'><img src='make_spde-2.png' alt='' width='700' height='433' /></div><div class='input'><span class='co'># }</span>
+</div><div class='output co'>#&gt; <span class='warning'>Warning: make_spde() is depreciated. Please use make_mesh() instead.</span></div><div class='input'><span class='fu'>plot_spde</span><span class='op'>(</span><span class='va'>sp2</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; <span class='warning'>Warning: plot_spde() is depreciated. Please use make_mesh() and plot()</span></div><div class='img'><img src='make_spde-2.png' alt='' width='700' height='433' /></div><div class='input'><span class='co'># }</span>
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">

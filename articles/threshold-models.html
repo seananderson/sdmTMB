@@ -31,7 +31,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">sdmTMB</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.6.9009</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.7.9000</span>
       </span>
     </div>
 
@@ -93,7 +93,7 @@
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Threshold modeling with sdmTMB</h1>
             
-            <h4 class="date">2020-10-06</h4>
+            <h4 class="date">2020-10-07</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/seananderson/sdmTMB/blob/master/vignettes/threshold-models.Rmd"><code>vignettes/threshold-models.Rmd</code></a></small>
       <div class="hidden name"><code>threshold-models.Rmd</code></div>
@@ -126,7 +126,7 @@
 <span class="co">#&gt; $ depth_scaled2 &lt;dbl&gt; 0.11083919, 0.20492947, 0.28724555, 0.08279527, 0.76844…</span></pre></div>
 <p>As before, the SPDE mesh is created using 75 knots for a balance between speed and accuracy. You will likely want to use more for applied scenarios. You will want to make sure that increasing the number of knots does not change the conclusions.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit">
-<span class="va">pcod_spde</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/make_spde.html">make_spde</a></span><span class="op">(</span><span class="va">pcod</span><span class="op">$</span><span class="va">X</span>, <span class="va">pcod</span><span class="op">$</span><span class="va">Y</span>, n_knots <span class="op">=</span> <span class="fl">75</span><span class="op">)</span></pre></div>
+<span class="va">pcod_spde</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/make_mesh.html">make_mesh</a></span><span class="op">(</span><span class="va">pcod</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"X"</span>, <span class="st">"Y"</span><span class="op">)</span>, cutoff <span class="op">=</span> <span class="fl">12</span><span class="op">)</span></pre></div>
 <p>We will extend the simple GLMM used in the index standardization vignette to include a threshold effect. For real applications, the threshold effect might be a function of habitat covariates, environmental variables, etc. Because ‘depth’ is the only external variable in the <code>pcod</code> data frame, we’ll use that. For any threshold model, you can specify the model as a linear threshold (<code>breakpt()</code>) or logistic (<code>logistic()</code>) as part of the formula. Note: as before, if we want to use this model for index standardization then we need to include <code>0 + as.factor(year)</code> or <code>-1 + as.factor(year)</code> so that we have a factor predictor that represents the mean estimate for each time slice.</p>
 <p>This first example uses the ‘depth_scaled’ covariate (depth, standardized ~ N(0,1)) and the logistic function, similar to selectivity curves used in fisheries models. The form is</p>
 <p><span class="math display">\[s(x)=\tau + \psi *\quad { \left[ 1+{ \exp }^{ -ln\left( 19 \right) \quad *\quad \left( x-s50 \right) \quad /\quad \left( s95\quad -\quad s50 \right)  } \right]  }^{ -1 }\]</span> where <span class="math inline">\(\psi\)</span> is a scaling parameter (controlling the height of the y-axis for the response, and is unconstrained), <span class="math inline">\(\tau\)</span> is an intercept, <span class="math inline">\(s50\)</span> is a parameter controlling the point at which the function reaches 50% of the maximum (<span class="math inline">\(\psi\)</span>), and <span class="math inline">\(s95\)</span> is a parameter controlling the point at which the function reaches 95%. The parameter <span class="math inline">\(s50\)</span> is unconstrained, and <span class="math inline">\(s95\)</span> is constrained to be larger than <span class="math inline">\(s50\)</span>.</p>
@@ -142,27 +142,29 @@
 <span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span><span class="op">(</span><span class="va">m</span><span class="op">)</span>
 <span class="co">#&gt; Spatiotemporal model fit by ML ['sdmTMB']</span>
 <span class="co">#&gt; Formula: density ~ 0 + logistic(depth_scaled) + as.factor(year)</span>
+<span class="co">#&gt; Time column: "year"</span>
 <span class="co">#&gt; SPDE: pcod_spde</span>
+<span class="co">#&gt; Data: pcod</span>
 <span class="co">#&gt; Family: tweedie(link = 'log')</span>
 <span class="co">#&gt;                     coef.est coef.se</span>
-<span class="co">#&gt; as.factor(year)2003    -0.11    0.65</span>
-<span class="co">#&gt; as.factor(year)2004     0.39    0.64</span>
-<span class="co">#&gt; as.factor(year)2005     0.11    0.64</span>
-<span class="co">#&gt; as.factor(year)2007    -1.03    0.66</span>
-<span class="co">#&gt; as.factor(year)2009    -0.46    0.65</span>
-<span class="co">#&gt; as.factor(year)2011    -0.15    0.64</span>
-<span class="co">#&gt; as.factor(year)2013     0.21    0.63</span>
-<span class="co">#&gt; as.factor(year)2015     0.19    0.64</span>
-<span class="co">#&gt; as.factor(year)2017    -0.51    0.66</span>
-<span class="co">#&gt; depth_scaled-s50       -1.64    0.13</span>
-<span class="co">#&gt; depth_scaled-s95       -0.45    0.23</span>
-<span class="co">#&gt; depth_scaled-smax       2.99    0.57</span>
+<span class="co">#&gt; as.factor(year)2003    -0.52    0.63</span>
+<span class="co">#&gt; as.factor(year)2004     0.06    0.62</span>
+<span class="co">#&gt; as.factor(year)2005    -0.08    0.62</span>
+<span class="co">#&gt; as.factor(year)2007    -1.28    0.63</span>
+<span class="co">#&gt; as.factor(year)2009    -0.80    0.63</span>
+<span class="co">#&gt; as.factor(year)2011    -0.33    0.62</span>
+<span class="co">#&gt; as.factor(year)2013    -0.13    0.61</span>
+<span class="co">#&gt; as.factor(year)2015    -0.16    0.62</span>
+<span class="co">#&gt; as.factor(year)2017    -0.75    0.63</span>
+<span class="co">#&gt; depth_scaled-s50       -1.48    0.12</span>
+<span class="co">#&gt; depth_scaled-s95       -0.53    0.22</span>
+<span class="co">#&gt; depth_scaled-smax       3.22    0.53</span>
 <span class="co">#&gt; </span>
-<span class="co">#&gt; Matern range parameter: 12.96</span>
-<span class="co">#&gt; Dispersion parameter: 12.67</span>
-<span class="co">#&gt; Spatial SD (sigma_O): 3.20</span>
-<span class="co">#&gt; Spatiotemporal SD (sigma_E): 2.09</span>
-<span class="co">#&gt; ML criterion at convergence: 6451.985</span></pre></div>
+<span class="co">#&gt; Matern range parameter: 22.09</span>
+<span class="co">#&gt; Dispersion parameter: 12.33</span>
+<span class="co">#&gt; Spatial SD (sigma_O): 2.02</span>
+<span class="co">#&gt; Spatiotemporal SD (sigma_E): 1.40</span>
+<span class="co">#&gt; ML criterion at convergence: 6435.001</span></pre></div>
 <p>We can visualize the effect:</p>
 <div class="sourceCode" id="cb6"><pre class="downlit">
 <span class="va">nd</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span><span class="op">(</span>
@@ -171,6 +173,8 @@
   year <span class="op">=</span> <span class="fl">2015L</span> <span class="co"># a chosen year</span>
 <span class="op">)</span>
 <span class="va">p</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/predict.html">predict</a></span><span class="op">(</span><span class="va">m</span>, newdata <span class="op">=</span> <span class="va">nd</span>, se_fit <span class="op">=</span> <span class="cn">TRUE</span>, re_form <span class="op">=</span> <span class="cn">NA</span>, xy_cols <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"X"</span>, <span class="st">"Y"</span><span class="op">)</span><span class="op">)</span>
+<span class="co">#&gt; Warning: argument `xy_cols` is deprecated; this information is already in the</span>
+<span class="co">#&gt; output of the `make_mesh(). Did you use `make_spde()`?</span>
 <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span><span class="op">(</span><span class="va">p</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span><span class="va">depth_scaled</span>, <span class="fu"><a href="https://rdrr.io/r/base/Log.html">exp</a></span><span class="op">(</span><span class="va">est</span><span class="op">)</span>, 
   ymin <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Log.html">exp</a></span><span class="op">(</span><span class="va">est</span> <span class="op">-</span> <span class="fl">1.96</span> <span class="op">*</span> <span class="va">est_se</span><span class="op">)</span>, 
   ymax <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Log.html">exp</a></span><span class="op">(</span><span class="va">est</span> <span class="op">+</span> <span class="fl">1.96</span> <span class="op">*</span> <span class="va">est_se</span><span class="op">)</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span>
@@ -189,26 +193,28 @@
 <span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span><span class="op">(</span><span class="va">m</span><span class="op">)</span>
 <span class="co">#&gt; Spatiotemporal model fit by ML ['sdmTMB']</span>
 <span class="co">#&gt; Formula: density ~ 0 + breakpt(depth_scaled) + as.factor(year)</span>
+<span class="co">#&gt; Time column: "year"</span>
 <span class="co">#&gt; SPDE: pcod_spde</span>
+<span class="co">#&gt; Data: pcod</span>
 <span class="co">#&gt; Family: tweedie(link = 'log')</span>
 <span class="co">#&gt;                      coef.est coef.se</span>
-<span class="co">#&gt; as.factor(year)2003      3.79    0.31</span>
-<span class="co">#&gt; as.factor(year)2004      4.23    0.30</span>
-<span class="co">#&gt; as.factor(year)2005      3.91    0.30</span>
-<span class="co">#&gt; as.factor(year)2007      2.90    0.32</span>
-<span class="co">#&gt; as.factor(year)2009      3.46    0.31</span>
-<span class="co">#&gt; as.factor(year)2011      3.69    0.31</span>
-<span class="co">#&gt; as.factor(year)2013      4.16    0.30</span>
-<span class="co">#&gt; as.factor(year)2015      4.04    0.30</span>
-<span class="co">#&gt; as.factor(year)2017      3.38    0.32</span>
-<span class="co">#&gt; depth_scaled-slope       0.95    0.15</span>
-<span class="co">#&gt; depth_scaled-breakpt    -1.78    0.28</span>
+<span class="co">#&gt; as.factor(year)2003      3.63    0.33</span>
+<span class="co">#&gt; as.factor(year)2004      4.19    0.32</span>
+<span class="co">#&gt; as.factor(year)2005      4.00    0.32</span>
+<span class="co">#&gt; as.factor(year)2007      2.89    0.33</span>
+<span class="co">#&gt; as.factor(year)2009      3.38    0.33</span>
+<span class="co">#&gt; as.factor(year)2011      3.78    0.32</span>
+<span class="co">#&gt; as.factor(year)2013      4.09    0.32</span>
+<span class="co">#&gt; as.factor(year)2015      3.94    0.32</span>
+<span class="co">#&gt; as.factor(year)2017      3.39    0.33</span>
+<span class="co">#&gt; depth_scaled-slope       1.12    0.17</span>
+<span class="co">#&gt; depth_scaled-breakpt    -1.59    0.23</span>
 <span class="co">#&gt; </span>
-<span class="co">#&gt; Matern range parameter: 6.57</span>
-<span class="co">#&gt; Dispersion parameter: 12.50</span>
-<span class="co">#&gt; Spatial SD (sigma_O): 4.33</span>
-<span class="co">#&gt; Spatiotemporal SD (sigma_E): 3.75</span>
-<span class="co">#&gt; ML criterion at convergence: 6412.278</span></pre></div>
+<span class="co">#&gt; Matern range parameter: 15.94</span>
+<span class="co">#&gt; Dispersion parameter: 12.14</span>
+<span class="co">#&gt; Spatial SD (sigma_O): 1.82</span>
+<span class="co">#&gt; Spatiotemporal SD (sigma_E): 1.70</span>
+<span class="co">#&gt; ML criterion at convergence: 6397.346</span></pre></div>
 <p>We can visualize the linear breakpoint effect:</p>
 <div class="sourceCode" id="cb9"><pre class="downlit">
 <span class="va">p</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/predict.html">predict</a></span><span class="op">(</span><span class="va">m</span>, newdata <span class="op">=</span> <span class="va">nd</span>, se_fit <span class="op">=</span> <span class="cn">TRUE</span>, re_form <span class="op">=</span> <span class="cn">NA</span>, xy_cols <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"X"</span>, <span class="st">"Y"</span><span class="op">)</span><span class="op">)</span>

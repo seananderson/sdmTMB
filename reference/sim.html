@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">sdmTMB</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.6.9009</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.7.9000</span>
       </span>
     </div>
 
@@ -237,30 +237,30 @@ data in list element 1 and input values in element 2.</p></td>
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/Random.html'>set.seed</a></span><span class='op'>(</span><span class='fl'>2957278</span><span class='op'>)</span>
 <span class='va'>dat</span> <span class='op'>&lt;-</span> <span class='fu'>sim</span><span class='op'>(</span>time_steps <span class='op'>=</span> <span class='fl'>9</span><span class='op'>)</span>
-<span class='va'>spde</span> <span class='op'>&lt;-</span> <span class='fu'><a href='make_spde.html'>make_spde</a></span><span class='op'>(</span>x <span class='op'>=</span> <span class='va'>dat</span><span class='op'>$</span><span class='va'>x</span>, y <span class='op'>=</span> <span class='va'>dat</span><span class='op'>$</span><span class='va'>y</span>, n_knots <span class='op'>=</span> <span class='fl'>50</span><span class='op'>)</span>
-<span class='fu'><a href='make_spde.html'>plot_spde</a></span><span class='op'>(</span><span class='va'>spde</span><span class='op'>)</span>
+<span class='va'>spde</span> <span class='op'>&lt;-</span> <span class='fu'><a href='make_mesh.html'>make_mesh</a></span><span class='op'>(</span><span class='va'>dat</span>, <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"x"</span>, <span class='st'>"y"</span><span class='op'>)</span>, n_knots <span class='op'>=</span> <span class='fl'>40</span>, type <span class='op'>=</span> <span class='st'>"kmeans"</span><span class='op'>)</span>
+<span class='fu'><a href='https://r-spatial.github.io/sf/reference/plot.html'>plot</a></span><span class='op'>(</span><span class='va'>spde</span><span class='op'>)</span>
 </div><div class='img'><img src='sim-1.png' alt='' width='700' height='433' /></div><div class='input'><span class='va'>m</span> <span class='op'>&lt;-</span> <span class='fu'><a href='sdmTMB.html'>sdmTMB</a></span><span class='op'>(</span>
   data <span class='op'>=</span> <span class='va'>dat</span>, formula <span class='op'>=</span> <span class='va'>observed</span> <span class='op'>~</span> <span class='fl'>1</span>, time <span class='op'>=</span> <span class='st'>"time"</span>,
   family <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/stats/family.html'>gaussian</a></span><span class='op'>(</span>link <span class='op'>=</span> <span class='st'>"identity"</span><span class='op'>)</span>, spde <span class='op'>=</span> <span class='va'>spde</span>
 <span class='op'>)</span>
-<span class='va'>r</span> <span class='op'>&lt;-</span> <span class='va'>m</span><span class='op'>$</span><span class='va'>tmb_obj</span><span class='op'>$</span><span class='fu'>report</span><span class='op'>(</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; <span class='warning'>Warning: The model may not have converged: extreme or very small eigen values detected.</span></div><div class='input'><span class='va'>r</span> <span class='op'>&lt;-</span> <span class='va'>m</span><span class='op'>$</span><span class='va'>tmb_obj</span><span class='op'>$</span><span class='fu'>report</span><span class='op'>(</span><span class='op'>)</span>
 <span class='va'>r</span><span class='op'>$</span><span class='va'>sigma_O</span>
-</div><div class='output co'>#&gt; [1] 0.001541575</div><div class='input'><span class='va'>r</span><span class='op'>$</span><span class='va'>sigma_E</span>
-</div><div class='output co'>#&gt; [1] 2.259881e-06</div><div class='input'><span class='va'>s</span> <span class='op'>&lt;-</span> <span class='fu'>TMB</span><span class='fu'>::</span><span class='fu'><a href='https://rdrr.io/pkg/TMB/man/sdreport.html'>sdreport</a></span><span class='op'>(</span><span class='va'>m</span><span class='op'>$</span><span class='va'>tmb_obj</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; [1] 0.0001049265</div><div class='input'><span class='va'>r</span><span class='op'>$</span><span class='va'>sigma_E</span>
+</div><div class='output co'>#&gt; [1] 0.0002147704</div><div class='input'><span class='va'>s</span> <span class='op'>&lt;-</span> <span class='fu'>TMB</span><span class='fu'>::</span><span class='fu'><a href='https://rdrr.io/pkg/TMB/man/sdreport.html'>sdreport</a></span><span class='op'>(</span><span class='va'>m</span><span class='op'>$</span><span class='va'>tmb_obj</span><span class='op'>)</span>
 <span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/summary.html'>summary</a></span><span class='op'>(</span><span class='va'>s</span><span class='op'>)</span><span class='op'>)</span>
-</div><div class='output co'>#&gt;               Estimate   Std. Error
-#&gt; b_j      -0.0001706625 4.079317e-04
-#&gt; ln_tau_O  4.1398251760 4.215356e+00
-#&gt; ln_tau_E 10.6650727564 8.847380e+02
-#&gt; ln_kappa  1.0696134483 2.706202e+00
-#&gt; ln_phi   -4.5501750200 2.449811e-02
-#&gt; omega_s  -0.0006254648 1.614695e-03</div><div class='input'>
+</div><div class='output co'>#&gt;               Estimate Std. Error
+#&gt; b_j      -1.840600e-04        NaN
+#&gt; ln_tau_O  2.182111e+00        NaN
+#&gt; ln_tau_E  1.465802e+00        NaN
+#&gt; ln_kappa  5.714627e+00        NaN
+#&gt; ln_phi   -4.545857e+00        NaN
+#&gt; omega_s   2.619719e-10        NaN</div><div class='input'>
 <span class='fu'><a href='https://rdrr.io/r/base/Random.html'>set.seed</a></span><span class='op'>(</span><span class='fl'>1838</span><span class='op'>)</span>
 <span class='va'>dat</span> <span class='op'>&lt;-</span> <span class='fu'>sim</span><span class='op'>(</span>
   time_steps <span class='op'>=</span> <span class='fl'>9</span>, ar1_fields <span class='op'>=</span> <span class='cn'>TRUE</span>, ar1_phi <span class='op'>=</span> <span class='fl'>0.5</span>,
   sigma_O <span class='op'>=</span> <span class='fl'>0.01</span>, sigma_E <span class='op'>=</span> <span class='fl'>0.3</span>, phi <span class='op'>=</span> <span class='fl'>0.01</span>
 <span class='op'>)</span>
-<span class='va'>spde</span> <span class='op'>&lt;-</span> <span class='fu'><a href='make_spde.html'>make_spde</a></span><span class='op'>(</span>x <span class='op'>=</span> <span class='va'>dat</span><span class='op'>$</span><span class='va'>x</span>, y <span class='op'>=</span> <span class='va'>dat</span><span class='op'>$</span><span class='va'>y</span>, n_knots <span class='op'>=</span> <span class='fl'>80</span><span class='op'>)</span>
+<span class='va'>spde</span> <span class='op'>&lt;-</span> <span class='fu'><a href='make_mesh.html'>make_mesh</a></span><span class='op'>(</span><span class='va'>dat</span>, <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"x"</span>, <span class='st'>"y"</span><span class='op'>)</span>, n_knots <span class='op'>=</span> <span class='fl'>40</span>, type <span class='op'>=</span> <span class='st'>"kmeans"</span><span class='op'>)</span>
 <span class='va'>m</span> <span class='op'>&lt;-</span> <span class='fu'><a href='sdmTMB.html'>sdmTMB</a></span><span class='op'>(</span>
   ar1_fields <span class='op'>=</span> <span class='cn'>TRUE</span>, include_spatial <span class='op'>=</span> <span class='cn'>FALSE</span>,
   data <span class='op'>=</span> <span class='va'>dat</span>, formula <span class='op'>=</span> <span class='va'>observed</span> <span class='op'>~</span> <span class='fl'>1</span>, time <span class='op'>=</span> <span class='st'>"time"</span>,
@@ -268,8 +268,9 @@ data in list element 1 and input values in element 2.</p></td>
 <span class='op'>)</span>
 <span class='va'>r</span> <span class='op'>&lt;-</span> <span class='va'>m</span><span class='op'>$</span><span class='va'>tmb_obj</span><span class='op'>$</span><span class='fu'>report</span><span class='op'>(</span><span class='op'>)</span>
 <span class='va'>r</span><span class='op'>$</span><span class='va'>sigma_E</span>
-</div><div class='output co'>#&gt; [1] 0.07292456</div><div class='input'><span class='fl'>2</span> <span class='op'>*</span> <span class='fu'><a href='https://rdrr.io/r/stats/Logistic.html'>plogis</a></span><span class='op'>(</span><span class='va'>m</span><span class='op'>$</span><span class='va'>model</span><span class='op'>$</span><span class='va'>par</span><span class='op'>[[</span><span class='st'>"ar1_phi"</span><span class='op'>]</span><span class='op'>]</span><span class='op'>)</span> <span class='op'>-</span> <span class='fl'>1</span>
-</div><div class='output co'>#&gt; [1] 0.4018035</div><div class='input'>
+</div><div class='output co'>#&gt; [1] 0.06548702</div><div class='input'><span class='fl'>2</span> <span class='op'>*</span> <span class='fu'><a href='https://rdrr.io/r/stats/Logistic.html'>plogis</a></span><span class='op'>(</span><span class='va'>m</span><span class='op'>$</span><span class='va'>model</span><span class='op'>$</span><span class='va'>par</span><span class='op'>[[</span><span class='st'>"ar1_phi"</span><span class='op'>]</span><span class='op'>]</span><span class='op'>)</span> <span class='op'>-</span> <span class='fl'>1</span>
+</div><div class='output co'>#&gt; [1] 0.4665123</div><div class='input'>
+<span class='va'>spde</span> <span class='op'>&lt;-</span> <span class='fu'><a href='make_mesh.html'>make_mesh</a></span><span class='op'>(</span><span class='va'>dat</span>, <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"x"</span>, <span class='st'>"y"</span><span class='op'>)</span>,  n_knots <span class='op'>=</span> <span class='fl'>40</span>, type <span class='op'>=</span> <span class='st'>"kmeans"</span><span class='op'>)</span>
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">

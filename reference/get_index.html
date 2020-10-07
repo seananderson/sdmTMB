@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">sdmTMB</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.6.9009</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.7.9000</span>
       </span>
     </div>
 
@@ -164,8 +164,9 @@
 
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='co'># Use a small number of knots for this example to make it fast:</span>
-<span class='va'>pcod_spde</span> <span class='op'>&lt;-</span> <span class='fu'><a href='make_spde.html'>make_spde</a></span><span class='op'>(</span><span class='va'>pcod</span><span class='op'>$</span><span class='va'>X</span>, <span class='va'>pcod</span><span class='op'>$</span><span class='va'>Y</span>, n_knots <span class='op'>=</span> <span class='fl'>50</span><span class='op'>)</span>
+    <pre class="examples"><div class='input'><span class='co'># \donttest{</span>
+<span class='co'># Use a small number of knots for this example to make it fast:</span>
+<span class='va'>pcod_spde</span> <span class='op'>&lt;-</span> <span class='fu'><a href='make_mesh.html'>make_mesh</a></span><span class='op'>(</span><span class='va'>pcod</span>, <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"X"</span>, <span class='st'>"Y"</span><span class='op'>)</span>, n_knots <span class='op'>=</span> <span class='fl'>50</span>, type <span class='op'>=</span> <span class='st'>"kmeans"</span><span class='op'>)</span>
 <span class='va'>m</span> <span class='op'>&lt;-</span> <span class='fu'><a href='sdmTMB.html'>sdmTMB</a></span><span class='op'>(</span>
  data <span class='op'>=</span> <span class='va'>pcod</span>,
  formula <span class='op'>=</span> <span class='va'>density</span> <span class='op'>~</span> <span class='fl'>0</span> <span class='op'>+</span> <span class='fu'><a href='https://rdrr.io/r/base/factor.html'>as.factor</a></span><span class='op'>(</span><span class='va'>year</span><span class='op'>)</span>,
@@ -198,7 +199,8 @@
 #&gt; 15 2011 5747.3914 5733.3611 5761.4217  7.158443   0.01364879   FALSE     Y
 #&gt; 16 2013 5748.4016 5730.1126 5766.6905  9.331266   0.01364879   FALSE     Y
 #&gt; 17 2015 5753.2808 5735.6838 5770.8779  8.978265   0.01364879   FALSE     Y
-#&gt; 18 2017 5756.3072 5738.1905 5774.4240  9.243414   0.01364879   FALSE     Y</div><div class='input'>
+#&gt; 18 2017 5756.3072 5738.1905 5774.4240  9.243414   0.01364879   FALSE     Y</div><div class='input'><span class='co'># }</span>
+
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">

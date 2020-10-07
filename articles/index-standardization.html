@@ -31,7 +31,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">sdmTMB</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.6.9009</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.7.9000</span>
       </span>
     </div>
 
@@ -93,7 +93,7 @@
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Index standardization with sdmTMB</h1>
             
-            <h4 class="date">2020-10-06</h4>
+            <h4 class="date">2020-10-07</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/seananderson/sdmTMB/blob/master/vignettes/index-standardization.Rmd"><code>vignettes/index-standardization.Rmd</code></a></small>
       <div class="hidden name"><code>index-standardization.Rmd</code></div>
@@ -131,8 +131,8 @@
 <span class="co">#&gt; $ depth_scaled2 &lt;dbl&gt; 0.11083919, 0.20492947, 0.28724555, 0.08279527, 0.76844…</span></pre></div>
 <p>First we will create our SPDE mesh. We will use 100 knots for a balance between speed and accuracy in this vignette. You will likely want to use more for applied scenarios. You will want to make sure that increasing the number of knots does not change the conclusions.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit">
-<span class="va">pcod_spde</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/make_spde.html">make_spde</a></span><span class="op">(</span><span class="va">pcod</span><span class="op">$</span><span class="va">X</span>, <span class="va">pcod</span><span class="op">$</span><span class="va">Y</span>, n_knots <span class="op">=</span> <span class="fl">100</span><span class="op">)</span>
-<span class="fu"><a href="../reference/make_spde.html">plot_spde</a></span><span class="op">(</span><span class="va">pcod_spde</span><span class="op">)</span></pre></div>
+<span class="va">pcod_spde</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/make_mesh.html">make_mesh</a></span><span class="op">(</span><span class="va">pcod</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"X"</span>, <span class="st">"Y"</span><span class="op">)</span>, cutoff <span class="op">=</span> <span class="fl">10</span><span class="op">)</span>
+<span class="fu"><a href="https://r-spatial.github.io/sf/reference/plot.html">plot</a></span><span class="op">(</span><span class="va">pcod_spde</span><span class="op">)</span></pre></div>
 <p><img src="index-standardization_files/figure-html/spde-1.png" width="672"></p>
 <p>Let’s fit a GLMM. Note that if we want to use this model for index standardization then we need to include <code>0 + as.factor(year)</code> or <code>-1 + as.factor(year)</code> so that we have a factor predictor that represents the mean estimate for each time slice.</p>
 <div class="sourceCode" id="cb4"><pre class="downlit">
@@ -231,65 +231,65 @@
 <tbody>
 <tr class="odd">
 <td align="right">2003</td>
-<td align="right">749</td>
-<td align="right">551</td>
-<td align="right">1016</td>
-<td align="right">0.16</td>
+<td align="right">661</td>
+<td align="right">461</td>
+<td align="right">946</td>
+<td align="right">0.18</td>
 </tr>
 <tr class="even">
 <td align="right">2004</td>
-<td align="right">1487</td>
-<td align="right">1160</td>
-<td align="right">1906</td>
-<td align="right">0.13</td>
+<td align="right">1352</td>
+<td align="right">1003</td>
+<td align="right">1823</td>
+<td align="right">0.15</td>
 </tr>
 <tr class="odd">
 <td align="right">2005</td>
-<td align="right">1394</td>
-<td align="right">1001</td>
-<td align="right">1941</td>
-<td align="right">0.17</td>
+<td align="right">1332</td>
+<td align="right">928</td>
+<td align="right">1911</td>
+<td align="right">0.19</td>
 </tr>
 <tr class="even">
 <td align="right">2007</td>
-<td align="right">339</td>
-<td align="right">249</td>
-<td align="right">462</td>
+<td align="right">317</td>
+<td align="right">231</td>
+<td align="right">436</td>
 <td align="right">0.16</td>
 </tr>
 <tr class="odd">
 <td align="right">2009</td>
-<td align="right">554</td>
-<td align="right">408</td>
-<td align="right">752</td>
-<td align="right">0.16</td>
+<td align="right">499</td>
+<td align="right">358</td>
+<td align="right">696</td>
+<td align="right">0.17</td>
 </tr>
 <tr class="even">
 <td align="right">2011</td>
-<td align="right">993</td>
-<td align="right">774</td>
-<td align="right">1275</td>
-<td align="right">0.13</td>
-</tr>
-<tr class="odd">
-<td align="right">2013</td>
-<td align="right">1105</td>
-<td align="right">825</td>
-<td align="right">1481</td>
-<td align="right">0.15</td>
-</tr>
-<tr class="even">
-<td align="right">2015</td>
-<td align="right">1174</td>
-<td align="right">891</td>
-<td align="right">1546</td>
+<td align="right">992</td>
+<td align="right">752</td>
+<td align="right">1310</td>
 <td align="right">0.14</td>
 </tr>
 <tr class="odd">
+<td align="right">2013</td>
+<td align="right">1016</td>
+<td align="right">741</td>
+<td align="right">1392</td>
+<td align="right">0.16</td>
+</tr>
+<tr class="even">
+<td align="right">2015</td>
+<td align="right">1074</td>
+<td align="right">806</td>
+<td align="right">1431</td>
+<td align="right">0.15</td>
+</tr>
+<tr class="odd">
 <td align="right">2017</td>
-<td align="right">550</td>
-<td align="right">394</td>
-<td align="right">766</td>
+<td align="right">529</td>
+<td align="right">383</td>
+<td align="right">730</td>
 <td align="right">0.17</td>
 </tr>
 </tbody>

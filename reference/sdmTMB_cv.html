@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">sdmTMB</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.6.9009</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.7.9000</span>
       </span>
     </div>
 
@@ -156,7 +156,7 @@
     </tr>
     <tr>
       <th>spde</th>
-      <td><p>Output from <code><a href='make_spde.html'>make_spde()</a></code>.</p></td>
+      <td><p>Output from <code><a href='make_mesh.html'>make_mesh()</a></code>.</p></td>
     </tr>
     <tr>
       <th>time</th>
@@ -180,7 +180,7 @@ exception of <code>weights</code>, which are used to define the folds.</p></td>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='va'>d</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/subset.html'>subset</a></span><span class='op'>(</span><span class='va'>pcod</span>, <span class='va'>year</span> <span class='op'>&gt;=</span> <span class='fl'>2011</span><span class='op'>)</span> <span class='co'># subset for example speed</span>
-<span class='va'>spde</span> <span class='op'>&lt;-</span> <span class='fu'><a href='make_spde.html'>make_spde</a></span><span class='op'>(</span><span class='va'>d</span><span class='op'>$</span><span class='va'>X</span>, <span class='va'>d</span><span class='op'>$</span><span class='va'>Y</span>, n_knots <span class='op'>=</span> <span class='fl'>30</span><span class='op'>)</span>
+<span class='va'>spde</span> <span class='op'>&lt;-</span> <span class='fu'><a href='make_mesh.html'>make_mesh</a></span><span class='op'>(</span><span class='va'>d</span>, <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"X"</span>, <span class='st'>"Y"</span><span class='op'>)</span>, cutoff <span class='op'>=</span> <span class='fl'>30</span><span class='op'>)</span>
 
 <span class='co'># library(future) # for parallel processing</span>
 <span class='co'># plan(multisession) # for parallel processing</span>
@@ -189,9 +189,9 @@ exception of <code>weights</code>, which are used to define the folds.</p></td>
   data <span class='op'>=</span> <span class='va'>d</span>, spde <span class='op'>=</span> <span class='va'>spde</span>,
   family <span class='op'>=</span> <span class='fu'><a href='Beta.html'>tweedie</a></span><span class='op'>(</span>link <span class='op'>=</span> <span class='st'>"log"</span><span class='op'>)</span>, time <span class='op'>=</span> <span class='st'>"year"</span>, k_folds <span class='op'>=</span> <span class='fl'>3</span>
 <span class='op'>)</span>
-<span class='va'>m_cv</span><span class='op'>$</span><span class='va'>fold_loglik</span>
-</div><div class='output co'>#&gt; [1] -1967.241 -2333.340 -2572.307</div><div class='input'><span class='va'>m_cv</span><span class='op'>$</span><span class='va'>sum_loglik</span>
-</div><div class='output co'>#&gt; [1] -6872.889</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='va'>m_cv</span><span class='op'>$</span><span class='va'>data</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; <span class='warning'>Warning: NaNs produced</span></div><div class='output co'>#&gt; <span class='warning'>Warning: The model may not have converged: non-positive-definite Hessian matrix.</span></div><div class='input'><span class='va'>m_cv</span><span class='op'>$</span><span class='va'>fold_loglik</span>
+</div><div class='output co'>#&gt; [1] -6031.840 -2058.376 -2057.240</div><div class='input'><span class='va'>m_cv</span><span class='op'>$</span><span class='va'>sum_loglik</span>
+</div><div class='output co'>#&gt; [1] -10147.46</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='va'>m_cv</span><span class='op'>$</span><span class='va'>data</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; <span style='color: #555555;'># A tibble: 6 x 15</span><span>
 #&gt;    year     X     Y depth density present   lat   lon depth_mean depth_sd
 #&gt;   </span><span style='color: #555555;font-style: italic;'>&lt;int&gt;</span><span> </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span>   </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span>   </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span>      </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span>    </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span>
@@ -205,22 +205,24 @@ exception of <code>weights</code>, which are used to define the folds.</p></td>
 #&gt; </span><span style='color: #555555;'>#   cv_fold </span><span style='color: #555555;font-style: italic;'>&lt;int&gt;</span><span style='color: #555555;'>, cv_predicted </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #555555;'>, cv_loglik </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span></div><div class='input'><span class='va'>m_cv</span><span class='op'>$</span><span class='va'>models</span><span class='op'>[[</span><span class='fl'>1</span><span class='op'>]</span><span class='op'>]</span>
 </div><div class='output co'>#&gt; Spatiotemporal model fit by ML ['sdmTMB']
 #&gt; Formula: formula
+#&gt; Time column: time
 #&gt; SPDE: spde
+#&gt; Data: data
 #&gt; Family: tweedie(link = 'log')
 #&gt;                     coef.est coef.se
-#&gt; depth_scaled           -1.25    0.25
-#&gt; depth_scaled2          -0.93    0.16
-#&gt; as.factor(year)2011     4.21    0.35
-#&gt; as.factor(year)2013     3.86    0.38
-#&gt; as.factor(year)2015     3.57    0.36
-#&gt; as.factor(year)2017     2.89    0.42
+#&gt; depth_scaled           -1.13    0.30
+#&gt; depth_scaled2          -1.98    0.29
+#&gt; as.factor(year)2011     3.86    0.42
+#&gt; as.factor(year)2013     4.14    0.40
+#&gt; as.factor(year)2015     4.13    0.41
+#&gt; as.factor(year)2017     3.28    0.44
 #&gt; 
-#&gt; Matern range parameter: 16.65
-#&gt; Dispersion parameter: 14.97
-#&gt; Spatial SD (sigma_O): 0.70
-#&gt; Spatiotemporal SD (sigma_E): 2.19
-#&gt; ML criterion at convergence: 1043.687</div><div class='input'><span class='va'>m_cv</span><span class='op'>$</span><span class='va'>max_gradients</span>
-</div><div class='output co'>#&gt; [1] 8.520158e-05 4.929657e-06 9.255972e-05</div></span></pre>
+#&gt; Matern range parameter: 0.01
+#&gt; Dispersion parameter: 13.66
+#&gt; Spatial SD (sigma_O): 2570.14
+#&gt; Spatiotemporal SD (sigma_E): 3986.23
+#&gt; ML criterion at convergence: 960.551</div><div class='input'><span class='va'>m_cv</span><span class='op'>$</span><span class='va'>max_gradients</span>
+</div><div class='output co'>#&gt; [1] 7.091206e-06 1.349069e-03 4.070303e-05</div></span></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
