@@ -141,9 +141,9 @@
     <p>Extract a relative biomass/abundance index or a center of gravity</p>
     </div>
 
-    <pre class="usage"><span class='fu'>get_index</span><span class='op'>(</span><span class='va'>obj</span>, bias_correct <span class='op'>=</span> <span class='cn'>FALSE</span>, level <span class='op'>=</span> <span class='fl'>0.95</span><span class='op'>)</span>
+    <pre class="usage"><span class='fu'>get_index</span><span class='op'>(</span><span class='va'>obj</span>, bias_correct <span class='op'>=</span> <span class='cn'>FALSE</span>, level <span class='op'>=</span> <span class='fl'>0.95</span>, <span class='va'>...</span><span class='op'>)</span>
 
-<span class='fu'>get_cog</span><span class='op'>(</span><span class='va'>obj</span>, bias_correct <span class='op'>=</span> <span class='cn'>FALSE</span>, level <span class='op'>=</span> <span class='fl'>0.95</span><span class='op'>)</span></pre>
+<span class='fu'>get_cog</span><span class='op'>(</span><span class='va'>obj</span>, bias_correct <span class='op'>=</span> <span class='cn'>FALSE</span>, level <span class='op'>=</span> <span class='fl'>0.95</span>, <span class='va'>...</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -159,6 +159,10 @@
     <tr>
       <th>level</th>
       <td><p>The confidence level.</p></td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td><p>Passed to <code><a href='https://rdrr.io/pkg/TMB/man/sdreport.html'>TMB::sdreport()</a></code>.</p></td>
     </tr>
     </table>
 
