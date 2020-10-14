@@ -356,13 +356,13 @@ provide mechanisms to predict over missing time slices.</p>
 #&gt; Spatial SD (sigma_O): 2.65
 #&gt; Spatiotemporal SD (sigma_E): 1.84
 #&gt; ML criterion at convergence: 2955.205</div><div class='input'><span class='fu'><a href='https://rdrr.io/pkg/generics/man/tidy.html'>tidy</a></span><span class='op'>(</span><span class='va'>m</span>, conf.int <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>
-</div><div class='output co'>#&gt;                  term  estimate  std.error  conf.low conf.high
-#&gt; 1        depth_scaled -1.576331 0.19996477  1.513221 -4.665883
-#&gt; 2       depth_scaled2 -1.108998 0.09901707  1.064598 -3.282593
-#&gt; 3 as.factor(year)2011  3.671954 0.34094666 -3.524944 10.868853
-#&gt; 4 as.factor(year)2013  3.873061 0.33816658 -3.717999 11.464122
-#&gt; 5 as.factor(year)2015  3.781375 0.33823534 -3.629983 11.192732
-#&gt; 6 as.factor(year)2017  3.051192 0.35024414 -2.929034  9.031417</div><div class='input'><span class='fu'><a href='https://rdrr.io/pkg/generics/man/tidy.html'>tidy</a></span><span class='op'>(</span><span class='va'>m</span>, effects <span class='op'>=</span> <span class='st'>"ran_par"</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; <span class='warning'>Warning: the condition has length &gt; 1 and only the first element will be used</span></div><div class='output co'>#&gt;                  term  estimate  std.error  conf.low conf.high
+#&gt; 1        depth_scaled -1.576331 0.19996477 -4.665883  11.46412
+#&gt; 2       depth_scaled2 -1.108998 0.09901707 -4.665883  11.46412
+#&gt; 3 as.factor(year)2011  3.671954 0.34094666 -4.665883  11.46412
+#&gt; 4 as.factor(year)2013  3.873061 0.33816658 -4.665883  11.46412
+#&gt; 5 as.factor(year)2015  3.781375 0.33823534 -4.665883  11.46412
+#&gt; 6 as.factor(year)2017  3.051192 0.35024414 -4.665883  11.46412</div><div class='input'><span class='fu'><a href='https://rdrr.io/pkg/generics/man/tidy.html'>tidy</a></span><span class='op'>(</span><span class='va'>m</span>, effects <span class='op'>=</span> <span class='st'>"ran_par"</span><span class='op'>)</span>
 </div><div class='output co'>#&gt;      term  estimate   std.error
 #&gt; 1 sigma_O  2.649666  3.55022096
 #&gt; 2 sigma_E  1.835268  2.36310702
