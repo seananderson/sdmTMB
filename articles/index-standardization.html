@@ -93,7 +93,7 @@
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Index standardization with sdmTMB</h1>
             
-            <h4 class="date">2020-10-14</h4>
+            <h4 class="date">2020-10-15</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/seananderson/sdmTMB/blob/master/vignettes/index-standardization.Rmd"><code>vignettes/index-standardization.Rmd</code></a></small>
       <div class="hidden name"><code>index-standardization.Rmd</code></div>
@@ -108,8 +108,6 @@
 <span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://pbs-assess.github.io/sdmTMB/index.html">sdmTMB</a></span><span class="op">)</span></pre></div>
 <p>Let’s perform index standardization with the built-in data for Pacific cod.</p>
 <ul>
-<li>I’ve included columns for depth and depth squared.</li>
-<li>Depth was centred and scaled by its standard deviation and I’ve included those in the data frame so that they could be used to similarly scale the prediction grid.</li>
 <li>The density units should be kg/km<sup>2</sup>.</li>
 <li>Here, X and Y are coordinates in UTM zone 9.</li>
 </ul>
@@ -181,13 +179,13 @@
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_viridis.html">scale_fill_viridis_c</a></span><span class="op">(</span>trans <span class="op">=</span> <span class="st">"sqrt"</span><span class="op">)</span> <span class="op">+</span>
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">ggtitle</a></span><span class="op">(</span><span class="st">"Prediction (fixed effects + all random effects)"</span><span class="op">)</span></pre></div>
 <p><img src="index-standardization_files/figure-html/plot-all-effects-1.png" width="768"></p>
-<p>We can also look at just the fixed effects, here depth:</p>
+<p>We can also look at just the fixed effects, here year:</p>
 <div class="sourceCode" id="cb12"><pre class="downlit">
 <span class="fu">plot_map</span><span class="op">(</span><span class="va">predictions</span><span class="op">$</span><span class="va">data</span>, <span class="st">"exp(est_non_rf)"</span><span class="op">)</span> <span class="op">+</span>
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">ggtitle</a></span><span class="op">(</span><span class="st">"Prediction (fixed effects only)"</span><span class="op">)</span> <span class="op">+</span>
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_viridis.html">scale_fill_viridis_c</a></span><span class="op">(</span>trans <span class="op">=</span> <span class="st">"sqrt"</span><span class="op">)</span></pre></div>
 <p><img src="index-standardization_files/figure-html/plot-fix-defects-1.png" width="768"></p>
-<p>We can look at the spatial random effects but represent consistent deviations in space through time that are not accounted for by our fixed effects of depth. In other words, these deviations represent consistent biotic and abiotic factors that are affecting biomass density but are not accounted for in the model.</p>
+<p>We can look at the spatial random effects that represent consistent deviations in space through time that are not accounted for by our fixed effects. In other words, these deviations represent consistent biotic and abiotic factors that are affecting biomass density but are not accounted for in the model.</p>
 <div class="sourceCode" id="cb13"><pre class="downlit">
 <span class="fu">plot_map</span><span class="op">(</span><span class="va">predictions</span><span class="op">$</span><span class="va">data</span>, <span class="st">"omega_s"</span><span class="op">)</span> <span class="op">+</span>
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">ggtitle</a></span><span class="op">(</span><span class="st">"Spatial random effects only"</span><span class="op">)</span> <span class="op">+</span>
