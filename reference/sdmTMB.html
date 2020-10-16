@@ -166,7 +166,8 @@ species distribution models and relative abundance index standardization.</p>
   newton_steps <span class='op'>=</span> <span class='fl'>0</span>,
   mgcv <span class='op'>=</span> <span class='cn'>TRUE</span>,
   previous_fit <span class='op'>=</span> <span class='cn'>NULL</span>,
-  quadratic_roots <span class='op'>=</span> <span class='cn'>FALSE</span>
+  quadratic_roots <span class='op'>=</span> <span class='cn'>FALSE</span>,
+  epsilon_model <span class='op'>=</span> <span class='cn'>NULL</span>
 <span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
@@ -298,6 +299,12 @@ quadratic parameters. This means that if you want to generate a quadratic
 profile for depth, and depth and depth^2 are part of your formula, you need
 to make sure these are listed first and that an intercept isn't included.
 For example, <code>formula = cpue ~ 0 + depth + depth2 + as.factor(year)</code>.</p></td>
+    </tr>
+    <tr>
+      <th>epsilon_model</th>
+      <td><p>Whether to include an optional non-stationary model for
+epsilon (sd of spatiotemporal process). Defaults to NULL, but can also be
+'loglinear' or 'ar1'</p></td>
     </tr>
     </table>
 
@@ -583,7 +590,31 @@ provide mechanisms to predict over missing time slices.</p>
 #&gt; Spatiotemporal SD (sigma_E): 0.01
 #&gt; Spatiotemporal SD (sigma_E): 0.01
 #&gt; Spatiotemporal SD (sigma_E): 0.01
-#&gt; ML criterion at convergence: 592.503</div><div class='input'><span class='co'># }</span>
+#&gt; ML criterion at convergence: 592.503</div><div class='input'>
+<span class='co'>#' Non-stationary model on spatiotemporal variance:</span>
+<span class='va'>m_pos</span> <span class='op'>&lt;-</span> <span class='fu'>sdmTMB</span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/Log.html'>log</a></span><span class='op'>(</span><span class='va'>density</span><span class='op'>)</span> <span class='op'>~</span> <span class='va'>depth_scaled</span> <span class='op'>+</span> <span class='va'>depth_scaled2</span> <span class='op'>+</span> <span class='fu'><a href='https://rdrr.io/r/base/factor.html'>as.factor</a></span><span class='op'>(</span><span class='va'>year</span><span class='op'>)</span>,
+   data <span class='op'>=</span> <span class='va'>pcod_gaus</span>, time <span class='op'>=</span> <span class='st'>"year"</span>, spde <span class='op'>=</span> <span class='va'>pcod_spde_gaus</span>, epsilon_model<span class='op'>=</span><span class='st'>"loglinear"</span><span class='op'>)</span>
+<span class='fu'><a href='https://rdrr.io/r/base/print.html'>print</a></span><span class='op'>(</span><span class='va'>m_pos</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; Spatiotemporal model fit by ML ['sdmTMB']
+#&gt; Formula: log(density) ~ depth_scaled + depth_scaled2 + as.factor(year)
+#&gt; Time column: "year"
+#&gt; SPDE: pcod_spde_gaus
+#&gt; Data: pcod_gaus
+#&gt; Family: gaussian(link = 'identity')
+#&gt;                     coef.est coef.se
+#&gt; (Intercept)             3.63    0.12
+#&gt; depth_scaled           -0.21    0.14
+#&gt; depth_scaled2          -0.39    0.10
+#&gt; as.factor(year)2015     0.06    0.17
+#&gt; as.factor(year)2017    -0.27    0.18
+#&gt; 
+#&gt; Matern range parameter: 0.23
+#&gt; Dispersion parameter: 1.35
+#&gt; Spatial SD (sigma_O): 0.01
+#&gt; Spatiotemporal SD (sigma_E): 0.01
+#&gt; Spatiotemporal SD (sigma_E): 0.01
+#&gt; Spatiotemporal SD (sigma_E): 0.01
+#&gt; ML criterion at convergence: 599.014</div><div class='input'><span class='co'># }</span>
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
