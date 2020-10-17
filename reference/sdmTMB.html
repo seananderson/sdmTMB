@@ -166,8 +166,7 @@ species distribution models and relative abundance index standardization.</p>
   newton_steps <span class='op'>=</span> <span class='fl'>0</span>,
   mgcv <span class='op'>=</span> <span class='cn'>TRUE</span>,
   previous_fit <span class='op'>=</span> <span class='cn'>NULL</span>,
-  quadratic_roots <span class='op'>=</span> <span class='cn'>FALSE</span>,
-  epsilon_model <span class='op'>=</span> <span class='cn'>NULL</span>
+  quadratic_roots <span class='op'>=</span> <span class='cn'>FALSE</span>
 <span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
@@ -300,12 +299,6 @@ profile for depth, and depth and depth^2 are part of your formula, you need
 to make sure these are listed first and that an intercept isn't included.
 For example, <code>formula = cpue ~ 0 + depth + depth2 + as.factor(year)</code>.</p></td>
     </tr>
-    <tr>
-      <th>epsilon_model</th>
-      <td><p>Whether to include an optional non-stationary model for
-epsilon (sd of spatiotemporal process). Defaults to NULL, but can also be
-'loglinear' or 'ar1'</p></td>
-    </tr>
     </table>
 
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
@@ -362,31 +355,25 @@ provide mechanisms to predict over missing time slices.</p>
 #&gt; Dispersion parameter: 14.16
 #&gt; Spatial SD (sigma_O): 2.65
 #&gt; Spatiotemporal SD (sigma_E): 1.84
-#&gt; Spatiotemporal SD (sigma_E): 1.84
-#&gt; Spatiotemporal SD (sigma_E): 1.84
-#&gt; Spatiotemporal SD (sigma_E): 1.84
 #&gt; ML criterion at convergence: 2955.205</div><div class='input'><span class='fu'><a href='https://rdrr.io/pkg/generics/man/tidy.html'>tidy</a></span><span class='op'>(</span><span class='va'>m</span>, conf.int <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>
 </div><div class='output co'>#&gt;                  term  estimate  std.error  conf.low  conf.high
-#&gt; 1        depth_scaled -1.576328 0.19996440 -1.968251 -1.1844048
-#&gt; 2       depth_scaled2 -1.108996 0.09901704 -1.303066 -0.9149266
-#&gt; 3 as.factor(year)2011  3.671942 0.34094548  3.003701  4.3401830
-#&gt; 4 as.factor(year)2013  3.873055 0.33816523  3.210263  4.5358468
-#&gt; 5 as.factor(year)2015  3.781372 0.33823404  3.118445  4.4442981
-#&gt; 6 as.factor(year)2017  3.051183 0.35024288  2.364720  3.7376465</div><div class='input'><span class='fu'><a href='https://rdrr.io/pkg/generics/man/tidy.html'>tidy</a></span><span class='op'>(</span><span class='va'>m</span>, effects <span class='op'>=</span> <span class='st'>"ran_par"</span><span class='op'>)</span>
-</div><div class='output co'>#&gt;      term  estimate  std.error
-#&gt; 1 sigma_O  2.649840  3.5514197
-#&gt; 2 sigma_E  1.835414  2.3639792
-#&gt; 3 sigma_E  1.835414  2.3639792
-#&gt; 4 sigma_E  1.835414  2.3639792
-#&gt; 5 sigma_E  1.835414  2.3639792
-#&gt; 6 sigma_Z  1.424808  2.0979956
-#&gt; 7   range 14.285859 21.0355807
-#&gt; 8  ln_phi  2.650136  0.0488771</div><div class='input'>
+#&gt; 1        depth_scaled -1.576331 0.19996477 -1.968255 -1.1844073
+#&gt; 2       depth_scaled2 -1.108998 0.09901707 -1.303068 -0.9149278
+#&gt; 3 as.factor(year)2011  3.671954 0.34094666  3.003711  4.3401975
+#&gt; 4 as.factor(year)2013  3.873061 0.33816658  3.210267  4.5358558
+#&gt; 5 as.factor(year)2015  3.781375 0.33823534  3.118445  4.4443036
+#&gt; 6 as.factor(year)2017  3.051192 0.35024414  2.364726  3.7376576</div><div class='input'><span class='fu'><a href='https://rdrr.io/pkg/generics/man/tidy.html'>tidy</a></span><span class='op'>(</span><span class='va'>m</span>, effects <span class='op'>=</span> <span class='st'>"ran_par"</span><span class='op'>)</span>
+</div><div class='output co'>#&gt;      term  estimate   std.error
+#&gt; 1 sigma_O  2.649666  3.55022096
+#&gt; 2 sigma_E  1.835268  2.36310702
+#&gt; 3 sigma_Z  1.424922  2.09758701
+#&gt; 4   range 14.287000 21.03148364
+#&gt; 5  ln_phi  2.650139  0.04887713</div><div class='input'>
 <span class='co'># Run extra optimization steps to help convergence:</span>
 <span class='va'>m1</span> <span class='op'>&lt;-</span> <span class='fu'><a href='run_extra_optimization.html'>run_extra_optimization</a></span><span class='op'>(</span><span class='va'>m</span>, nlminb_loops <span class='op'>=</span> <span class='fl'>0</span>, newton_steps <span class='op'>=</span> <span class='fl'>1</span><span class='op'>)</span>
 <span class='fu'><a href='https://rdrr.io/r/base/Extremes.html'>max</a></span><span class='op'>(</span><span class='va'>m</span><span class='op'>$</span><span class='va'>gradients</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; [1] 0.0001617264</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/Extremes.html'>max</a></span><span class='op'>(</span><span class='va'>m1</span><span class='op'>$</span><span class='va'>gradients</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; [1] 4.795527e-08</div><div class='input'>
+</div><div class='output co'>#&gt; [1] 0.0005911291</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/Extremes.html'>max</a></span><span class='op'>(</span><span class='va'>m1</span><span class='op'>$</span><span class='va'>gradients</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; [1] 9.228843e-10</div><div class='input'>
 <span class='co'># Binomial:</span>
 <span class='va'>pcod_binom</span> <span class='op'>&lt;-</span> <span class='va'>d</span>
 <span class='va'>pcod_binom</span><span class='op'>$</span><span class='va'>present</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/ifelse.html'>ifelse</a></span><span class='op'>(</span><span class='va'>pcod_binom</span><span class='op'>$</span><span class='va'>density</span> <span class='op'>&gt;</span> <span class='fl'>0</span>, <span class='fl'>1L</span>, <span class='fl'>0L</span><span class='op'>)</span>
@@ -411,9 +398,6 @@ provide mechanisms to predict over missing time slices.</p>
 #&gt; Matern range parameter: 27.49
 #&gt; Spatial SD (sigma_O): 2.51
 #&gt; Spatiotemporal SD (sigma_E): 0.22
-#&gt; Spatiotemporal SD (sigma_E): 0.22
-#&gt; Spatiotemporal SD (sigma_E): 0.22
-#&gt; Spatiotemporal SD (sigma_E): 0.22
 #&gt; ML criterion at convergence: 470.433</div><div class='input'>
 <span class='co'># Gaussian:</span>
 <span class='va'>pcod_gaus</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/subset.html'>subset</a></span><span class='op'>(</span><span class='va'>d</span>, <span class='va'>density</span> <span class='op'>&gt;</span> <span class='fl'>0</span> <span class='op'>&amp;</span> <span class='va'>year</span> <span class='op'>&gt;=</span> <span class='fl'>2013</span><span class='op'>)</span>
@@ -437,8 +421,6 @@ provide mechanisms to predict over missing time slices.</p>
 #&gt; Matern range parameter: 0.22
 #&gt; Dispersion parameter: 1.35
 #&gt; Spatial SD (sigma_O): 0.01
-#&gt; Spatiotemporal SD (sigma_E): 0.01
-#&gt; Spatiotemporal SD (sigma_E): 0.01
 #&gt; Spatiotemporal SD (sigma_E): 0.01
 #&gt; ML criterion at convergence: 599.014</div><div class='input'>
 <span class='co'># With splines via mgcv.</span>
@@ -466,8 +448,6 @@ provide mechanisms to predict over missing time slices.</p>
 #&gt; Dispersion parameter: 1.32
 #&gt; Spatial SD (sigma_O): 0.01
 #&gt; Spatiotemporal SD (sigma_E): 0.01
-#&gt; Spatiotemporal SD (sigma_E): 0.01
-#&gt; Spatiotemporal SD (sigma_E): 0.01
 #&gt; ML criterion at convergence: 589.528</div><div class='input'>
 <span class='co'># \donttest{</span>
 <span class='co'># Fit a spatial only model:</span>
@@ -488,7 +468,7 @@ provide mechanisms to predict over missing time slices.</p>
 #&gt; 
 #&gt; Matern range parameter: 0.03
 #&gt; Dispersion parameter: 14.78
-#&gt; Spatial SD (sigma_O): 1676.69
+#&gt; Spatial SD (sigma_O): 1676.93
 #&gt; Spatiotemporal SD (sigma_E): not estimated
 #&gt; ML criterion at convergence: 2974.181</div><div class='input'>
 <span class='co'># Spatial-trend example:</span>
@@ -497,14 +477,11 @@ provide mechanisms to predict over missing time slices.</p>
   spatial_trend <span class='op'>=</span> <span class='cn'>TRUE</span>, time <span class='op'>=</span> <span class='st'>"year"</span><span class='op'>)</span>
 <span class='fu'><a href='https://rdrr.io/pkg/generics/man/tidy.html'>tidy</a></span><span class='op'>(</span><span class='va'>m</span>, effects <span class='op'>=</span> <span class='st'>"ran_par"</span><span class='op'>)</span>
 </div><div class='output co'>#&gt;      term   estimate   std.error
-#&gt; 1 sigma_O  2.5786214  1.30244825
-#&gt; 2 sigma_E  0.8739982  0.52751440
-#&gt; 3 sigma_E  0.8739982  0.52751440
-#&gt; 4 sigma_E  0.8739982  0.52751440
-#&gt; 5 sigma_E  0.8739982  0.52751440
-#&gt; 6 sigma_Z  0.3300048  0.18774226
-#&gt; 7   range 24.7820017 17.96336785
-#&gt; 8  ln_phi  2.7411705  0.04682977</div><div class='input'>
+#&gt; 1 sigma_O  2.5786217  1.30244889
+#&gt; 2 sigma_E  0.8739983  0.52751464
+#&gt; 3 sigma_Z  0.3300048  0.18774233
+#&gt; 4   range 24.7819975 17.96337051
+#&gt; 5  ln_phi  2.7411705  0.04682977</div><div class='input'>
 <span class='co'># Time-varying effects of depth and depth squared:</span>
 <span class='va'>m</span> <span class='op'>&lt;-</span> <span class='fu'>sdmTMB</span><span class='op'>(</span><span class='va'>density</span> <span class='op'>~</span> <span class='fl'>0</span> <span class='op'>+</span> <span class='fu'><a href='https://rdrr.io/r/base/factor.html'>as.factor</a></span><span class='op'>(</span><span class='va'>year</span><span class='op'>)</span>,
   time_varying <span class='op'>=</span> <span class='op'>~</span> <span class='fl'>0</span> <span class='op'>+</span> <span class='va'>depth_scaled</span> <span class='op'>+</span> <span class='va'>depth_scaled2</span>,
@@ -537,33 +514,30 @@ provide mechanisms to predict over missing time slices.</p>
 #&gt; Dispersion parameter: 13.78
 #&gt; Spatial SD (sigma_O): 5.23
 #&gt; Spatiotemporal SD (sigma_E): 3.65
-#&gt; Spatiotemporal SD (sigma_E): 3.65
-#&gt; Spatiotemporal SD (sigma_E): 3.65
-#&gt; Spatiotemporal SD (sigma_E): 3.65
 #&gt; ML criterion at convergence: 2943.572</div><div class='input'>
 <span class='co'># See the b_rw_t estimates; these are the time-varying (random walk) effects.</span>
 <span class='co'># These could be added to tidy.sdmTMB() eventually.</span>
 <span class='fu'><a href='https://rdrr.io/r/base/summary.html'>summary</a></span><span class='op'>(</span><span class='va'>m</span><span class='op'>$</span><span class='va'>sd_report</span><span class='op'>)</span><span class='op'>[</span><span class='fl'>1</span><span class='op'>:</span><span class='fl'>19</span>,<span class='op'>]</span>
 </div><div class='output co'>#&gt;            Estimate  Std. Error
-#&gt; b_j       4.0090862  0.31751954
-#&gt; b_j       3.6751805  0.30409940
-#&gt; b_j       4.0278773  0.31422332
-#&gt; b_j       3.4204683  0.33726399
-#&gt; ln_tau_O -2.1297755 13.60941287
-#&gt; ln_tau_E -1.7704425 13.59380357
-#&gt; ln_kappa -0.7894297  6.89125656
-#&gt; thetaf    0.3172204  0.06427312
-#&gt; ln_phi    2.6232965  0.04895034
-#&gt; ln_tau_V -1.5247839  0.84952395
-#&gt; ln_tau_V -0.2008951  0.45430293
-#&gt; b_rw_t   -0.7777382  0.14304714
-#&gt; b_rw_t   -0.7505321  0.12626464
-#&gt; b_rw_t   -0.7338111  0.13539466
-#&gt; b_rw_t   -1.0153734  0.23736187
-#&gt; b_rw_t   -1.7649950  0.25180626
+#&gt; b_j       4.0090857  0.31751952
+#&gt; b_j       3.6751802  0.30409937
+#&gt; b_j       4.0278771  0.31422329
+#&gt; b_j       3.4204681  0.33726397
+#&gt; ln_tau_O -2.1297989 13.60990355
+#&gt; ln_tau_E -1.7704662 13.59429418
+#&gt; ln_kappa -0.7894178  6.89150310
+#&gt; thetaf    0.3172203  0.06427311
+#&gt; ln_phi    2.6232964  0.04895034
+#&gt; ln_tau_V -1.5247844  0.84952434
+#&gt; ln_tau_V -0.2008952  0.45430292
+#&gt; b_rw_t   -0.7777382  0.14304712
+#&gt; b_rw_t   -0.7505321  0.12626463
+#&gt; b_rw_t   -0.7338112  0.13539466
+#&gt; b_rw_t   -1.0153733  0.23736192
+#&gt; b_rw_t   -1.7649948  0.25180625
 #&gt; b_rw_t   -0.7903727  0.12822860
-#&gt; b_rw_t   -1.5261893  0.21146327
-#&gt; b_rw_t   -2.0694459  0.34416971</div><div class='input'>
+#&gt; b_rw_t   -1.5261894  0.21146326
+#&gt; b_rw_t   -2.0694458  0.34416974</div><div class='input'>
 <span class='co'># Linear breakpoint model on depth:</span>
 <span class='va'>m_pos</span> <span class='op'>&lt;-</span> <span class='fu'>sdmTMB</span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/Log.html'>log</a></span><span class='op'>(</span><span class='va'>density</span><span class='op'>)</span> <span class='op'>~</span> <span class='fl'>0</span> <span class='op'>+</span> <span class='fu'><a href='https://rdrr.io/r/base/factor.html'>as.factor</a></span><span class='op'>(</span><span class='va'>year</span><span class='op'>)</span> <span class='op'>+</span>
     <span class='fu'>breakpt</span><span class='op'>(</span><span class='va'>depth_scaled</span><span class='op'>)</span> <span class='op'>+</span> <span class='va'>depth_scaled2</span>, data <span class='op'>=</span> <span class='va'>pcod_gaus</span>,
@@ -588,33 +562,7 @@ provide mechanisms to predict over missing time slices.</p>
 #&gt; Dispersion parameter: 1.33
 #&gt; Spatial SD (sigma_O): 0.01
 #&gt; Spatiotemporal SD (sigma_E): 0.01
-#&gt; Spatiotemporal SD (sigma_E): 0.01
-#&gt; Spatiotemporal SD (sigma_E): 0.01
-#&gt; ML criterion at convergence: 592.503</div><div class='input'>
-<span class='co'>#' Non-stationary model on spatiotemporal variance:</span>
-<span class='va'>m_pos</span> <span class='op'>&lt;-</span> <span class='fu'>sdmTMB</span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/Log.html'>log</a></span><span class='op'>(</span><span class='va'>density</span><span class='op'>)</span> <span class='op'>~</span> <span class='va'>depth_scaled</span> <span class='op'>+</span> <span class='va'>depth_scaled2</span> <span class='op'>+</span> <span class='fu'><a href='https://rdrr.io/r/base/factor.html'>as.factor</a></span><span class='op'>(</span><span class='va'>year</span><span class='op'>)</span>,
-   data <span class='op'>=</span> <span class='va'>pcod_gaus</span>, time <span class='op'>=</span> <span class='st'>"year"</span>, spde <span class='op'>=</span> <span class='va'>pcod_spde_gaus</span>, epsilon_model<span class='op'>=</span><span class='st'>"loglinear"</span><span class='op'>)</span>
-<span class='fu'><a href='https://rdrr.io/r/base/print.html'>print</a></span><span class='op'>(</span><span class='va'>m_pos</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; Spatiotemporal model fit by ML ['sdmTMB']
-#&gt; Formula: log(density) ~ depth_scaled + depth_scaled2 + as.factor(year)
-#&gt; Time column: "year"
-#&gt; SPDE: pcod_spde_gaus
-#&gt; Data: pcod_gaus
-#&gt; Family: gaussian(link = 'identity')
-#&gt;                     coef.est coef.se
-#&gt; (Intercept)             3.63    0.12
-#&gt; depth_scaled           -0.21    0.14
-#&gt; depth_scaled2          -0.39    0.10
-#&gt; as.factor(year)2015     0.06    0.17
-#&gt; as.factor(year)2017    -0.27    0.18
-#&gt; 
-#&gt; Matern range parameter: 0.23
-#&gt; Dispersion parameter: 1.35
-#&gt; Spatial SD (sigma_O): 0.01
-#&gt; Spatiotemporal SD (sigma_E): 0.01
-#&gt; Spatiotemporal SD (sigma_E): 0.01
-#&gt; Spatiotemporal SD (sigma_E): 0.01
-#&gt; ML criterion at convergence: 599.014</div><div class='input'><span class='co'># }</span>
+#&gt; ML criterion at convergence: 592.503</div><div class='input'><span class='co'># }</span>
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">

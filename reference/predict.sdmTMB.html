@@ -250,19 +250,19 @@ are included for other functions.</p>
 #&gt; 521 2003 420.6101 5771.055   256   0.00000       0 52.08437 -130.1586
 #&gt; 488 2003 417.7130 5772.205   293   0.00000       0 52.09428 -130.2012
 #&gt;     depth_mean  depth_sd depth_scaled depth_scaled2         est est_non_rf
-#&gt; 888   5.155194 0.4448783    0.3329252    0.11083919  3.45791986   3.222485
-#&gt; 887   5.155194 0.4448783    0.4526914    0.20492947  3.35694075   2.924750
-#&gt; 921   5.155194 0.4448783    0.5359529    0.28724555  3.18090092   2.695805
-#&gt; 756   5.155194 0.4448783    0.2877417    0.08279527  3.78707587   3.325129
-#&gt; 521   5.155194 0.4448783    0.8766077    0.76844097  1.08924632   1.571518
-#&gt; 488   5.155194 0.4448783    1.1800505    1.39251928 -0.08535829   0.316159
+#&gt; 888   5.155194 0.4448783    0.3329252    0.11083919  3.45790996  3.2224925
+#&gt; 887   5.155194 0.4448783    0.4526914    0.20492947  3.35693490  2.9247584
+#&gt; 921   5.155194 0.4448783    0.5359529    0.28724555  3.18089685  2.6958144
+#&gt; 756   5.155194 0.4448783    0.2877417    0.08279527  3.78706764  3.3251355
+#&gt; 521   5.155194 0.4448783    0.8766077    0.76844097  1.08925568  1.5715299
+#&gt; 488   5.155194 0.4448783    1.1800505    1.39251928 -0.08534777  0.3161718
 #&gt;         est_rf     omega_s zeta_s epsilon_st
-#&gt; 888  0.2354349 -0.17931620      0  0.4147511
-#&gt; 887  0.4321912 -0.07778944      0  0.5099806
-#&gt; 921  0.4850961 -0.08539330      0  0.5704894
-#&gt; 756  0.4619473  0.12198148      0  0.3399658
-#&gt; 521 -0.4822716 -0.09802904      0 -0.3842425
-#&gt; 488 -0.4015173 -0.07048986      0 -0.3310274</div><div class='input'>
+#&gt; 888  0.2354175 -0.17931791      0  0.4147354
+#&gt; 887  0.4321765 -0.07779134      0  0.5099679
+#&gt; 921  0.4850825 -0.08539403      0  0.5704765
+#&gt; 756  0.4619321  0.12197326      0  0.3399588
+#&gt; 521 -0.4822742 -0.09803447      0 -0.3842397
+#&gt; 488 -0.4015196 -0.07049567      0 -0.3310239</div><div class='input'>
 <span class='va'>predictions</span><span class='op'>$</span><span class='va'>resids</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/stats/residuals.html'>residuals</a></span><span class='op'>(</span><span class='va'>m</span><span class='op'>)</span> <span class='co'># randomized quantile residuals</span>
 <span class='co'># \donttest{</span>
 <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/ggplot.html'>ggplot</a></span><span class='op'>(</span><span class='va'>predictions</span>, <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/aes.html'>aes</a></span><span class='op'>(</span><span class='va'>X</span>, <span class='va'>Y</span>, col <span class='op'>=</span> <span class='va'>resids</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>+</span> <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/scale_gradient.html'>scale_colour_gradient2</a></span><span class='op'>(</span><span class='op'>)</span> <span class='op'>+</span>
