@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">sdmTMB</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.7.9000</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.7.9001</span>
       </span>
     </div>
 
@@ -147,7 +147,7 @@
 
 <span class='fu'>nbinom2</span><span class='op'>(</span>link <span class='op'>=</span> <span class='st'>"log"</span><span class='op'>)</span>
 
-<span class='fu'>student</span><span class='op'>(</span>link <span class='op'>=</span> <span class='st'>"identity"</span><span class='op'>)</span>
+<span class='fu'>student</span><span class='op'>(</span>link <span class='op'>=</span> <span class='st'>"identity"</span>, df <span class='op'>=</span> <span class='fl'>3</span><span class='op'>)</span>
 
 <span class='fu'>tweedie</span><span class='op'>(</span>link <span class='op'>=</span> <span class='st'>"log"</span><span class='op'>)</span></pre>
 
@@ -158,14 +158,17 @@
       <th>link</th>
       <td><p>The link.</p></td>
     </tr>
+    <tr>
+      <th>df</th>
+      <td><p>Student-t degrees of freedom fixed value parameter.</p></td>
+    </tr>
     </table>
 
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
     <p>The negative binomial parameterization is the NB2 where the variance grows
 quadratically with the mean (Hilbe 2011).</p>
-<p>The degrees of freedom parameter for the Student-t distribution is currently
-fixed at 3.</p>
+<p>The degrees of freedom parameter is currently not estimated and is fixed at <code>df</code>.</p>
     <h2 class="hasAnchor" id="references"><a class="anchor" href="#references"></a>References</h2>
 
     <p>Hilbe, J. M. (2011). Negative binomial regression. Cambridge University Press.</p>
@@ -235,6 +238,9 @@ fixed at 3.</p>
 #&gt; function (eta) 
 #&gt; eta
 #&gt; &lt;environment: namespace:stats&gt;
+#&gt; 
+#&gt; $df
+#&gt; [1] 3
 #&gt; </div><div class='input'><span class='fu'>tweedie</span><span class='op'>(</span>link <span class='op'>=</span> <span class='st'>"log"</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; $family
 #&gt; [1] "tweedie"
