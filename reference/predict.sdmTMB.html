@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">sdmTMB</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.7.9001</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.8.9000</span>
       </span>
     </div>
 
@@ -187,7 +187,8 @@ a list format output. Necessary for the <code><a href='get_index.html'>get_index
       <th>area</th>
       <td><p>A vector of areas for survey grid cells. Only necessary if the
 output will be passed to <code><a href='get_index.html'>get_index()</a></code> or <code><a href='get_index.html'>get_cog()</a></code>. Should be the same length
-as the number of rows of <code>newdata</code>. Defaults to a sequence of 1s.</p></td>
+as the number of rows of <code>newdata</code>. If length 1, will be repeated to match the
+rows of data.</p></td>
     </tr>
     <tr>
       <th>re_form</th>
@@ -250,19 +251,19 @@ are included for other functions.</p>
 #&gt; 521 2003 420.6101 5771.055   256   0.00000       0 52.08437 -130.1586
 #&gt; 488 2003 417.7130 5772.205   293   0.00000       0 52.09428 -130.2012
 #&gt;     depth_mean  depth_sd depth_scaled depth_scaled2         est est_non_rf
-#&gt; 888   5.155194 0.4448783    0.3329252    0.11083919  3.45790996  3.2224925
-#&gt; 887   5.155194 0.4448783    0.4526914    0.20492947  3.35693490  2.9247584
-#&gt; 921   5.155194 0.4448783    0.5359529    0.28724555  3.18089685  2.6958144
-#&gt; 756   5.155194 0.4448783    0.2877417    0.08279527  3.78706764  3.3251355
-#&gt; 521   5.155194 0.4448783    0.8766077    0.76844097  1.08925568  1.5715299
-#&gt; 488   5.155194 0.4448783    1.1800505    1.39251928 -0.08534777  0.3161718
+#&gt; 888   5.155194 0.4448783    0.3329252    0.11083919  3.45791471  3.2225314
+#&gt; 887   5.155194 0.4448783    0.4526914    0.20492947  3.35694044  2.9247984
+#&gt; 921   5.155194 0.4448783    0.5359529    0.28724555  3.18090324  2.6958553
+#&gt; 756   5.155194 0.4448783    0.2877417    0.08279527  3.78707132  3.3251741
+#&gt; 521   5.155194 0.4448783    0.8766077    0.76844097  1.08926601  1.5715748
+#&gt; 488   5.155194 0.4448783    1.1800505    1.39251928 -0.08533285  0.3162215
 #&gt;         est_rf     omega_s zeta_s epsilon_st
-#&gt; 888  0.2354175 -0.17931791      0  0.4147354
-#&gt; 887  0.4321765 -0.07779134      0  0.5099679
-#&gt; 921  0.4850825 -0.08539403      0  0.5704765
-#&gt; 756  0.4619321  0.12197326      0  0.3399588
-#&gt; 521 -0.4822742 -0.09803447      0 -0.3842397
-#&gt; 488 -0.4015196 -0.07049567      0 -0.3310239</div><div class='input'>
+#&gt; 888  0.2353833 -0.17932670      0  0.4147100
+#&gt; 887  0.4321420 -0.07780172      0  0.5099438
+#&gt; 921  0.4850480 -0.08540468      0  0.5704527
+#&gt; 756  0.4618972  0.12196182      0  0.3399354
+#&gt; 521 -0.4823088 -0.09804612      0 -0.3842627
+#&gt; 488 -0.4015544 -0.07050750      0 -0.3310469</div><div class='input'>
 <span class='va'>predictions</span><span class='op'>$</span><span class='va'>resids</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/stats/residuals.html'>residuals</a></span><span class='op'>(</span><span class='va'>m</span><span class='op'>)</span> <span class='co'># randomized quantile residuals</span>
 <span class='co'># \donttest{</span>
 <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/ggplot.html'>ggplot</a></span><span class='op'>(</span><span class='va'>predictions</span>, <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/aes.html'>aes</a></span><span class='op'>(</span><span class='va'>X</span>, <span class='va'>Y</span>, col <span class='op'>=</span> <span class='va'>resids</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>+</span> <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/scale_gradient.html'>scale_colour_gradient2</a></span><span class='op'>(</span><span class='op'>)</span> <span class='op'>+</span>

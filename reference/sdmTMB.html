@@ -73,7 +73,7 @@ species distribution models and relative abundance index standardization." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">sdmTMB</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.7.9001</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.8.9000</span>
       </span>
     </div>
 
@@ -243,9 +243,8 @@ are interested in this functionality, please contact the developers.</p></td>
     </tr>
     <tr>
       <th>ar1_fields</th>
-      <td><p>Estimate the spatiotemporal random fields as an AR1
-process? Note that the parameter <code>ar1_phi</code> has been internally bounded
-between <code>-1</code> and <code>1</code> with:  <code>2 * invlogit(ar1_phi) - 1</code> i.e. in R <code>2 * plogis(ar_phi) - 1</code>.</p></td>
+      <td><p>Estimate the spatiotemporal random fields as a
+stationary AR1 process?</p></td>
     </tr>
     <tr>
       <th>include_spatial</th>
@@ -337,7 +336,7 @@ provide mechanisms to predict over missing time slices.</p>
 <span class='va'>m</span> <span class='op'>&lt;-</span> <span class='fu'>sdmTMB</span><span class='op'>(</span><span class='va'>density</span> <span class='op'>~</span> <span class='fl'>0</span> <span class='op'>+</span> <span class='va'>depth_scaled</span> <span class='op'>+</span> <span class='va'>depth_scaled2</span> <span class='op'>+</span> <span class='fu'><a href='https://rdrr.io/r/base/factor.html'>as.factor</a></span><span class='op'>(</span><span class='va'>year</span><span class='op'>)</span>,
   data <span class='op'>=</span> <span class='va'>d</span>, time <span class='op'>=</span> <span class='st'>"year"</span>, spde <span class='op'>=</span> <span class='va'>pcod_spde</span>, family <span class='op'>=</span> <span class='fu'><a href='Families.html'>tweedie</a></span><span class='op'>(</span>link <span class='op'>=</span> <span class='st'>"log"</span><span class='op'>)</span><span class='op'>)</span>
 <span class='fu'><a href='https://rdrr.io/r/base/print.html'>print</a></span><span class='op'>(</span><span class='va'>m</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; Spatiotemporal model fit by ML ['sdmTMB']
+</div><div class='output co'>#&gt; Spatial model fit by ML ['sdmTMB']
 #&gt; Formula: density ~ 0 + depth_scaled + depth_scaled2 + as.factor(year)
 #&gt; Time column: "year"
 #&gt; SPDE: pcod_spde
@@ -357,23 +356,23 @@ provide mechanisms to predict over missing time slices.</p>
 #&gt; Spatiotemporal SD (sigma_E): 1.84
 #&gt; ML criterion at convergence: 2955.205</div><div class='input'><span class='fu'><a href='https://rdrr.io/pkg/generics/man/tidy.html'>tidy</a></span><span class='op'>(</span><span class='va'>m</span>, conf.int <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>
 </div><div class='output co'>#&gt;                  term  estimate  std.error  conf.low  conf.high
-#&gt; 1        depth_scaled -1.576331 0.19996477 -1.968255 -1.1844073
-#&gt; 2       depth_scaled2 -1.108998 0.09901707 -1.303068 -0.9149278
-#&gt; 3 as.factor(year)2011  3.671954 0.34094666  3.003711  4.3401975
-#&gt; 4 as.factor(year)2013  3.873061 0.33816658  3.210267  4.5358558
-#&gt; 5 as.factor(year)2015  3.781375 0.33823534  3.118445  4.4443036
-#&gt; 6 as.factor(year)2017  3.051192 0.35024414  2.364726  3.7376576</div><div class='input'><span class='fu'><a href='https://rdrr.io/pkg/generics/man/tidy.html'>tidy</a></span><span class='op'>(</span><span class='va'>m</span>, effects <span class='op'>=</span> <span class='st'>"ran_par"</span><span class='op'>)</span>
-</div><div class='output co'>#&gt;      term  estimate   std.error
-#&gt; 1 sigma_O  2.649666  3.55022096
-#&gt; 2 sigma_E  1.835268  2.36310702
-#&gt; 3 sigma_Z  1.424922  2.09758701
-#&gt; 4   range 14.287000 21.03148364
-#&gt; 5  ln_phi  2.650139  0.04887713</div><div class='input'>
+#&gt; 1        depth_scaled -1.576332 0.19996487 -1.968256 -1.1844078
+#&gt; 2       depth_scaled2 -1.108996 0.09901708 -1.303066 -0.9149263
+#&gt; 3 as.factor(year)2011  3.671943 0.34094724  3.003698  4.3401871
+#&gt; 4 as.factor(year)2013  3.873057 0.33816705  3.210262  4.5358527
+#&gt; 5 as.factor(year)2015  3.781371 0.33823581  3.118441  4.4443008
+#&gt; 6 as.factor(year)2017  3.051184 0.35024463  2.364717  3.7376510</div><div class='input'><span class='fu'><a href='https://rdrr.io/pkg/generics/man/tidy.html'>tidy</a></span><span class='op'>(</span><span class='va'>m</span>, effects <span class='op'>=</span> <span class='st'>"ran_par"</span>, conf.int <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>
+</div><div class='output co'>#&gt;      term  estimate  std.error    conf.low conf.high
+#&gt; 1 sigma_O  2.649715  3.5506223  0.19168473  36.62779
+#&gt; 2 sigma_E  1.835313  2.3634025  0.14709085  22.89996
+#&gt; 3 sigma_Z  1.424891  2.0977456  0.07954827  25.52307
+#&gt; 4   range 14.286693 21.0330734  0.79759176 255.90736
+#&gt; 5     phi 14.155988  0.6919039 12.86281152  15.57918</div><div class='input'>
 <span class='co'># Run extra optimization steps to help convergence:</span>
 <span class='va'>m1</span> <span class='op'>&lt;-</span> <span class='fu'><a href='run_extra_optimization.html'>run_extra_optimization</a></span><span class='op'>(</span><span class='va'>m</span>, nlminb_loops <span class='op'>=</span> <span class='fl'>0</span>, newton_steps <span class='op'>=</span> <span class='fl'>1</span><span class='op'>)</span>
 <span class='fu'><a href='https://rdrr.io/r/base/Extremes.html'>max</a></span><span class='op'>(</span><span class='va'>m</span><span class='op'>$</span><span class='va'>gradients</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; [1] 0.0005911291</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/Extremes.html'>max</a></span><span class='op'>(</span><span class='va'>m1</span><span class='op'>$</span><span class='va'>gradients</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; [1] 9.228843e-10</div><div class='input'>
+</div><div class='output co'>#&gt; [1] 0.000457957</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/Extremes.html'>max</a></span><span class='op'>(</span><span class='va'>m1</span><span class='op'>$</span><span class='va'>gradients</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; [1] 1.466514e-09</div><div class='input'>
 <span class='co'># Binomial:</span>
 <span class='va'>pcod_binom</span> <span class='op'>&lt;-</span> <span class='va'>d</span>
 <span class='va'>pcod_binom</span><span class='op'>$</span><span class='va'>present</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/ifelse.html'>ifelse</a></span><span class='op'>(</span><span class='va'>pcod_binom</span><span class='op'>$</span><span class='va'>density</span> <span class='op'>&gt;</span> <span class='fl'>0</span>, <span class='fl'>1L</span>, <span class='fl'>0L</span><span class='op'>)</span>
@@ -381,7 +380,7 @@ provide mechanisms to predict over missing time slices.</p>
   data <span class='op'>=</span> <span class='va'>pcod_binom</span>, time <span class='op'>=</span> <span class='st'>"year"</span>, spde <span class='op'>=</span> <span class='va'>pcod_spde</span>,
   family <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/stats/family.html'>binomial</a></span><span class='op'>(</span>link <span class='op'>=</span> <span class='st'>"logit"</span><span class='op'>)</span><span class='op'>)</span>
 <span class='fu'><a href='https://rdrr.io/r/base/print.html'>print</a></span><span class='op'>(</span><span class='va'>m_bin</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; Spatiotemporal model fit by ML ['sdmTMB']
+</div><div class='output co'>#&gt; Spatial model fit by ML ['sdmTMB']
 #&gt; Formula: present ~ 0 + as.factor(year) + depth_scaled + depth_scaled2
 #&gt; Time column: "year"
 #&gt; SPDE: pcod_spde
@@ -405,7 +404,7 @@ provide mechanisms to predict over missing time slices.</p>
 <span class='va'>m_pos</span> <span class='op'>&lt;-</span> <span class='fu'>sdmTMB</span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/Log.html'>log</a></span><span class='op'>(</span><span class='va'>density</span><span class='op'>)</span> <span class='op'>~</span> <span class='fl'>0</span> <span class='op'>+</span> <span class='fu'><a href='https://rdrr.io/r/base/factor.html'>as.factor</a></span><span class='op'>(</span><span class='va'>year</span><span class='op'>)</span> <span class='op'>+</span> <span class='va'>depth_scaled</span> <span class='op'>+</span> <span class='va'>depth_scaled2</span>,
   data <span class='op'>=</span> <span class='va'>pcod_gaus</span>, time <span class='op'>=</span> <span class='st'>"year"</span>, spde <span class='op'>=</span> <span class='va'>pcod_spde_gaus</span><span class='op'>)</span>
 <span class='fu'><a href='https://rdrr.io/r/base/print.html'>print</a></span><span class='op'>(</span><span class='va'>m_pos</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; Spatiotemporal model fit by ML ['sdmTMB']
+</div><div class='output co'>#&gt; Spatial model fit by ML ['sdmTMB']
 #&gt; Formula: log(density) ~ 0 + as.factor(year) + depth_scaled + depth_scaled2
 #&gt; Time column: "year"
 #&gt; SPDE: pcod_spde_gaus
@@ -430,7 +429,7 @@ provide mechanisms to predict over missing time slices.</p>
 <span class='va'>m_gam</span> <span class='op'>&lt;-</span> <span class='fu'>sdmTMB</span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/Log.html'>log</a></span><span class='op'>(</span><span class='va'>density</span><span class='op'>)</span> <span class='op'>~</span> <span class='fl'>0</span> <span class='op'>+</span> <span class='fu'><a href='https://rdrr.io/r/base/factor.html'>as.factor</a></span><span class='op'>(</span><span class='va'>year</span><span class='op'>)</span> <span class='op'>+</span> <span class='fu'>s</span><span class='op'>(</span><span class='va'>depth_scaled</span>, k <span class='op'>=</span> <span class='fl'>4</span><span class='op'>)</span>,
   data <span class='op'>=</span> <span class='va'>pcod_gaus</span>, time <span class='op'>=</span> <span class='st'>"year"</span>, spde <span class='op'>=</span> <span class='va'>pcod_spde_gaus</span><span class='op'>)</span>
 <span class='fu'><a href='https://rdrr.io/r/base/print.html'>print</a></span><span class='op'>(</span><span class='va'>m_gam</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; Spatiotemporal model fit by ML ['sdmTMB']
+</div><div class='output co'>#&gt; Spatial model fit by ML ['sdmTMB']
 #&gt; Formula: log(density) ~ 0 + as.factor(year) + s(depth_scaled, k = 4)
 #&gt; Time column: "year"
 #&gt; SPDE: pcod_spde_gaus
@@ -455,7 +454,7 @@ provide mechanisms to predict over missing time slices.</p>
   <span class='va'>density</span> <span class='op'>~</span> <span class='va'>depth_scaled</span> <span class='op'>+</span> <span class='va'>depth_scaled2</span>, data <span class='op'>=</span> <span class='va'>d</span>,
   spde <span class='op'>=</span> <span class='va'>pcod_spde</span>, family <span class='op'>=</span> <span class='fu'><a href='Families.html'>tweedie</a></span><span class='op'>(</span>link <span class='op'>=</span> <span class='st'>"log"</span><span class='op'>)</span><span class='op'>)</span>
 <span class='fu'><a href='https://rdrr.io/r/base/print.html'>print</a></span><span class='op'>(</span><span class='va'>m</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; Spatiotemporal model fit by ML ['sdmTMB']
+</div><div class='output co'>#&gt; Spatial model fit by ML ['sdmTMB']
 #&gt; Formula: density ~ depth_scaled + depth_scaled2
 #&gt; Time column: NULL
 #&gt; SPDE: pcod_spde
@@ -468,7 +467,7 @@ provide mechanisms to predict over missing time slices.</p>
 #&gt; 
 #&gt; Matern range parameter: 0.03
 #&gt; Dispersion parameter: 14.78
-#&gt; Spatial SD (sigma_O): 1676.93
+#&gt; Spatial SD (sigma_O): 1676.98
 #&gt; Spatiotemporal SD (sigma_E): not estimated
 #&gt; ML criterion at convergence: 2974.181</div><div class='input'>
 <span class='co'># Spatial-trend example:</span>
@@ -476,18 +475,18 @@ provide mechanisms to predict over missing time slices.</p>
   spde <span class='op'>=</span> <span class='va'>pcod_spde</span>, family <span class='op'>=</span> <span class='fu'><a href='Families.html'>tweedie</a></span><span class='op'>(</span>link <span class='op'>=</span> <span class='st'>"log"</span><span class='op'>)</span>,
   spatial_trend <span class='op'>=</span> <span class='cn'>TRUE</span>, time <span class='op'>=</span> <span class='st'>"year"</span><span class='op'>)</span>
 <span class='fu'><a href='https://rdrr.io/pkg/generics/man/tidy.html'>tidy</a></span><span class='op'>(</span><span class='va'>m</span>, effects <span class='op'>=</span> <span class='st'>"ran_par"</span><span class='op'>)</span>
-</div><div class='output co'>#&gt;      term   estimate   std.error
-#&gt; 1 sigma_O  2.5786217  1.30244889
-#&gt; 2 sigma_E  0.8739983  0.52751464
-#&gt; 3 sigma_Z  0.3300048  0.18774233
-#&gt; 4   range 24.7819975 17.96337051
-#&gt; 5  ln_phi  2.7411705  0.04682977</div><div class='input'>
+</div><div class='output co'>#&gt;      term   estimate  std.error
+#&gt; 1 sigma_O  2.5786216  1.3024488
+#&gt; 2 sigma_E  0.8739983  0.5275146
+#&gt; 3 sigma_Z  0.3300048  0.1877423
+#&gt; 4   range 24.7819984 17.9633699
+#&gt; 5     phi 15.5051233  0.7261014</div><div class='input'>
 <span class='co'># Time-varying effects of depth and depth squared:</span>
 <span class='va'>m</span> <span class='op'>&lt;-</span> <span class='fu'>sdmTMB</span><span class='op'>(</span><span class='va'>density</span> <span class='op'>~</span> <span class='fl'>0</span> <span class='op'>+</span> <span class='fu'><a href='https://rdrr.io/r/base/factor.html'>as.factor</a></span><span class='op'>(</span><span class='va'>year</span><span class='op'>)</span>,
   time_varying <span class='op'>=</span> <span class='op'>~</span> <span class='fl'>0</span> <span class='op'>+</span> <span class='va'>depth_scaled</span> <span class='op'>+</span> <span class='va'>depth_scaled2</span>,
   data <span class='op'>=</span> <span class='va'>d</span>, time <span class='op'>=</span> <span class='st'>"year"</span>, spde <span class='op'>=</span> <span class='va'>pcod_spde</span>, family <span class='op'>=</span> <span class='fu'><a href='Families.html'>tweedie</a></span><span class='op'>(</span>link <span class='op'>=</span> <span class='st'>"log"</span><span class='op'>)</span><span class='op'>)</span>
 <span class='fu'><a href='https://rdrr.io/r/base/print.html'>print</a></span><span class='op'>(</span><span class='va'>m</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; Spatiotemporal model fit by ML ['sdmTMB']
+</div><div class='output co'>#&gt; Spatial model fit by ML ['sdmTMB']
 #&gt; Formula: density ~ 0 + as.factor(year)
 #&gt; Time column: "year"
 #&gt; SPDE: pcod_spde
@@ -519,31 +518,31 @@ provide mechanisms to predict over missing time slices.</p>
 <span class='co'># These could be added to tidy.sdmTMB() eventually.</span>
 <span class='fu'><a href='https://rdrr.io/r/base/summary.html'>summary</a></span><span class='op'>(</span><span class='va'>m</span><span class='op'>$</span><span class='va'>sd_report</span><span class='op'>)</span><span class='op'>[</span><span class='fl'>1</span><span class='op'>:</span><span class='fl'>19</span>,<span class='op'>]</span>
 </div><div class='output co'>#&gt;            Estimate  Std. Error
-#&gt; b_j       4.0090857  0.31751952
-#&gt; b_j       3.6751802  0.30409937
-#&gt; b_j       4.0278771  0.31422329
-#&gt; b_j       3.4204681  0.33726397
-#&gt; ln_tau_O -2.1297989 13.60990355
-#&gt; ln_tau_E -1.7704662 13.59429418
-#&gt; ln_kappa -0.7894178  6.89150310
-#&gt; thetaf    0.3172203  0.06427311
-#&gt; ln_phi    2.6232964  0.04895034
-#&gt; ln_tau_V -1.5247844  0.84952434
-#&gt; ln_tau_V -0.2008952  0.45430292
-#&gt; b_rw_t   -0.7777382  0.14304712
-#&gt; b_rw_t   -0.7505321  0.12626463
-#&gt; b_rw_t   -0.7338112  0.13539466
-#&gt; b_rw_t   -1.0153733  0.23736192
-#&gt; b_rw_t   -1.7649948  0.25180625
-#&gt; b_rw_t   -0.7903727  0.12822860
-#&gt; b_rw_t   -1.5261894  0.21146326
-#&gt; b_rw_t   -2.0694458  0.34416974</div><div class='input'>
+#&gt; b_j       4.0090872  0.31751960
+#&gt; b_j       3.6751811  0.30409948
+#&gt; b_j       4.0278776  0.31422339
+#&gt; b_j       3.4204687  0.33726406
+#&gt; ln_tau_O -2.1297412 13.60884306
+#&gt; ln_tau_E -1.7704078 13.59323378
+#&gt; ln_kappa -0.7894472  6.89097094
+#&gt; thetaf    0.3172205  0.06427312
+#&gt; ln_phi    2.6232966  0.04895034
+#&gt; ln_tau_V -1.5247832  0.84952336
+#&gt; ln_tau_V -0.2008949  0.45430295
+#&gt; b_rw_t   -0.7777383  0.14304717
+#&gt; b_rw_t   -0.7505321  0.12626466
+#&gt; b_rw_t   -0.7338111  0.13539467
+#&gt; b_rw_t   -1.0153736  0.23736181
+#&gt; b_rw_t   -1.7649953  0.25180630
+#&gt; b_rw_t   -0.7903728  0.12822862
+#&gt; b_rw_t   -1.5261893  0.21146329
+#&gt; b_rw_t   -2.0694461  0.34416970</div><div class='input'>
 <span class='co'># Linear breakpoint model on depth:</span>
 <span class='va'>m_pos</span> <span class='op'>&lt;-</span> <span class='fu'>sdmTMB</span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/Log.html'>log</a></span><span class='op'>(</span><span class='va'>density</span><span class='op'>)</span> <span class='op'>~</span> <span class='fl'>0</span> <span class='op'>+</span> <span class='fu'><a href='https://rdrr.io/r/base/factor.html'>as.factor</a></span><span class='op'>(</span><span class='va'>year</span><span class='op'>)</span> <span class='op'>+</span>
     <span class='fu'>breakpt</span><span class='op'>(</span><span class='va'>depth_scaled</span><span class='op'>)</span> <span class='op'>+</span> <span class='va'>depth_scaled2</span>, data <span class='op'>=</span> <span class='va'>pcod_gaus</span>,
   time <span class='op'>=</span> <span class='st'>"year"</span>, spde <span class='op'>=</span> <span class='va'>pcod_spde_gaus</span><span class='op'>)</span>
-<span class='fu'><a href='https://rdrr.io/r/base/print.html'>print</a></span><span class='op'>(</span><span class='va'>m_pos</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; Spatiotemporal model fit by ML ['sdmTMB']
+</div><div class='output co'>#&gt; <span class='warning'>Warning: The model may not have converged: non-positive-definite Hessian matrix.</span></div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/print.html'>print</a></span><span class='op'>(</span><span class='va'>m_pos</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; Spatial model fit by ML ['sdmTMB']
 #&gt; Formula: log(density) ~ 0 + as.factor(year) + breakpt(depth_scaled) + 
 #&gt; Formula:     depth_scaled2
 #&gt; Time column: "year"
@@ -551,12 +550,12 @@ provide mechanisms to predict over missing time slices.</p>
 #&gt; Data: pcod_gaus
 #&gt; Family: gaussian(link = 'identity')
 #&gt;                      coef.est coef.se
-#&gt; as.factor(year)2013      4.24    0.20
-#&gt; as.factor(year)2015      4.30    0.21
-#&gt; as.factor(year)2017      4.03    0.23
-#&gt; depth_scaled2            0.21    0.19
-#&gt; depth_scaled-slope       1.35    0.43
-#&gt; depth_scaled-breakpt    -0.72    0.14
+#&gt; as.factor(year)2013      4.24     NaN
+#&gt; as.factor(year)2015      4.30     NaN
+#&gt; as.factor(year)2017      4.03     NaN
+#&gt; depth_scaled2            0.21     NaN
+#&gt; depth_scaled-slope       1.35     NaN
+#&gt; depth_scaled-breakpt    -0.72     NaN
 #&gt; 
 #&gt; Matern range parameter: 0.21
 #&gt; Dispersion parameter: 1.33
