@@ -31,7 +31,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">sdmTMB</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.8.9000</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.9.9000</span>
       </span>
     </div>
 
@@ -94,7 +94,7 @@
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Index standardization with sdmTMB</h1>
             
-            <h4 class="date">2020-10-23</h4>
+            <h4 class="date">2020-11-20</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/seananderson/sdmTMB/blob/master/vignettes/index-standardization.Rmd"><code>vignettes/index-standardization.Rmd</code></a></small>
       <div class="hidden name"><code>index-standardization.Rmd</code></div>
@@ -103,17 +103,17 @@
 
     
     
-<div class="sourceCode" id="cb1"><pre class="downlit">
-<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="http://ggplot2.tidyverse.org">ggplot2</a></span><span class="op">)</span>
+<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="http://ggplot2.tidyverse.org">ggplot2</a></span><span class="op">)</span>
 <span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org">dplyr</a></span><span class="op">)</span>
-<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://pbs-assess.github.io/sdmTMB/index.html">sdmTMB</a></span><span class="op">)</span></pre></div>
+<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://pbs-assess.github.io/sdmTMB/index.html">sdmTMB</a></span><span class="op">)</span></code></pre></div>
 <p>Let’s perform index standardization with the built-in data for Pacific cod.</p>
 <ul>
 <li>The density units should be kg/km<sup>2</sup>.</li>
 <li>Here, X and Y are coordinates in UTM zone 9.</li>
 </ul>
-<div class="sourceCode" id="cb2"><pre class="downlit">
-<span class="fu"><a href="https://tibble.tidyverse.org/reference/glimpse.html">glimpse</a></span><span class="op">(</span><span class="va">pcod</span><span class="op">)</span>
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://tibble.tidyverse.org/reference/glimpse.html">glimpse</a></span><span class="op">(</span><span class="va">pcod</span><span class="op">)</span>
 <span class="co">#&gt; Rows: 2,143</span>
 <span class="co">#&gt; Columns: 12</span>
 <span class="co">#&gt; $ year          &lt;int&gt; 2003, 2003, 2003, 2003, 2003, 2003, 2003, 2003, 2003, 2…</span>
@@ -127,34 +127,34 @@
 <span class="co">#&gt; $ depth_mean    &lt;dbl&gt; 5.155194, 5.155194, 5.155194, 5.155194, 5.155194, 5.155…</span>
 <span class="co">#&gt; $ depth_sd      &lt;dbl&gt; 0.4448783, 0.4448783, 0.4448783, 0.4448783, 0.4448783, …</span>
 <span class="co">#&gt; $ depth_scaled  &lt;dbl&gt; 0.3329252, 0.4526914, 0.5359529, 0.2877417, 0.8766077, …</span>
-<span class="co">#&gt; $ depth_scaled2 &lt;dbl&gt; 0.11083919, 0.20492947, 0.28724555, 0.08279527, 0.76844…</span></pre></div>
+<span class="co">#&gt; $ depth_scaled2 &lt;dbl&gt; 0.11083919, 0.20492947, 0.28724555, 0.08279527, 0.76844…</span></code></pre></div>
 <p>First we will create our SPDE mesh. We will use 100 knots for a balance between speed and accuracy in this vignette. You will likely want to use more for applied scenarios. You will want to make sure that increasing the number of knots does not change the conclusions.</p>
-<div class="sourceCode" id="cb3"><pre class="downlit">
-<span class="va">pcod_spde</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/make_mesh.html">make_mesh</a></span><span class="op">(</span><span class="va">pcod</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"X"</span>, <span class="st">"Y"</span><span class="op">)</span>, cutoff <span class="op">=</span> <span class="fl">10</span><span class="op">)</span>
-<span class="fu"><a href="https://r-spatial.github.io/sf/reference/plot.html">plot</a></span><span class="op">(</span><span class="va">pcod_spde</span><span class="op">)</span></pre></div>
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">pcod_spde</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/make_mesh.html">make_mesh</a></span><span class="op">(</span><span class="va">pcod</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"X"</span>, <span class="st">"Y"</span><span class="op">)</span>, cutoff <span class="op">=</span> <span class="fl">10</span><span class="op">)</span>
+<span class="fu"><a href="https://r-spatial.github.io/sf/reference/plot.html">plot</a></span><span class="op">(</span><span class="va">pcod_spde</span><span class="op">)</span></code></pre></div>
 <p><img src="index-standardization_files/figure-html/spde-1.png" width="672"></p>
 <p>Let’s fit a GLMM. Note that if we want to use this model for index standardization then we need to include <code>0 + as.factor(year)</code> or <code>-1 + as.factor(year)</code> so that we have a factor predictor that represents the mean estimate for each time slice.</p>
-<div class="sourceCode" id="cb4"><pre class="downlit">
-<span class="va">m</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/sdmTMB.html">sdmTMB</a></span><span class="op">(</span>
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">m</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/sdmTMB.html">sdmTMB</a></span><span class="op">(</span>
   data <span class="op">=</span> <span class="va">pcod</span>, 
   formula <span class="op">=</span> <span class="va">density</span> <span class="op">~</span> <span class="fl">0</span> <span class="op">+</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html">as.factor</a></span><span class="op">(</span><span class="va">year</span><span class="op">)</span>,
-  time <span class="op">=</span> <span class="st">"year"</span>, spde <span class="op">=</span> <span class="va">pcod_spde</span>, family <span class="op">=</span> <span class="fu"><a href="../reference/Families.html">tweedie</a></span><span class="op">(</span>link <span class="op">=</span> <span class="st">"log"</span><span class="op">)</span><span class="op">)</span></pre></div>
+  time <span class="op">=</span> <span class="st">"year"</span>, spde <span class="op">=</span> <span class="va">pcod_spde</span>, family <span class="op">=</span> <span class="fu"><a href="../reference/Families.html">tweedie</a></span><span class="op">(</span>link <span class="op">=</span> <span class="st">"log"</span><span class="op">)</span><span class="op">)</span></code></pre></div>
 <p>We can inspect randomized quantile residuals::</p>
-<div class="sourceCode" id="cb5"><pre class="downlit">
-<span class="va">pcod</span><span class="op">$</span><span class="va">resids</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/residuals.html">residuals</a></span><span class="op">(</span><span class="va">m</span><span class="op">)</span> <span class="co"># randomized quantile residuals</span>
-<span class="fu"><a href="https://rdrr.io/r/graphics/hist.html">hist</a></span><span class="op">(</span><span class="va">pcod</span><span class="op">$</span><span class="va">resids</span><span class="op">)</span></pre></div>
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">pcod</span><span class="op">$</span><span class="va">resids</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/residuals.html">residuals</a></span><span class="op">(</span><span class="va">m</span><span class="op">)</span> <span class="co"># randomized quantile residuals</span>
+<span class="fu"><a href="https://rdrr.io/r/graphics/hist.html">hist</a></span><span class="op">(</span><span class="va">pcod</span><span class="op">$</span><span class="va">resids</span><span class="op">)</span></code></pre></div>
 <p><img src="index-standardization_files/figure-html/residuals-1.png" width="768"></p>
-<div class="sourceCode" id="cb6"><pre class="downlit">
-<span class="fu"><a href="https://rdrr.io/r/stats/qqnorm.html">qqnorm</a></span><span class="op">(</span><span class="va">pcod</span><span class="op">$</span><span class="va">resids</span><span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/r/graphics/abline.html">abline</a></span><span class="op">(</span>a <span class="op">=</span> <span class="fl">0</span>, b <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></pre></div>
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/stats/qqnorm.html">qqnorm</a></span><span class="op">(</span><span class="va">pcod</span><span class="op">$</span><span class="va">resids</span><span class="op">)</span>
+<span class="fu"><a href="https://rdrr.io/r/graphics/abline.html">abline</a></span><span class="op">(</span>a <span class="op">=</span> <span class="fl">0</span>, b <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></code></pre></div>
 <p><img src="index-standardization_files/figure-html/residuals-2.png" width="768"></p>
-<div class="sourceCode" id="cb7"><pre class="downlit">
-<span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span><span class="op">(</span><span class="va">pcod</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span><span class="va">X</span>, <span class="va">Y</span>, col <span class="op">=</span> <span class="va">resids</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_gradient.html">scale_colour_gradient2</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span>
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html">geom_point</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/facet_wrap.html">facet_wrap</a></span><span class="op">(</span><span class="op">~</span><span class="va">year</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/coord_fixed.html">coord_fixed</a></span><span class="op">(</span><span class="op">)</span></pre></div>
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span><span class="op">(</span><span class="va">pcod</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span><span class="va">X</span>, <span class="va">Y</span>, col <span class="op">=</span> <span class="va">resids</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_gradient.html">scale_colour_gradient2</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html">geom_point</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/facet_wrap.html">facet_wrap</a></span><span class="op">(</span><span class="op">~</span><span class="va">year</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/coord_fixed.html">coord_fixed</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
 <p><img src="index-standardization_files/figure-html/residuals-3.png" width="768"></p>
 <p>Now we want to predict on a fine-scale grid on the entire survey domain. There is a grid built into the package for Queen Charlotte Sound named <code>qcs_grid</code>. Our prediction grid also needs to have all the covariates that we used in the model above.</p>
-<div class="sourceCode" id="cb8"><pre class="downlit">
-<span class="fu"><a href="https://tibble.tidyverse.org/reference/glimpse.html">glimpse</a></span><span class="op">(</span><span class="va">qcs_grid</span><span class="op">)</span>
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://tibble.tidyverse.org/reference/glimpse.html">glimpse</a></span><span class="op">(</span><span class="va">qcs_grid</span><span class="op">)</span>
 <span class="co">#&gt; Rows: 65,826</span>
 <span class="co">#&gt; Columns: 6</span>
 <span class="co">#&gt; $ X             &lt;dbl&gt; 456, 458, 460, 462, 464, 466, 468, 470, 472, 474, 476, …</span>
@@ -162,63 +162,63 @@
 <span class="co">#&gt; $ depth         &lt;dbl&gt; 347.08345, 223.33479, 203.74085, 183.29868, 182.99983, …</span>
 <span class="co">#&gt; $ depth_scaled  &lt;dbl&gt; 1.56081222, 0.56976987, 0.36336929, 0.12570465, 0.12203…</span>
 <span class="co">#&gt; $ depth_scaled2 &lt;dbl&gt; 2.436134789, 0.324637708, 0.132037240, 0.015801658, 0.0…</span>
-<span class="co">#&gt; $ year          &lt;int&gt; 2003, 2003, 2003, 2003, 2003, 2003, 2003, 2003, 2003, 2…</span></pre></div>
+<span class="co">#&gt; $ year          &lt;int&gt; 2003, 2003, 2003, 2003, 2003, 2003, 2003, 2003, 2003, 2…</span></code></pre></div>
 <p>Now make the predictions on new data:</p>
-<div class="sourceCode" id="cb9"><pre class="downlit">
-<span class="va">predictions</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/predict.html">predict</a></span><span class="op">(</span><span class="va">m</span>, newdata <span class="op">=</span> <span class="va">qcs_grid</span>, return_tmb_object <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></pre></div>
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">predictions</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/predict.html">predict</a></span><span class="op">(</span><span class="va">m</span>, newdata <span class="op">=</span> <span class="va">qcs_grid</span>, return_tmb_object <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></code></pre></div>
 <p>Let’s make a small function to make maps.</p>
-<div class="sourceCode" id="cb10"><pre class="downlit">
-<span class="va">plot_map</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">dat</span>, <span class="va">column</span><span class="op">)</span> <span class="op">{</span>
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">plot_map</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">dat</span>, <span class="va">column</span><span class="op">)</span> <span class="op">{</span>
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span><span class="op">(</span><span class="va">dat</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes_.html">aes_string</a></span><span class="op">(</span><span class="st">"X"</span>, <span class="st">"Y"</span>, fill <span class="op">=</span> <span class="va">column</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span>
     <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_tile.html">geom_raster</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span>
     <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/facet_wrap.html">facet_wrap</a></span><span class="op">(</span><span class="op">~</span><span class="va">year</span><span class="op">)</span> <span class="op">+</span>
     <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/coord_fixed.html">coord_fixed</a></span><span class="op">(</span><span class="op">)</span>
-<span class="op">}</span></pre></div>
+<span class="op">}</span></code></pre></div>
 <p>There are four kinds of predictions that we get out of the model. First we will show the predictions that incorporate all fixed effects and random effects:</p>
-<div class="sourceCode" id="cb11"><pre class="downlit">
-<span class="fu">plot_map</span><span class="op">(</span><span class="va">predictions</span><span class="op">$</span><span class="va">data</span>, <span class="st">"exp(est)"</span><span class="op">)</span> <span class="op">+</span>
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu">plot_map</span><span class="op">(</span><span class="va">predictions</span><span class="op">$</span><span class="va">data</span>, <span class="st">"exp(est)"</span><span class="op">)</span> <span class="op">+</span>
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_viridis.html">scale_fill_viridis_c</a></span><span class="op">(</span>trans <span class="op">=</span> <span class="st">"sqrt"</span><span class="op">)</span> <span class="op">+</span>
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">ggtitle</a></span><span class="op">(</span><span class="st">"Prediction (fixed effects + all random effects)"</span><span class="op">)</span></pre></div>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">ggtitle</a></span><span class="op">(</span><span class="st">"Prediction (fixed effects + all random effects)"</span><span class="op">)</span></code></pre></div>
 <p><img src="index-standardization_files/figure-html/plot-all-effects-1.png" width="768"></p>
 <p>We can also look at just the fixed effects, here year:</p>
-<div class="sourceCode" id="cb12"><pre class="downlit">
-<span class="fu">plot_map</span><span class="op">(</span><span class="va">predictions</span><span class="op">$</span><span class="va">data</span>, <span class="st">"exp(est_non_rf)"</span><span class="op">)</span> <span class="op">+</span>
+<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu">plot_map</span><span class="op">(</span><span class="va">predictions</span><span class="op">$</span><span class="va">data</span>, <span class="st">"exp(est_non_rf)"</span><span class="op">)</span> <span class="op">+</span>
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">ggtitle</a></span><span class="op">(</span><span class="st">"Prediction (fixed effects only)"</span><span class="op">)</span> <span class="op">+</span>
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_viridis.html">scale_fill_viridis_c</a></span><span class="op">(</span>trans <span class="op">=</span> <span class="st">"sqrt"</span><span class="op">)</span></pre></div>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_viridis.html">scale_fill_viridis_c</a></span><span class="op">(</span>trans <span class="op">=</span> <span class="st">"sqrt"</span><span class="op">)</span></code></pre></div>
 <p><img src="index-standardization_files/figure-html/plot-fix-defects-1.png" width="768"></p>
 <p>We can look at the spatial random effects that represent consistent deviations in space through time that are not accounted for by our fixed effects. In other words, these deviations represent consistent biotic and abiotic factors that are affecting biomass density but are not accounted for in the model.</p>
-<div class="sourceCode" id="cb13"><pre class="downlit">
-<span class="fu">plot_map</span><span class="op">(</span><span class="va">predictions</span><span class="op">$</span><span class="va">data</span>, <span class="st">"omega_s"</span><span class="op">)</span> <span class="op">+</span>
+<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu">plot_map</span><span class="op">(</span><span class="va">predictions</span><span class="op">$</span><span class="va">data</span>, <span class="st">"omega_s"</span><span class="op">)</span> <span class="op">+</span>
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">ggtitle</a></span><span class="op">(</span><span class="st">"Spatial random effects only"</span><span class="op">)</span> <span class="op">+</span>
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_gradient.html">scale_fill_gradient2</a></span><span class="op">(</span><span class="op">)</span></pre></div>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_gradient.html">scale_fill_gradient2</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
 <p><img src="index-standardization_files/figure-html/plot-spatial-effects-1.png" width="768"></p>
 <p>And finally we can look at the spatiotemporal random effects that represent deviation from the fixed effect predictions and the spatial random effect deviations. These represent biotic and abiotic factors that are changing through time and are not accounted for in the model.</p>
-<div class="sourceCode" id="cb14"><pre class="downlit">
-<span class="fu">plot_map</span><span class="op">(</span><span class="va">predictions</span><span class="op">$</span><span class="va">data</span>, <span class="st">"epsilon_st"</span><span class="op">)</span> <span class="op">+</span>
+<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu">plot_map</span><span class="op">(</span><span class="va">predictions</span><span class="op">$</span><span class="va">data</span>, <span class="st">"epsilon_st"</span><span class="op">)</span> <span class="op">+</span>
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">ggtitle</a></span><span class="op">(</span><span class="st">"Spatiotemporal random effects only"</span><span class="op">)</span> <span class="op">+</span>
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_gradient.html">scale_fill_gradient2</a></span><span class="op">(</span><span class="op">)</span></pre></div>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_gradient.html">scale_fill_gradient2</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
 <p><img src="index-standardization_files/figure-html/plot-spatiotemporal-effects-1.png" width="768"></p>
 <p>When we ran our <code>predict.sdmTBM()</code> function, it also returned a report from TMB in the output because we included <code>return_tmb_object = TRUE</code>. We can then run our <code><a href="../reference/get_index.html">get_index()</a></code> function to extract the total biomass calculations and standard errors:</p>
-<div class="sourceCode" id="cb15"><pre class="downlit">
- <span class="co"># not bias correcting for vignette-building speed:</span>
-<span class="va">ind</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_index.html">get_index</a></span><span class="op">(</span><span class="va">predictions</span>, bias_correct <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></pre></div>
-<div class="sourceCode" id="cb16"><pre class="downlit">
-<span class="co"># scale the biomass by the area and adjust units;</span>
+<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
+<code class="sourceCode R"> <span class="co"># not bias correcting for vignette-building speed:</span>
+<span class="va">ind</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_index.html">get_index</a></span><span class="op">(</span><span class="va">predictions</span>, bias_correct <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></code></pre></div>
+<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co"># scale the biomass by the area and adjust units;</span>
 <span class="va">scale</span> <span class="op">&lt;-</span> <span class="fl">2</span> <span class="op">*</span> <span class="fl">2</span> <span class="op">/</span> <span class="fl">1000</span> <span class="co"># 2 x 2 km grid and converted from kg to tonnes</span>
 <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span><span class="op">(</span><span class="va">ind</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span><span class="va">year</span>, <span class="va">est</span><span class="op">*</span><span class="va">scale</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_path.html">geom_line</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span>
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_ribbon.html">geom_ribbon</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span>ymin <span class="op">=</span> <span class="va">lwr</span><span class="op">*</span><span class="va">scale</span>, ymax <span class="op">=</span> <span class="va">upr</span><span class="op">*</span><span class="va">scale</span><span class="op">)</span>, alpha <span class="op">=</span> <span class="fl">0.4</span><span class="op">)</span> <span class="op">+</span>
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">xlab</a></span><span class="op">(</span><span class="st">'Year'</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">ylab</a></span><span class="op">(</span><span class="st">'Biomass estimate (metric tonnes)'</span><span class="op">)</span></pre></div>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">xlab</a></span><span class="op">(</span><span class="st">'Year'</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">ylab</a></span><span class="op">(</span><span class="st">'Biomass estimate (metric tonnes)'</span><span class="op">)</span></code></pre></div>
 <p><img src="index-standardization_files/figure-html/plot-index-1.png" width="672"></p>
 <p>These are our biomass estimates:</p>
-<div class="sourceCode" id="cb17"><pre class="downlit">
-<span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span><span class="va">ind</span>, 
+<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span><span class="va">ind</span>, 
   est <span class="op">=</span> <span class="va">est</span> <span class="op">*</span> <span class="va">scale</span>,
   lwr <span class="op">=</span> <span class="va">lwr</span> <span class="op">*</span> <span class="va">scale</span>,
   upr <span class="op">=</span> <span class="va">upr</span> <span class="op">*</span> <span class="va">scale</span>,
   cv <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/MathFun.html">sqrt</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/Log.html">exp</a></span><span class="op">(</span><span class="va">se</span><span class="op">^</span><span class="fl">2</span><span class="op">)</span> <span class="op">-</span> <span class="fl">1</span><span class="op">)</span>
   <span class="op">)</span> <span class="op">%&gt;%</span> 
   <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span><span class="op">(</span><span class="op">-</span><span class="va">log_est</span>, <span class="op">-</span><span class="va">max_gradient</span>, <span class="op">-</span><span class="va">bad_eig</span>, <span class="op">-</span><span class="va">se</span><span class="op">)</span> <span class="op">%&gt;%</span>
-  <span class="fu">knitr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html">kable</a></span><span class="op">(</span>format <span class="op">=</span> <span class="st">"pandoc"</span>, digits <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">0</span>, <span class="fl">0</span>, <span class="fl">0</span>, <span class="fl">2</span><span class="op">)</span><span class="op">)</span></pre></div>
+  <span class="fu">knitr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html">kable</a></span><span class="op">(</span>format <span class="op">=</span> <span class="st">"pandoc"</span>, digits <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">0</span>, <span class="fl">0</span>, <span class="fl">0</span>, <span class="fl">2</span><span class="op">)</span><span class="op">)</span></code></pre></div>
 <table class="table">
 <thead><tr class="header">
 <th align="right">year</th>

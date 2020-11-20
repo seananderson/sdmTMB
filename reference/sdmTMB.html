@@ -73,7 +73,7 @@ species distribution models and relative abundance index standardization." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">sdmTMB</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.8.9000</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.9.9000</span>
       </span>
     </div>
 
@@ -354,14 +354,14 @@ provide mechanisms to predict over missing time slices.</p>
 #&gt; Dispersion parameter: 14.16
 #&gt; Spatial SD (sigma_O): 2.65
 #&gt; Spatiotemporal SD (sigma_E): 1.84
-#&gt; ML criterion at convergence: 2955.205</div><div class='input'><span class='fu'><a href='https://rdrr.io/pkg/generics/man/tidy.html'>tidy</a></span><span class='op'>(</span><span class='va'>m</span>, conf.int <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>
+#&gt; ML criterion at convergence: 2955.205</div><div class='input'><span class='fu'><a href='https://generics.r-lib.org/reference/tidy.html'>tidy</a></span><span class='op'>(</span><span class='va'>m</span>, conf.int <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>
 </div><div class='output co'>#&gt;                  term  estimate  std.error  conf.low  conf.high
 #&gt; 1        depth_scaled -1.576332 0.19996487 -1.968256 -1.1844078
 #&gt; 2       depth_scaled2 -1.108996 0.09901708 -1.303066 -0.9149263
 #&gt; 3 as.factor(year)2011  3.671943 0.34094724  3.003698  4.3401871
 #&gt; 4 as.factor(year)2013  3.873057 0.33816705  3.210262  4.5358527
 #&gt; 5 as.factor(year)2015  3.781371 0.33823581  3.118441  4.4443008
-#&gt; 6 as.factor(year)2017  3.051184 0.35024463  2.364717  3.7376510</div><div class='input'><span class='fu'><a href='https://rdrr.io/pkg/generics/man/tidy.html'>tidy</a></span><span class='op'>(</span><span class='va'>m</span>, effects <span class='op'>=</span> <span class='st'>"ran_par"</span>, conf.int <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>
+#&gt; 6 as.factor(year)2017  3.051184 0.35024463  2.364717  3.7376510</div><div class='input'><span class='fu'><a href='https://generics.r-lib.org/reference/tidy.html'>tidy</a></span><span class='op'>(</span><span class='va'>m</span>, effects <span class='op'>=</span> <span class='st'>"ran_par"</span>, conf.int <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>
 </div><div class='output co'>#&gt;      term  estimate  std.error    conf.low conf.high
 #&gt; 1 sigma_O  2.649715  3.5506223  0.19168473  36.62779
 #&gt; 2 sigma_E  1.835313  2.3634025  0.14709085  22.89996
@@ -474,7 +474,7 @@ provide mechanisms to predict over missing time slices.</p>
 <span class='va'>m</span> <span class='op'>&lt;-</span> <span class='fu'>sdmTMB</span><span class='op'>(</span><span class='va'>density</span> <span class='op'>~</span> <span class='va'>depth_scaled</span>, data <span class='op'>=</span> <span class='va'>d</span>,
   spde <span class='op'>=</span> <span class='va'>pcod_spde</span>, family <span class='op'>=</span> <span class='fu'><a href='Families.html'>tweedie</a></span><span class='op'>(</span>link <span class='op'>=</span> <span class='st'>"log"</span><span class='op'>)</span>,
   spatial_trend <span class='op'>=</span> <span class='cn'>TRUE</span>, time <span class='op'>=</span> <span class='st'>"year"</span><span class='op'>)</span>
-<span class='fu'><a href='https://rdrr.io/pkg/generics/man/tidy.html'>tidy</a></span><span class='op'>(</span><span class='va'>m</span>, effects <span class='op'>=</span> <span class='st'>"ran_par"</span><span class='op'>)</span>
+<span class='fu'><a href='https://generics.r-lib.org/reference/tidy.html'>tidy</a></span><span class='op'>(</span><span class='va'>m</span>, effects <span class='op'>=</span> <span class='st'>"ran_par"</span><span class='op'>)</span>
 </div><div class='output co'>#&gt;      term   estimate  std.error
 #&gt; 1 sigma_O  2.5786216  1.3024488
 #&gt; 2 sigma_E  0.8739983  0.5275146

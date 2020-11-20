@@ -71,7 +71,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">sdmTMB</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.8.9000</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.9.9000</span>
       </span>
     </div>
 
@@ -135,6 +135,13 @@
       <small>Source: <a href='https://github.com/seananderson/sdmTMB/blob/master/NEWS.md'><code>NEWS.md</code></a></small>
     </div>
 
+    <div id="sdmtmb-0099000" class="section level1">
+<h1 class="page-header" data-toc-text="0.0.9.9000">
+<a href="#sdmtmb-0099000" class="anchor"></a>sdmTMB 0.0.9.9000</h1>
+<ul>
+<li>Switched the density/abundance index calculation to use the link function as opposed to a hardcoded log() so that the <code>get_generic()</code> function can be used to grab things like standardized average values of the response across a grid. What used to be <code>log_total</code> in the raw TMB output is now <code>link_total</code> but most users you shouldn’t notice any difference.</li>
+</ul>
+</div>
     <div id="sdmtmb-0089000" class="section level1">
 <h1 class="page-header" data-toc-text="0.0.8.9000">
 <a href="#sdmtmb-0089000" class="anchor"></a>sdmTMB 0.0.8.9000</h1>
@@ -154,7 +161,7 @@
 <h1 class="page-header" data-toc-text="0.0.7.9000">
 <a href="#sdmtmb-0079000" class="anchor"></a>sdmTMB 0.0.7.9000</h1>
 <ul>
-<li><p>Added a <code><a href="https://rdrr.io/pkg/generics/man/tidy.html">tidy()</a></code> method (from broom and broom.mixed) to return a data frame of parameter estimates. The function can extract the fixed effects or the random effect parameters (variances, AR1 correlation, spatial range).</p></li>
+<li><p>Added a <code><a href="https://generics.r-lib.org/reference/tidy.html">tidy()</a></code> method (from broom and broom.mixed) to return a data frame of parameter estimates. The function can extract the fixed effects or the random effect parameters (variances, AR1 correlation, spatial range).</p></li>
 <li><p>Added an argument <code>extra_time</code> to <code><a href="../reference/sdmTMB.html">sdmTMB()</a></code>. This introduces additional time slices that you can then predict on if you want to interpolate or forecast. Internally, it uses Eric Ward’s ‘weights hack’. This is also useful if you have data unevenly spaced in time and you want the gaps evenly spaced for a random walk or AR1 process (add any missing years to <code>extra_time</code>).</p></li>
 <li><p><code><a href="../reference/make_spde.html">make_spde()</a></code> is now replaced with <code><a href="../reference/make_mesh.html">make_mesh()</a></code> and <code><a href="../reference/make_spde.html">make_spde()</a></code> has been soft depreciated. <code><a href="../reference/make_mesh.html">make_mesh()</a></code> carries through the x and y column names to the predict function and is more in line with the tidyverse style of taking a data frame first.</p></li>
 <li><p><code><a href="../reference/make_mesh.html">make_mesh()</a></code> can accept <code>cutoff</code> as an argument (as in INLA), which is likely a better default way to specify the mesh since it scales across regions better and is line with the literature on INLA.</p></li>

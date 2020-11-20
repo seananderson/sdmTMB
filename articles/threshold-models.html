@@ -31,7 +31,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">sdmTMB</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.8.9000</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.9.9000</span>
       </span>
     </div>
 
@@ -94,7 +94,7 @@
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Threshold modeling with sdmTMB</h1>
             
-            <h4 class="date">2020-10-23</h4>
+            <h4 class="date">2020-11-20</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/seananderson/sdmTMB/blob/master/vignettes/threshold-models.Rmd"><code>vignettes/threshold-models.Rmd</code></a></small>
       <div class="hidden name"><code>threshold-models.Rmd</code></div>
@@ -103,14 +103,14 @@
 
     
     
-<div class="sourceCode" id="cb1"><pre class="downlit">
-<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="http://ggplot2.tidyverse.org">ggplot2</a></span><span class="op">)</span>
+<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="http://ggplot2.tidyverse.org">ggplot2</a></span><span class="op">)</span>
 <span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org">dplyr</a></span><span class="op">)</span>
-<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://pbs-assess.github.io/sdmTMB/index.html">sdmTMB</a></span><span class="op">)</span></pre></div>
+<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://pbs-assess.github.io/sdmTMB/index.html">sdmTMB</a></span><span class="op">)</span></code></pre></div>
 <p>We’ll repeat the same models used for the index standardization vignette, using the built-in data for Pacific cod.</p>
 <p>As a summary, - We’ve included columns for depth and depth squared. - Depth was centred and scaled by its standard deviation and we’ve included those in the data frame so that they could be used to similarly scale the prediction grid. - The density units should be kg/km<sup>2</sup>. - Here, X and Y are coordinates in UTM zone 9.</p>
-<div class="sourceCode" id="cb2"><pre class="downlit">
-<span class="fu"><a href="https://tibble.tidyverse.org/reference/glimpse.html">glimpse</a></span><span class="op">(</span><span class="va">pcod</span><span class="op">)</span>
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://tibble.tidyverse.org/reference/glimpse.html">glimpse</a></span><span class="op">(</span><span class="va">pcod</span><span class="op">)</span>
 <span class="co">#&gt; Rows: 2,143</span>
 <span class="co">#&gt; Columns: 12</span>
 <span class="co">#&gt; $ year          &lt;int&gt; 2003, 2003, 2003, 2003, 2003, 2003, 2003, 2003, 2003, 2…</span>
@@ -124,23 +124,23 @@
 <span class="co">#&gt; $ depth_mean    &lt;dbl&gt; 5.155194, 5.155194, 5.155194, 5.155194, 5.155194, 5.155…</span>
 <span class="co">#&gt; $ depth_sd      &lt;dbl&gt; 0.4448783, 0.4448783, 0.4448783, 0.4448783, 0.4448783, …</span>
 <span class="co">#&gt; $ depth_scaled  &lt;dbl&gt; 0.3329252, 0.4526914, 0.5359529, 0.2877417, 0.8766077, …</span>
-<span class="co">#&gt; $ depth_scaled2 &lt;dbl&gt; 0.11083919, 0.20492947, 0.28724555, 0.08279527, 0.76844…</span></pre></div>
+<span class="co">#&gt; $ depth_scaled2 &lt;dbl&gt; 0.11083919, 0.20492947, 0.28724555, 0.08279527, 0.76844…</span></code></pre></div>
 <p>As before, the SPDE mesh is created using 75 knots for a balance between speed and accuracy. You will likely want to use more for applied scenarios. You will want to make sure that increasing the number of knots does not change the conclusions.</p>
-<div class="sourceCode" id="cb3"><pre class="downlit">
-<span class="va">pcod_spde</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/make_mesh.html">make_mesh</a></span><span class="op">(</span><span class="va">pcod</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"X"</span>, <span class="st">"Y"</span><span class="op">)</span>, cutoff <span class="op">=</span> <span class="fl">12</span><span class="op">)</span></pre></div>
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">pcod_spde</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/make_mesh.html">make_mesh</a></span><span class="op">(</span><span class="va">pcod</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"X"</span>, <span class="st">"Y"</span><span class="op">)</span>, cutoff <span class="op">=</span> <span class="fl">12</span><span class="op">)</span></code></pre></div>
 <p>We will extend the simple GLMM used in the index standardization vignette to include a threshold effect. For real applications, the threshold effect might be a function of habitat covariates, environmental variables, etc. Because ‘depth’ is the only external variable in the <code>pcod</code> data frame, we’ll use that. For any threshold model, you can specify the model as a linear threshold (<code>breakpt()</code>) or logistic (<code>logistic()</code>) as part of the formula. Note: as before, if we want to use this model for index standardization then we need to include <code>0 + as.factor(year)</code> or <code>-1 + as.factor(year)</code> so that we have a factor predictor that represents the mean estimate for each time slice.</p>
 <p>This first example uses the ‘depth_scaled’ covariate (depth, standardized ~ N(0,1)) and the logistic function, similar to selectivity curves used in fisheries models. The form is</p>
 <p><span class="math display">\[s(x)=\tau + \psi *\quad { \left[ 1+{ \exp }^{ -ln\left( 19 \right) \quad *\quad \left( x-s50 \right) \quad /\quad \left( s95\quad -\quad s50 \right)  } \right]  }^{ -1 }\]</span> where <span class="math inline">\(\psi\)</span> is a scaling parameter (controlling the height of the y-axis for the response, and is unconstrained), <span class="math inline">\(\tau\)</span> is an intercept, <span class="math inline">\(s50\)</span> is a parameter controlling the point at which the function reaches 50% of the maximum (<span class="math inline">\(\psi\)</span>), and <span class="math inline">\(s95\)</span> is a parameter controlling the point at which the function reaches 95%. The parameter <span class="math inline">\(s50\)</span> is unconstrained, and <span class="math inline">\(s95\)</span> is constrained to be larger than <span class="math inline">\(s50\)</span>.</p>
-<div class="sourceCode" id="cb4"><pre class="downlit">
-<span class="va">m</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/sdmTMB.html">sdmTMB</a></span><span class="op">(</span>
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">m</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/sdmTMB.html">sdmTMB</a></span><span class="op">(</span>
   data <span class="op">=</span> <span class="va">pcod</span>,
   formula <span class="op">=</span> <span class="va">density</span> <span class="op">~</span> <span class="fl">0</span> <span class="op">+</span> <span class="fu">logistic</span><span class="op">(</span><span class="va">depth_scaled</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html">as.factor</a></span><span class="op">(</span><span class="va">year</span><span class="op">)</span>,
   time <span class="op">=</span> <span class="st">"year"</span>, spde <span class="op">=</span> <span class="va">pcod_spde</span>,
   family <span class="op">=</span> <span class="fu"><a href="../reference/Families.html">tweedie</a></span><span class="op">(</span>link <span class="op">=</span> <span class="st">"log"</span><span class="op">)</span>
-<span class="op">)</span></pre></div>
+<span class="op">)</span></code></pre></div>
 <p>We can then look at the important coefficients from the model. Here we’re looking at ‘s50’, ‘s95’, and ‘smax’.</p>
-<div class="sourceCode" id="cb5"><pre class="downlit">
-<span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span><span class="op">(</span><span class="va">m</span><span class="op">)</span>
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span><span class="op">(</span><span class="va">m</span><span class="op">)</span>
 <span class="co">#&gt; Spatial model fit by ML ['sdmTMB']</span>
 <span class="co">#&gt; Formula: density ~ 0 + logistic(depth_scaled) + as.factor(year)</span>
 <span class="co">#&gt; Time column: "year"</span>
@@ -165,10 +165,10 @@
 <span class="co">#&gt; Dispersion parameter: 12.33</span>
 <span class="co">#&gt; Spatial SD (sigma_O): 2.02</span>
 <span class="co">#&gt; Spatiotemporal SD (sigma_E): 1.40</span>
-<span class="co">#&gt; ML criterion at convergence: 6435.001</span></pre></div>
+<span class="co">#&gt; ML criterion at convergence: 6435.001</span></code></pre></div>
 <p>We can visualize the effect:</p>
-<div class="sourceCode" id="cb6"><pre class="downlit">
-<span class="va">nd</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span><span class="op">(</span>
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">nd</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span><span class="op">(</span>
   depth_scaled <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html">seq</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/Extremes.html">min</a></span><span class="op">(</span><span class="va">pcod</span><span class="op">$</span><span class="va">depth_scaled</span><span class="op">)</span> <span class="op">+</span> <span class="fl">0.2</span>, 
     <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html">max</a></span><span class="op">(</span><span class="va">pcod</span><span class="op">$</span><span class="va">depth_scaled</span><span class="op">)</span> <span class="op">-</span> <span class="fl">0.2</span>, length.out <span class="op">=</span> <span class="fl">100</span><span class="op">)</span>, 
   year <span class="op">=</span> <span class="fl">2015L</span> <span class="co"># a chosen year</span>
@@ -179,19 +179,19 @@
 <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span><span class="op">(</span><span class="va">p</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span><span class="va">depth_scaled</span>, <span class="fu"><a href="https://rdrr.io/r/base/Log.html">exp</a></span><span class="op">(</span><span class="va">est</span><span class="op">)</span>, 
   ymin <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Log.html">exp</a></span><span class="op">(</span><span class="va">est</span> <span class="op">-</span> <span class="fl">1.96</span> <span class="op">*</span> <span class="va">est_se</span><span class="op">)</span>, 
   ymax <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Log.html">exp</a></span><span class="op">(</span><span class="va">est</span> <span class="op">+</span> <span class="fl">1.96</span> <span class="op">*</span> <span class="va">est_se</span><span class="op">)</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span>
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_path.html">geom_line</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_ribbon.html">geom_ribbon</a></span><span class="op">(</span>alpha <span class="op">=</span> <span class="fl">0.4</span><span class="op">)</span></pre></div>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_path.html">geom_line</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_ribbon.html">geom_ribbon</a></span><span class="op">(</span>alpha <span class="op">=</span> <span class="fl">0.4</span><span class="op">)</span></code></pre></div>
 <p><img src="threshold-models_files/figure-html/logistic-eff-1.png" width="672"></p>
 <p>Next, we can try to fit the same model but use a linear breakpoint / cutpoint model:</p>
-<div class="sourceCode" id="cb7"><pre class="downlit">
-<span class="va">m</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/sdmTMB.html">sdmTMB</a></span><span class="op">(</span>
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">m</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/sdmTMB.html">sdmTMB</a></span><span class="op">(</span>
   data <span class="op">=</span> <span class="va">pcod</span>,
   formula <span class="op">=</span> <span class="va">density</span> <span class="op">~</span> <span class="fl">0</span> <span class="op">+</span> <span class="fu">breakpt</span><span class="op">(</span><span class="va">depth_scaled</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html">as.factor</a></span><span class="op">(</span><span class="va">year</span><span class="op">)</span>,
   time <span class="op">=</span> <span class="st">"year"</span>, spde <span class="op">=</span> <span class="va">pcod_spde</span>,
   family <span class="op">=</span> <span class="fu"><a href="../reference/Families.html">tweedie</a></span><span class="op">(</span>link <span class="op">=</span> <span class="st">"log"</span><span class="op">)</span>
-<span class="op">)</span></pre></div>
+<span class="op">)</span></code></pre></div>
 <p>For this model, the important parameters are the slope, ‘depth_scaled-slope’, and breakpoint, ‘depth_scaled-breakpt’.</p>
-<div class="sourceCode" id="cb8"><pre class="downlit">
-<span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span><span class="op">(</span><span class="va">m</span><span class="op">)</span>
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span><span class="op">(</span><span class="va">m</span><span class="op">)</span>
 <span class="co">#&gt; Spatial model fit by ML ['sdmTMB']</span>
 <span class="co">#&gt; Formula: density ~ 0 + breakpt(depth_scaled) + as.factor(year)</span>
 <span class="co">#&gt; Time column: "year"</span>
@@ -215,14 +215,14 @@
 <span class="co">#&gt; Dispersion parameter: 12.14</span>
 <span class="co">#&gt; Spatial SD (sigma_O): 1.82</span>
 <span class="co">#&gt; Spatiotemporal SD (sigma_E): 1.70</span>
-<span class="co">#&gt; ML criterion at convergence: 6397.346</span></pre></div>
+<span class="co">#&gt; ML criterion at convergence: 6397.346</span></code></pre></div>
 <p>We can visualize the linear breakpoint effect:</p>
-<div class="sourceCode" id="cb9"><pre class="downlit">
-<span class="va">p</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/predict.html">predict</a></span><span class="op">(</span><span class="va">m</span>, newdata <span class="op">=</span> <span class="va">nd</span>, se_fit <span class="op">=</span> <span class="cn">TRUE</span>, re_form <span class="op">=</span> <span class="cn">NA</span>, xy_cols <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"X"</span>, <span class="st">"Y"</span><span class="op">)</span><span class="op">)</span>
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">p</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/predict.html">predict</a></span><span class="op">(</span><span class="va">m</span>, newdata <span class="op">=</span> <span class="va">nd</span>, se_fit <span class="op">=</span> <span class="cn">TRUE</span>, re_form <span class="op">=</span> <span class="cn">NA</span>, xy_cols <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"X"</span>, <span class="st">"Y"</span><span class="op">)</span><span class="op">)</span>
 <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span><span class="op">(</span><span class="va">p</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span><span class="va">depth_scaled</span>, <span class="fu"><a href="https://rdrr.io/r/base/Log.html">exp</a></span><span class="op">(</span><span class="va">est</span><span class="op">)</span>, 
   ymin <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Log.html">exp</a></span><span class="op">(</span><span class="va">est</span> <span class="op">-</span> <span class="fl">1.96</span> <span class="op">*</span> <span class="va">est_se</span><span class="op">)</span>, 
   ymax <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Log.html">exp</a></span><span class="op">(</span><span class="va">est</span> <span class="op">+</span> <span class="fl">1.96</span> <span class="op">*</span> <span class="va">est_se</span><span class="op">)</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span>
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_path.html">geom_line</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_ribbon.html">geom_ribbon</a></span><span class="op">(</span>alpha <span class="op">=</span> <span class="fl">0.4</span><span class="op">)</span></pre></div>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_path.html">geom_line</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_ribbon.html">geom_ribbon</a></span><span class="op">(</span>alpha <span class="op">=</span> <span class="fl">0.4</span><span class="op">)</span></code></pre></div>
 <p><img src="threshold-models_files/figure-html/brkpt-eff-1.png" width="672"></p>
   </div>
 
