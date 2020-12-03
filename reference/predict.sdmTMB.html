@@ -40,7 +40,8 @@
 
 
 <meta property="og:title" content="Predict from an sdmTMB model — predict.sdmTMB" />
-<meta property="og:description" content="Can predict on the original data locations or on new data." />
+<meta property="og:description" content="Make predictions from an sdmTMB model. The function can predict on the
+original or new data." />
 
 
 
@@ -138,7 +139,8 @@
     </div>
 
     <div class="ref-description">
-    <p>Can predict on the original data locations or on new data.</p>
+    <p>Make predictions from an sdmTMB model. The function can predict on the
+original or new data.</p>
     </div>
 
     <pre class="usage"><span class='co'># S3 method for sdmTMB</span>
@@ -170,8 +172,8 @@ should be predictor data for each year in the original data set.</p></td>
     <tr>
       <th>se_fit</th>
       <td><p>Should standard errors on predictions at the new locations given by
-<code>newdata</code> be calculated? Warning: the current implementation can be slow for
-large data sets or high-resolution projections.</p></td>
+<code>newdata</code> be calculated? Warning: the current implementation can be very
+slow for large data sets or high-resolution projections.</p></td>
     </tr>
     <tr>
       <th>xy_cols</th>

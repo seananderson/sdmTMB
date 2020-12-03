@@ -40,8 +40,9 @@
 
 
 <meta property="og:title" content="Fit a spatial or spatiotemporal GLMM with TMB — sdmTMB" />
-<meta property="og:description" content="Fit a spatial or spatiotemporal GLMM with TMB. Particularly useful for
-species distribution models and relative abundance index standardization." />
+<meta property="og:description" content="Fit a spatial or spatiotemporal predictive-process GLMM with TMB.
+Among other uses, this can be useful for (dynamic) species distribution
+models and relative abundance index standardization." />
 
 
 
@@ -139,8 +140,9 @@ species distribution models and relative abundance index standardization." />
     </div>
 
     <div class="ref-description">
-    <p>Fit a spatial or spatiotemporal GLMM with TMB. Particularly useful for
-species distribution models and relative abundance index standardization.</p>
+    <p>Fit a spatial or spatiotemporal predictive-process GLMM with TMB.
+Among other uses, this can be useful for (dynamic) species distribution
+models and relative abundance index standardization.</p>
     </div>
 
     <pre class="usage"><span class='fu'>sdmTMB</span><span class='op'>(</span>
@@ -175,7 +177,9 @@ species distribution models and relative abundance index standardization.</p>
     <tr>
       <th>formula</th>
       <td><p>Model formula. See the Details section below for how to specify
-offsets and threshold parameters. For index standardization, include <code>0 + as.factor(year)</code> (or whatever the time column is called) in the formula.</p></td>
+offsets and threshold parameters. For index standardization, you may wish
+to include <code>0 + as.factor(year)</code> (or whatever the time column is called)
+in the formula.</p></td>
     </tr>
     <tr>
       <th>data</th>
@@ -200,7 +204,9 @@ model.</p></td>
     <tr>
       <th>time_varying</th>
       <td><p>An optional formula describing covariates that should be
-modelled as a random walk through time.</p></td>
+modelled as a random walk through time. Be careul not to include
+covariates (including the intercept) in both the main and time-varying
+formula. I.e., at least one should have <code>~ 0</code> or ~ -1`.</p></td>
     </tr>
     <tr>
       <th>weights</th>
@@ -211,11 +217,13 @@ to one and are not internally modified.</p></td>
     <tr>
       <th>extra_time</th>
       <td><p>Optional extra time slices (e.g., years) to include for
-interpolation or forecasting with the predict function. See details section.</p></td>
+interpolation or forecasting with the predict function. See Details section.</p></td>
     </tr>
     <tr>
       <th>reml</th>
-      <td><p>Logical: use REML estimation rather than maximum likelihood?</p></td>
+      <td><p>Logical: use REML (restricted maximum likelihood) estimation
+rather than maximum likelihood? Internally, this adds the fixed effects
+to the list of random effects to intetgrate over.</p></td>
     </tr>
     <tr>
       <th>silent</th>
@@ -236,10 +244,11 @@ Phases are usually faster and more stable.</p></td>
     </tr>
     <tr>
       <th>enable_priors</th>
-      <td><p>Should weakly informative priors be enabled?
-Experimental and likely for use with the <span class="pkg">tmbstan</span> package. Note that
-the priors are not yet sensible and Jacobian adjustments are not made. If you
-are interested in this functionality, please contact the developers.</p></td>
+      <td><p>Do not use yet. Should weakly
+informative priors be enabled? Experimental and likely for use with the
+<span class="pkg">tmbstan</span> package. Note that the priors are not yet sensible and
+Jacobian adjustments are not made. If you are interested in this
+functionality, please contact the developers.</p></td>
     </tr>
     <tr>
       <th>ar1_fields</th>
@@ -255,7 +264,9 @@ fields.</p></td>
     <tr>
       <th>spatial_trend</th>
       <td><p>Should a separate spatial field be included in the
-trend? Requires spatiotemporal data.</p></td>
+trend that represents local (time) trends? Requires spatiotemporal data.
+See <a href='http://dx.doi.org/10.1111/ecog.05176'>http://dx.doi.org/10.1111/ecog.05176</a> and the
+<a href='https://pbs-assess.github.io/sdmTMB/articles/spatial-trend-models.html'>spatial trends vignette</a>.</p></td>
     </tr>
     <tr>
       <th>spatial_only</th>
@@ -285,7 +296,7 @@ convergence.</p></td>
       <th>previous_fit</th>
       <td><p>A previously fitted sdmTMB model to initialize the
 optimization with. Can greatly speed up fitting. Note that the data and
-model must be set up exactly the same way! However, the <code>weights</code> argument
+model must be set up <em>exactly</em> the same way! However, the <code>weights</code> argument
 can change, which can be useful for cross-validation.</p></td>
     </tr>
     <tr>
@@ -302,7 +313,12 @@ For example, <code>formula = cpue ~ 0 + depth + depth2 + as.factor(year)</code>.
 
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-    <p><strong>Offsets</strong></p>
+    <p><strong>Model description</strong></p>
+<p>For now, see the
+<a href='https://pbs-assess.github.io/sdmTMB/articles/model-description.html'>model description</a>
+vignette for a start. There are also descriptions of particular models in
+Anderson et al. (2019) and Barnett et al. (2020) (see reference list below).</p>
+<p><strong>Offsets</strong></p>
 <p>In the model formula, an offset can be included by including <code>+ offset</code> in
 the model formula (a reserved word). The offset will be included in any
 prediction. <code>offset</code> must be a column in <code>data</code>.</p>
@@ -315,6 +331,8 @@ function of the 50% and 95% values. This is similar to length- or size-based
 selectivity in fisheries, and is parameterized by the points at which f(x) =
 0.5 or 0.95. See the vignette.</p>
 <p>Note that only a single threshold covariate can be included.</p>
+<p>See the
+<a href='https://pbs-assess.github.io/sdmTMB/articles/threshold-models.html'>threshold vignette</a>.</p>
 <p><strong>Forecasting or interpolating</strong></p>
 <p>Extra time slices (e.g., years) can be included for interpolation or
 forecasting with the predict function via the <code>extra_time</code> argument. The
@@ -322,10 +340,27 @@ predict function requires all time slices to be defined when fitting the
 model to ensure the various time indices are set up correctly. Be careful if
 including extra time slices that the model remains identifiable. For example,
 including <code>+ as.factor(year)</code> in <code>formula</code> will render a model with no data
-to inform the expected value in the missing year. <code>sdmTMB()</code> makes no attempt
+to inform the expected value in a missing year. <code>sdmTMB()</code> makes no attempt
 to determine if the model makes sense for forecasting or interpolation. The
 options <code>time_varying</code>, <code>include_spatial</code>, <code>ar1_fields</code>, <code>time = NULL</code>
 provide mechanisms to predict over missing time slices.</p>
+<p><strong>Index standardization</strong></p>
+<p>For index standardization, you may wish to include <code>0 + as.factor(year)</code>
+(or whatever the time column is called) in the formula. See a basic
+example of index standardization in the relevant
+<a href='https://pbs-assess.github.io/sdmTMB/articles/model-description.html'>package vignette</a>.</p>
+    <h2 class="hasAnchor" id="references"><a class="anchor" href="#references"></a>References</h2>
+
+    <p>Main reference/report introducing the package. We plan to write a paper
+to cite in the near future:</p>
+<p>Anderson, S.C., E.A. Keppel, A.M. Edwards, 2019. A reproducible data synopsis
+for over 100 species of British Columbia groundfish. DFO Can. Sci. Advis. Sec.
+Res. Doc. 2019/041. vii + 321 p.
+<a href='https://www.dfo-mpo.gc.ca/csas-sccs/Publications/ResDocs-DocRech/2019/2019_041-eng.html'>https://www.dfo-mpo.gc.ca/csas-sccs/Publications/ResDocs-DocRech/2019/2019_041-eng.html</a></p>
+<p>Reference for local trends:</p>
+<p>Barnett, L.A.K., E.J. Ward, S.C. Anderson. Improving estimates of species
+distribution change by incorporating local trends. In press at Ecography.
+<a href='https://doi.org/10.1111/ecog.05176'>https://doi.org/10.1111/ecog.05176</a></p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='va'>d</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/subset.html'>subset</a></span><span class='op'>(</span><span class='va'>pcod</span>, <span class='va'>year</span> <span class='op'>&gt;=</span> <span class='fl'>2011</span><span class='op'>)</span> <span class='co'># subset for example speed</span>
