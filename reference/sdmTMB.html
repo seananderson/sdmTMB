@@ -74,7 +74,7 @@ models and relative abundance index standardization." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">sdmTMB</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.10.9001</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.11.9000</span>
       </span>
     </div>
 
@@ -82,7 +82,7 @@ models and relative abundance index standardization." />
       <ul class="nav navbar-nav">
         <li>
   <a href="../index.html">
-    <span class="fas fa fas fa-home fa-lg"></span>
+    <span class="fas fa-home fa-lg"></span>
      
   </a>
 </li>
@@ -117,7 +117,7 @@ models and relative abundance index standardization." />
       <ul class="nav navbar-nav navbar-right">
         <li>
   <a href="https://github.com/seananderson/sdmTMB/">
-    <span class="fab fa fab fa-github fa-lg"></span>
+    <span class="fab fa-github fa-lg"></span>
      
   </a>
 </li>
@@ -159,7 +159,7 @@ models and relative abundance index standardization.</p>
   multiphase <span class='op'>=</span> <span class='cn'>TRUE</span>,
   anisotropy <span class='op'>=</span> <span class='cn'>FALSE</span>,
   control <span class='op'>=</span> <span class='fu'><a href='sdmTMBcontrol.html'>sdmTMBcontrol</a></span><span class='op'>(</span><span class='op'>)</span>,
-  enable_priors <span class='op'>=</span> <span class='cn'>FALSE</span>,
+  penalties <span class='op'>=</span> <span class='cn'>NULL</span>,
   ar1_fields <span class='op'>=</span> <span class='cn'>FALSE</span>,
   include_spatial <span class='op'>=</span> <span class='cn'>TRUE</span>,
   spatial_trend <span class='op'>=</span> <span class='cn'>FALSE</span>,
@@ -217,7 +217,8 @@ to one and are not internally modified.</p></td>
     <tr>
       <th>extra_time</th>
       <td><p>Optional extra time slices (e.g., years) to include for
-interpolation or forecasting with the predict function. See Details section.</p></td>
+interpolation or forecasting with the predict function. See the
+Details section below.</p></td>
     </tr>
     <tr>
       <th>reml</th>
@@ -243,12 +244,10 @@ Phases are usually faster and more stable.</p></td>
       <td><p>Optimization control options. See <code><a href='sdmTMBcontrol.html'>sdmTMBcontrol()</a></code>.</p></td>
     </tr>
     <tr>
-      <th>enable_priors</th>
-      <td><p>Do not use yet. Should weakly
-informative priors be enabled? Experimental and likely for use with the
-<span class="pkg">tmbstan</span> package. Note that the priors are not yet sensible and
-Jacobian adjustments are not made. If you are interested in this
-functionality, please contact the developers.</p></td>
+      <th>penalties</th>
+      <td><p>Optional vector of penalties (priors) on the fixed effects.
+See the Regularization Details section below.
+below.</p></td>
     </tr>
     <tr>
       <th>ar1_fields</th>
@@ -349,6 +348,15 @@ provide mechanisms to predict over missing time slices.</p>
 (or whatever the time column is called) in the formula. See a basic
 example of index standardization in the relevant
 <a href='https://pbs-assess.github.io/sdmTMB/articles/model-description.html'>package vignette</a>.</p>
+<p><strong>Regularization</strong></p>
+<p>You can achieve regularization via penalties (priors) on the fixed effect
+parameters. The vector of values supplied to the <code>penalties</code> argument
+represents standard deviations of normal distributions centered on zero with
+one value per fixed effect. These can be used for regularization, e.g.,
+Normal(0, 1) for ridge regression. These shoud not include <code>offset</code> terms and
+care should be taken if used with splines. You can fit the model once without
+penalties and inspect the element <code><a href='https://rdrr.io/r/utils/head.html'>head(your_model$tmb_data$X_ij)</a></code> if you want to see how the formula is translated to the fixed effect model matrix.
+The <code>penalties</code> vector should correspond to the columns of the <code>X_ij</code> matrix.</p>
     <h2 class="hasAnchor" id="references"><a class="anchor" href="#references"></a>References</h2>
 
     <p>Main reference/report introducing the package. We plan to write a paper
