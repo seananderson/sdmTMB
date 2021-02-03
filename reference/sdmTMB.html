@@ -408,12 +408,11 @@ distribution change by incorporating local trends. In press at Ecography.
 #&gt; 4 as.factor(year)2013  3.873057 0.33816705  3.210262  4.5358527
 #&gt; 5 as.factor(year)2015  3.781371 0.33823581  3.118441  4.4443008
 #&gt; 6 as.factor(year)2017  3.051184 0.35024463  2.364717  3.7376510</div><div class='input'><span class='fu'><a href='https://generics.r-lib.org/reference/tidy.html'>tidy</a></span><span class='op'>(</span><span class='va'>m</span>, effects <span class='op'>=</span> <span class='st'>"ran_par"</span>, conf.int <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>
-</div><div class='output co'>#&gt;      term  estimate  std.error    conf.low conf.high
-#&gt; 1 sigma_O  2.649715  3.5506223  0.19168473  36.62779
-#&gt; 2 sigma_E  1.835313  2.3634025  0.14709085  22.89996
-#&gt; 3 sigma_Z  1.424891  2.0977456  0.07954827  25.52307
-#&gt; 4   range 14.286693 21.0330734  0.79759176 255.90736
-#&gt; 5     phi 14.155988  0.6919039 12.86281152  15.57918</div><div class='input'>
+</div><div class='output co'>#&gt;      term  estimate  std.error   conf.low conf.high
+#&gt; 1 sigma_O  2.649715  3.5506223  0.1916847  36.62779
+#&gt; 2 sigma_E  1.835313  2.3634025  0.1470909  22.89996
+#&gt; 3   range 14.286693 21.0330734  0.7975918 255.90736
+#&gt; 4     phi 14.155988  0.6919039 12.8628115  15.57918</div><div class='input'>
 <span class='co'># Run extra optimization steps to help convergence:</span>
 <span class='va'>m1</span> <span class='op'>&lt;-</span> <span class='fu'><a href='run_extra_optimization.html'>run_extra_optimization</a></span><span class='op'>(</span><span class='va'>m</span>, nlminb_loops <span class='op'>=</span> <span class='fl'>0</span>, newton_steps <span class='op'>=</span> <span class='fl'>1</span><span class='op'>)</span>
 <span class='fu'><a href='https://rdrr.io/r/base/Extremes.html'>max</a></span><span class='op'>(</span><span class='va'>m</span><span class='op'>$</span><span class='va'>gradients</span><span class='op'>)</span>
