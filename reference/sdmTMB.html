@@ -74,7 +74,7 @@ models and relative abundance index standardization." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">sdmTMB</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.11.9000</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.11.9002</span>
       </span>
     </div>
 
@@ -212,7 +212,8 @@ formula. I.e., at least one should have <code>~ 0</code> or ~ -1`.</p></td>
       <th>weights</th>
       <td><p>Optional likelihood weights for the conditional model.
 Implemented as in <span class="pkg">glmmTMB</span>. In other words, weights do not have to sum
-to one and are not internally modified.</p></td>
+to one and are not internally modified. Can also be used for trials with
+the binomial family. See Details below.</p></td>
     </tr>
     <tr>
       <th>extra_time</th>
@@ -321,6 +322,10 @@ Anderson et al. (2019) and Barnett et al. (2020) (see reference list below).</p>
 <p>In the model formula, an offset can be included by including <code>+ offset</code> in
 the model formula (a reserved word). The offset will be included in any
 prediction. <code>offset</code> must be a column in <code>data</code>.</p>
+<p><strong>Binomial models</strong>
+Binomial models with more than one trial be specified as in <code><a href='https://rdrr.io/r/stats/glm.html'>stats::glm()</a></code>:
+<code>prob ~ ..., weights = N</code> or with a two-column matrix
+<code>cbind(successes,failures) ~ ...</code>.</p>
 <p><strong>Threshold models</strong></p>
 <p>A linear break-point relationship for a covariate can be included via <code>+ breakpt(variable)</code> in the formula, where <code>variable</code> is a single covariate
 corresponding to a column in <code>data</code>. In this case the relationship is linear
@@ -418,13 +423,38 @@ distribution change by incorporating local trends. In press at Ecography.
 <span class='fu'><a href='https://rdrr.io/r/base/Extremes.html'>max</a></span><span class='op'>(</span><span class='va'>m</span><span class='op'>$</span><span class='va'>gradients</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; [1] 0.000457957</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/Extremes.html'>max</a></span><span class='op'>(</span><span class='va'>m1</span><span class='op'>$</span><span class='va'>gradients</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; [1] 1.466514e-09</div><div class='input'>
-<span class='co'># Binomial:</span>
+<span class='co'># Bernoulli:</span>
 <span class='va'>pcod_binom</span> <span class='op'>&lt;-</span> <span class='va'>d</span>
 <span class='va'>pcod_binom</span><span class='op'>$</span><span class='va'>present</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/ifelse.html'>ifelse</a></span><span class='op'>(</span><span class='va'>pcod_binom</span><span class='op'>$</span><span class='va'>density</span> <span class='op'>&gt;</span> <span class='fl'>0</span>, <span class='fl'>1L</span>, <span class='fl'>0L</span><span class='op'>)</span>
 <span class='va'>m_bin</span> <span class='op'>&lt;-</span> <span class='fu'>sdmTMB</span><span class='op'>(</span><span class='va'>present</span> <span class='op'>~</span> <span class='fl'>0</span> <span class='op'>+</span> <span class='fu'><a href='https://rdrr.io/r/base/factor.html'>as.factor</a></span><span class='op'>(</span><span class='va'>year</span><span class='op'>)</span> <span class='op'>+</span> <span class='va'>depth_scaled</span> <span class='op'>+</span> <span class='va'>depth_scaled2</span>,
   data <span class='op'>=</span> <span class='va'>pcod_binom</span>, time <span class='op'>=</span> <span class='st'>"year"</span>, spde <span class='op'>=</span> <span class='va'>pcod_spde</span>,
   family <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/stats/family.html'>binomial</a></span><span class='op'>(</span>link <span class='op'>=</span> <span class='st'>"logit"</span><span class='op'>)</span><span class='op'>)</span>
 <span class='fu'><a href='https://rdrr.io/r/base/print.html'>print</a></span><span class='op'>(</span><span class='va'>m_bin</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; Spatial model fit by ML ['sdmTMB']
+#&gt; Formula: present ~ 0 + as.factor(year) + depth_scaled + depth_scaled2
+#&gt; Time column: "year"
+#&gt; SPDE: pcod_spde
+#&gt; Data: pcod_binom
+#&gt; Family: binomial(link = 'logit')
+#&gt;                     coef.est coef.se
+#&gt; as.factor(year)2011     0.33    0.47
+#&gt; as.factor(year)2013     1.49    0.48
+#&gt; as.factor(year)2015     1.16    0.47
+#&gt; as.factor(year)2017     0.27    0.47
+#&gt; depth_scaled           -2.15    0.28
+#&gt; depth_scaled2          -1.63    0.17
+#&gt; 
+#&gt; Matern range parameter: 27.46
+#&gt; Spatial SD (sigma_O): 2.51
+#&gt; Spatiotemporal SD (sigma_E): 0.22
+#&gt; ML criterion at convergence: 470.433</div><div class='input'>
+<span class='co'># Bernoulli (3 trials for all observations):</span>
+<span class='va'>pcod_binom</span> <span class='op'>&lt;-</span> <span class='va'>d</span>
+<span class='va'>pcod_binom</span><span class='op'>$</span><span class='va'>present</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/ifelse.html'>ifelse</a></span><span class='op'>(</span><span class='va'>pcod_binom</span><span class='op'>$</span><span class='va'>density</span> <span class='op'>&gt;</span> <span class='fl'>0</span>, <span class='fl'>1L</span>, <span class='fl'>0L</span><span class='op'>)</span>
+<span class='va'>m_bin</span> <span class='op'>&lt;-</span> <span class='fu'>sdmTMB</span><span class='op'>(</span><span class='va'>present</span> <span class='op'>~</span> <span class='fl'>0</span> <span class='op'>+</span> <span class='fu'><a href='https://rdrr.io/r/base/factor.html'>as.factor</a></span><span class='op'>(</span><span class='va'>year</span><span class='op'>)</span> <span class='op'>+</span> <span class='va'>depth_scaled</span> <span class='op'>+</span> <span class='va'>depth_scaled2</span>,
+  data <span class='op'>=</span> <span class='va'>pcod_binom</span>, time <span class='op'>=</span> <span class='st'>"year"</span>, spde <span class='op'>=</span> <span class='va'>pcod_spde</span>, size <span class='op'>=</span> <span class='fl'>3</span>,
+  family <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/stats/family.html'>binomial</a></span><span class='op'>(</span>link <span class='op'>=</span> <span class='st'>"logit"</span><span class='op'>)</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; <span class='error'>Error in sdmTMB(present ~ 0 + as.factor(year) + depth_scaled + depth_scaled2,     data = pcod_binom, time = "year", spde = pcod_spde, size = 3,     family = binomial(link = "logit")): unused argument (size = 3)</span></div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/print.html'>print</a></span><span class='op'>(</span><span class='va'>m_bin</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; Spatial model fit by ML ['sdmTMB']
 #&gt; Formula: present ~ 0 + as.factor(year) + depth_scaled + depth_scaled2
 #&gt; Time column: "year"

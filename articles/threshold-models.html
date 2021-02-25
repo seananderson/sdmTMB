@@ -31,7 +31,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">sdmTMB</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.11.9000</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.11.9002</span>
       </span>
     </div>
 
@@ -93,7 +93,7 @@
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Threshold modeling with sdmTMB</h1>
             
-            <h4 class="date">2021-02-04</h4>
+            <h4 class="date">2021-02-25</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/seananderson/sdmTMB/blob/master/vignettes/threshold-models.Rmd"><code>vignettes/threshold-models.Rmd</code></a></small>
       <div class="hidden name"><code>threshold-models.Rmd</code></div>
@@ -109,21 +109,21 @@
 <p>We’ll repeat the same models used for the index standardization vignette, using the built-in data for Pacific cod.</p>
 <p>As a summary, - We’ve included columns for depth and depth squared. - Depth was centred and scaled by its standard deviation and we’ve included those in the data frame so that they could be used to similarly scale the prediction grid. - The density units should be kg/km<sup>2</sup>. - Here, X and Y are coordinates in UTM zone 9.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://tibble.tidyverse.org/reference/glimpse.html">glimpse</a></span><span class="op">(</span><span class="va">pcod</span><span class="op">)</span>
+<code class="sourceCode R"><span class="fu"><a href="https://pillar.r-lib.org/reference/glimpse.html">glimpse</a></span><span class="op">(</span><span class="va">pcod</span><span class="op">)</span>
 <span class="co">#&gt; Rows: 2,143</span>
 <span class="co">#&gt; Columns: 12</span>
-<span class="co">#&gt; $ year          &lt;int&gt; 2003, 2003, 2003, 2003, 2003, 2003, 2003, 2003, 2003, 2…</span>
-<span class="co">#&gt; $ X             &lt;dbl&gt; 446.4752, 446.4594, 448.5987, 436.9157, 420.6101, 417.7…</span>
-<span class="co">#&gt; $ Y             &lt;dbl&gt; 5793.426, 5800.136, 5801.687, 5802.305, 5771.055, 5772.…</span>
-<span class="co">#&gt; $ depth         &lt;dbl&gt; 201, 212, 220, 197, 256, 293, 410, 387, 285, 270, 381, …</span>
-<span class="co">#&gt; $ density       &lt;dbl&gt; 113.138476, 41.704922, 0.000000, 15.706138, 0.000000, 0…</span>
-<span class="co">#&gt; $ present       &lt;dbl&gt; 1, 1, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0…</span>
-<span class="co">#&gt; $ lat           &lt;dbl&gt; 52.28858, 52.34890, 52.36305, 52.36738, 52.08437, 52.09…</span>
-<span class="co">#&gt; $ lon           &lt;dbl&gt; -129.7847, -129.7860, -129.7549, -129.9265, -130.1586, …</span>
-<span class="co">#&gt; $ depth_mean    &lt;dbl&gt; 5.155194, 5.155194, 5.155194, 5.155194, 5.155194, 5.155…</span>
-<span class="co">#&gt; $ depth_sd      &lt;dbl&gt; 0.4448783, 0.4448783, 0.4448783, 0.4448783, 0.4448783, …</span>
-<span class="co">#&gt; $ depth_scaled  &lt;dbl&gt; 0.3329252, 0.4526914, 0.5359529, 0.2877417, 0.8766077, …</span>
-<span class="co">#&gt; $ depth_scaled2 &lt;dbl&gt; 0.11083919, 0.20492947, 0.28724555, 0.08279527, 0.76844…</span></code></pre></div>
+<span class="co">#&gt; $ year          &lt;int&gt; 2003, 2003, 2003, 2003, 2003, 2003, 2003, 2003, 2003, 20…</span>
+<span class="co">#&gt; $ X             &lt;dbl&gt; 446.4752, 446.4594, 448.5987, 436.9157, 420.6101, 417.71…</span>
+<span class="co">#&gt; $ Y             &lt;dbl&gt; 5793.426, 5800.136, 5801.687, 5802.305, 5771.055, 5772.2…</span>
+<span class="co">#&gt; $ depth         &lt;dbl&gt; 201, 212, 220, 197, 256, 293, 410, 387, 285, 270, 381, 1…</span>
+<span class="co">#&gt; $ density       &lt;dbl&gt; 113.138476, 41.704922, 0.000000, 15.706138, 0.000000, 0.…</span>
+<span class="co">#&gt; $ present       &lt;dbl&gt; 1, 1, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0,…</span>
+<span class="co">#&gt; $ lat           &lt;dbl&gt; 52.28858, 52.34890, 52.36305, 52.36738, 52.08437, 52.094…</span>
+<span class="co">#&gt; $ lon           &lt;dbl&gt; -129.7847, -129.7860, -129.7549, -129.9265, -130.1586, -…</span>
+<span class="co">#&gt; $ depth_mean    &lt;dbl&gt; 5.155194, 5.155194, 5.155194, 5.155194, 5.155194, 5.1551…</span>
+<span class="co">#&gt; $ depth_sd      &lt;dbl&gt; 0.4448783, 0.4448783, 0.4448783, 0.4448783, 0.4448783, 0…</span>
+<span class="co">#&gt; $ depth_scaled  &lt;dbl&gt; 0.3329252, 0.4526914, 0.5359529, 0.2877417, 0.8766077, 1…</span>
+<span class="co">#&gt; $ depth_scaled2 &lt;dbl&gt; 0.11083919, 0.20492947, 0.28724555, 0.08279527, 0.768440…</span></code></pre></div>
 <p>As before, the SPDE mesh is created using 75 knots for a balance between speed and accuracy. You will likely want to use more for applied scenarios. You will want to make sure that increasing the number of knots does not change the conclusions.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">pcod_spde</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/make_mesh.html">make_mesh</a></span><span class="op">(</span><span class="va">pcod</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"X"</span>, <span class="st">"Y"</span><span class="op">)</span>, cutoff <span class="op">=</span> <span class="fl">12</span><span class="op">)</span></code></pre></div>
