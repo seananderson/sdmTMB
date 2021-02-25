@@ -199,7 +199,8 @@ model.</p></td>
       <td><p>The family and link. Supports <code><a href='https://rdrr.io/r/stats/family.html'>gaussian()</a></code>, <code><a href='https://rdrr.io/r/stats/family.html'>Gamma()</a></code>,
 <code><a href='https://rdrr.io/r/stats/family.html'>binomial()</a></code>, <code><a href='https://rdrr.io/r/stats/family.html'>poisson()</a></code>, <code><a href='Families.html'>Beta()</a></code>,
 <code><a href='Families.html'>nbinom2()</a></code>, and
-<code><a href='Families.html'>tweedie()</a></code>].</p></td>
+<code><a href='Families.html'>tweedie()</a></code>]. For binomial family options,
+see the 'Binomial families' section below.</p></td>
     </tr>
     <tr>
       <th>time_varying</th>
@@ -322,10 +323,14 @@ Anderson et al. (2019) and Barnett et al. (2020) (see reference list below).</p>
 <p>In the model formula, an offset can be included by including <code>+ offset</code> in
 the model formula (a reserved word). The offset will be included in any
 prediction. <code>offset</code> must be a column in <code>data</code>.</p>
-<p><strong>Binomial models</strong>
-Binomial models with more than one trial be specified as in <code><a href='https://rdrr.io/r/stats/glm.html'>stats::glm()</a></code>:
-<code>prob ~ ..., weights = N</code> or with a two-column matrix
-<code>cbind(successes,failures) ~ ...</code>.</p>
+<p><strong>Binomial families</strong>
+Following the structure of <code><a href='https://rdrr.io/r/stats/glm.html'>stats::glm()</a></code> and <span class="pkg">glmmTMB</span>, a binomial
+family can be specified in one of 4 ways: (1) the response may be a factor
+(and the model classifies the first level versus all others), (2) the
+response may be binomial (0/1), (3) the response can be a matrix of form
+<code><a href='https://rdrr.io/r/base/cbind.html'>cbind(success, failure)</a></code>, and (4) the response may be the observed
+proportions, and the 'weights' argument is used to specify the Binomial size
+(N) parameter (<code>prob ~ ..., weights = N</code>).</p>
 <p><strong>Threshold models</strong></p>
 <p>A linear break-point relationship for a covariate can be included via <code>+ breakpt(variable)</code> in the formula, where <code>variable</code> is a single covariate
 corresponding to a column in <code>data</code>. In this case the relationship is linear
