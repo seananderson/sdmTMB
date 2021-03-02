@@ -483,26 +483,8 @@ distribution change by incorporating local trends. In press at Ecography.
 <span class='co'># See ?mgcv::choose.k</span>
 <span class='va'>m_gam</span> <span class='op'>&lt;-</span> <span class='fu'>sdmTMB</span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/Log.html'>log</a></span><span class='op'>(</span><span class='va'>density</span><span class='op'>)</span> <span class='op'>~</span> <span class='fl'>0</span> <span class='op'>+</span> <span class='fu'><a href='https://rdrr.io/r/base/factor.html'>as.factor</a></span><span class='op'>(</span><span class='va'>year</span><span class='op'>)</span> <span class='op'>+</span> <span class='fu'>s</span><span class='op'>(</span><span class='va'>depth_scaled</span>, k <span class='op'>=</span> <span class='fl'>4</span><span class='op'>)</span>,
   data <span class='op'>=</span> <span class='va'>pcod_gaus</span>, time <span class='op'>=</span> <span class='st'>"year"</span>, spde <span class='op'>=</span> <span class='va'>pcod_spde_gaus</span><span class='op'>)</span>
-<span class='fu'><a href='https://rdrr.io/r/base/print.html'>print</a></span><span class='op'>(</span><span class='va'>m_gam</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; Spatial model fit by ML ['sdmTMB']
-#&gt; Formula: log(density) ~ 0 + as.factor(year) + s(depth_scaled, k = 4)
-#&gt; Time column: "year"
-#&gt; SPDE: pcod_spde_gaus
-#&gt; Data: pcod_gaus
-#&gt; Family: gaussian(link = 'identity')
-#&gt;                     coef.est coef.se
-#&gt; as.factor(year)2013     3.45    0.11
-#&gt; as.factor(year)2015     3.60    0.12
-#&gt; as.factor(year)2017     3.23    0.14
-#&gt; s(depth_scaled).1       1.04    0.26
-#&gt; s(depth_scaled).2      -0.61    0.61
-#&gt; s(depth_scaled).3      -0.90    0.30
-#&gt; 
-#&gt; Matern range parameter: 0.21
-#&gt; Dispersion parameter: 1.32
-#&gt; Spatial SD (sigma_O): 0.01
-#&gt; Spatiotemporal SD (sigma_E): 0.01
-#&gt; ML criterion at convergence: 589.528</div><div class='input'>
+</div><div class='output co'>#&gt; <span class='error'>Error in s(depth_scaled, k = 4): could not find function "s"</span></div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/print.html'>print</a></span><span class='op'>(</span><span class='va'>m_gam</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; <span class='error'>Error in print(m_gam): object 'm_gam' not found</span></div><div class='input'>
 <span class='co'># \donttest{</span>
 <span class='co'># Fit a spatial only model:</span>
 <span class='va'>m</span> <span class='op'>&lt;-</span> <span class='fu'>sdmTMB</span><span class='op'>(</span>
