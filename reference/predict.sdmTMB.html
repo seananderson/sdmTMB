@@ -73,7 +73,7 @@ original or new data." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">sdmTMB</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.11.9002</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.12.9000</span>
       </span>
     </div>
 
@@ -253,19 +253,19 @@ are included for other functions.</p>
 #&gt; 521 2003 420.6101 5771.055   256   0.00000       0 52.08437 -130.1586
 #&gt; 488 2003 417.7130 5772.205   293   0.00000       0 52.09428 -130.2012
 #&gt;     depth_mean  depth_sd depth_scaled depth_scaled2         est est_non_rf
-#&gt; 888   5.155194 0.4448783    0.3329252    0.11083919  3.45791471  3.2225314
-#&gt; 887   5.155194 0.4448783    0.4526914    0.20492947  3.35694044  2.9247984
-#&gt; 921   5.155194 0.4448783    0.5359529    0.28724555  3.18090324  2.6958553
-#&gt; 756   5.155194 0.4448783    0.2877417    0.08279527  3.78707132  3.3251741
-#&gt; 521   5.155194 0.4448783    0.8766077    0.76844097  1.08926601  1.5715748
-#&gt; 488   5.155194 0.4448783    1.1800505    1.39251928 -0.08533285  0.3162215
+#&gt; 888   5.155194 0.4448783    0.3329252    0.11083919  3.45791193  3.2225136
+#&gt; 887   5.155194 0.4448783    0.4526914    0.20492947  3.35693827  2.9247801
+#&gt; 921   5.155194 0.4448783    0.5359529    0.28724555  3.18090096  2.6958367
+#&gt; 756   5.155194 0.4448783    0.2877417    0.08279527  3.78707027  3.3251565
+#&gt; 521   5.155194 0.4448783    0.8766077    0.76844097  1.08926145  1.5715552
+#&gt; 488   5.155194 0.4448783    1.1800505    1.39251928 -0.08533746  0.3162011
 #&gt;         est_rf     omega_s zeta_s epsilon_st
-#&gt; 888  0.2353833 -0.17932670      0  0.4147100
-#&gt; 887  0.4321420 -0.07780172      0  0.5099438
-#&gt; 921  0.4850480 -0.08540468      0  0.5704527
-#&gt; 756  0.4618972  0.12196182      0  0.3399354
-#&gt; 521 -0.4823088 -0.09804612      0 -0.3842627
-#&gt; 488 -0.4015544 -0.07050750      0 -0.3310469</div><div class='input'>
+#&gt; 888  0.2353983 -0.17931253      0  0.4147108
+#&gt; 887  0.4321581 -0.07778678      0  0.5099449
+#&gt; 921  0.4850643 -0.08538943      0  0.5704537
+#&gt; 756  0.4619137  0.12197624      0  0.3399375
+#&gt; 521 -0.4822937 -0.09803081      0 -0.3842629
+#&gt; 488 -0.4015386 -0.07049222      0 -0.3310463</div><div class='input'>
 <span class='va'>predictions</span><span class='op'>$</span><span class='va'>resids</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/stats/residuals.html'>residuals</a></span><span class='op'>(</span><span class='va'>m</span><span class='op'>)</span> <span class='co'># randomized quantile residuals</span>
 <span class='co'># \donttest{</span>
 <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/ggplot.html'>ggplot</a></span><span class='op'>(</span><span class='va'>predictions</span>, <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/aes.html'>aes</a></span><span class='op'>(</span><span class='va'>X</span>, <span class='va'>Y</span>, col <span class='op'>=</span> <span class='va'>resids</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>+</span> <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/scale_gradient.html'>scale_colour_gradient2</a></span><span class='op'>(</span><span class='op'>)</span> <span class='op'>+</span>

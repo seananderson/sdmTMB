@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">sdmTMB</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.11.9002</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.12.9000</span>
       </span>
     </div>
 
@@ -211,7 +211,8 @@ should be between -1 and 1.</p></td>
     </tr>
     <tr>
       <th>sigma_E</th>
-      <td><p>SD of spatiotemporal process (Epsilon).</p></td>
+      <td><p>SD of spatiotemporal process (Epsilon). Can be scalar or
+vector for time-varying model.</p></td>
     </tr>
     <tr>
       <th>sigma_V</th>
@@ -285,11 +286,17 @@ data is in list element 1 and input values in element 2.</p></td>
 </div><div class='output co'>#&gt;          term  estimate  std.error  conf.low conf.high
 #&gt; 1 (Intercept) 0.4150763 0.06837053 0.2810725 0.5490801
 #&gt; 2          x1 0.6948517 0.01776395 0.6600350 0.7296684</div><div class='input'><span class='fu'><a href='https://generics.r-lib.org/reference/tidy.html'>tidy</a></span><span class='op'>(</span><span class='va'>m</span>, <span class='st'>"ran_pars"</span>, conf.int <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>
-</div><div class='output co'>#&gt;      term  estimate  std.error  conf.low conf.high
-#&gt; 1 sigma_E 0.3096089 0.02963157 0.2566540 0.3734900
-#&gt; 2   range 0.6200721 0.15621982 0.3784356 1.0159968
-#&gt; 3     phi 0.2111023 0.01921727 0.1766060 0.2523366
-#&gt; 4     rho 0.4973067 0.31644852 0.2313428 0.6941057</div><div class='input'><span class='co'># }</span>
+</div><div class='output co'>#&gt;        term  estimate  std.error  conf.low conf.high
+#&gt; 1   sigma_E 0.3096089 0.02963157 0.2566540 0.3734900
+#&gt; 2   sigma_E 0.3096089 0.02963157 0.2566540 0.3734900
+#&gt; 3   sigma_E 0.3096089 0.02963157 0.2566540 0.3734900
+#&gt; 4   sigma_E 0.3096089 0.02963157 0.2566540 0.3734900
+#&gt; 5   sigma_E 0.3096089 0.02963157 0.2566540 0.3734900
+#&gt; 6   sigma_E 0.3096089 0.02963157 0.2566540 0.3734900
+#&gt; 7  ln_tau_V 0.0000000         NA        NA        NA
+#&gt; 8     range 0.6200721 0.15621982 0.3784356 1.0159968
+#&gt; 9       phi 0.2111023 0.01921727 0.1766060 0.2523366
+#&gt; 10      rho 0.4973067 0.31644852 0.2313428 0.6941057</div><div class='input'><span class='co'># }</span>
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">

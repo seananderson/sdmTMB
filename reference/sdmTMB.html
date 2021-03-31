@@ -74,7 +74,7 @@ models and relative abundance index standardization." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">sdmTMB</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.11.9002</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.12.9000</span>
       </span>
     </div>
 
@@ -168,7 +168,8 @@ models and relative abundance index standardization.</p>
   newton_steps <span class='op'>=</span> <span class='fl'>0</span>,
   mgcv <span class='op'>=</span> <span class='cn'>TRUE</span>,
   previous_fit <span class='op'>=</span> <span class='cn'>NULL</span>,
-  quadratic_roots <span class='op'>=</span> <span class='cn'>FALSE</span>
+  quadratic_roots <span class='op'>=</span> <span class='cn'>FALSE</span>,
+  epsilon_predictor <span class='op'>=</span> <span class='cn'>NULL</span>
 <span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
@@ -310,6 +311,19 @@ profile for depth, and depth and depth^2 are part of your formula, you need
 to make sure these are listed first and that an intercept isn't included.
 For example, <code>formula = cpue ~ 0 + depth + depth2 + as.factor(year)</code>.</p></td>
     </tr>
+    <tr>
+      <th>epsilon_predictor</th>
+      <td><p>A column name (as character) of a predictor of a
+linear trend (in log space) of the spatiotemporal standard deviation. By
+default, this is <code>NULL</code> and fits a model with a constant spatiotemporal
+variance. However, this argument can also be a character name in the
+original data frame (a covariate that ideally has been standardized to have
+mean 0 and standard deviation = 1). Because the spatiotemporal field varies
+by time step, the standardization should be done by time. If the name of a
+predictor is included, a log-linear model is fit where the predictor is
+used to model effects on the standard deviation,
+e.g. <code>log(sd(i)) = B0 + B1 * epsilon_predictor(i)</code>.</p></td>
+    </tr>
     </table>
 
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
@@ -410,24 +424,31 @@ distribution change by incorporating local trends. In press at Ecography.
 #&gt; Dispersion parameter: 14.16
 #&gt; Spatial SD (sigma_O): 2.65
 #&gt; Spatiotemporal SD (sigma_E): 1.84
+#&gt; Spatiotemporal SD (sigma_E): 1.84
+#&gt; Spatiotemporal SD (sigma_E): 1.84
+#&gt; Spatiotemporal SD (sigma_E): 1.84
 #&gt; ML criterion at convergence: 2955.205</div><div class='input'><span class='fu'><a href='https://generics.r-lib.org/reference/tidy.html'>tidy</a></span><span class='op'>(</span><span class='va'>m</span>, conf.int <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>
 </div><div class='output co'>#&gt;                  term  estimate  std.error  conf.low  conf.high
-#&gt; 1        depth_scaled -1.576332 0.19996487 -1.968256 -1.1844078
-#&gt; 2       depth_scaled2 -1.108996 0.09901708 -1.303066 -0.9149263
-#&gt; 3 as.factor(year)2011  3.671943 0.34094724  3.003698  4.3401871
-#&gt; 4 as.factor(year)2013  3.873057 0.33816705  3.210262  4.5358527
-#&gt; 5 as.factor(year)2015  3.781371 0.33823581  3.118441  4.4443008
-#&gt; 6 as.factor(year)2017  3.051184 0.35024463  2.364717  3.7376510</div><div class='input'><span class='fu'><a href='https://generics.r-lib.org/reference/tidy.html'>tidy</a></span><span class='op'>(</span><span class='va'>m</span>, effects <span class='op'>=</span> <span class='st'>"ran_par"</span>, conf.int <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>
-</div><div class='output co'>#&gt;      term  estimate  std.error   conf.low conf.high
-#&gt; 1 sigma_O  2.649715  3.5506223  0.1916847  36.62779
-#&gt; 2 sigma_E  1.835313  2.3634025  0.1470909  22.89996
-#&gt; 3   range 14.286693 21.0330734  0.7975918 255.90736
-#&gt; 4     phi 14.155988  0.6919039 12.8628115  15.57918</div><div class='input'>
+#&gt; 1        depth_scaled -1.576331 0.19996474 -1.968255 -1.1844072
+#&gt; 2       depth_scaled2 -1.108996 0.09901702 -1.303066 -0.9149261
+#&gt; 3 as.factor(year)2011  3.671941 0.34094673  3.003698  4.3401846
+#&gt; 4 as.factor(year)2013  3.873055 0.33816650  3.210261  4.5358491
+#&gt; 5 as.factor(year)2015  3.781370 0.33823528  3.118441  4.4442988
+#&gt; 6 as.factor(year)2017  3.051183 0.35024411  2.364717  3.7376490</div><div class='input'><span class='fu'><a href='https://generics.r-lib.org/reference/tidy.html'>tidy</a></span><span class='op'>(</span><span class='va'>m</span>, effects <span class='op'>=</span> <span class='st'>"ran_par"</span>, conf.int <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>
+</div><div class='output co'>#&gt;       term  estimate  std.error   conf.low conf.high
+#&gt; 1  sigma_O  2.649743  3.5507682  0.1916715  36.63110
+#&gt; 2  sigma_E  1.835337  2.3635093  0.1470807  22.90212
+#&gt; 3  sigma_E  1.835337  2.3635093  0.1470807  22.90212
+#&gt; 4  sigma_E  1.835337  2.3635093  0.1470807  22.90212
+#&gt; 5  sigma_E  1.835337  2.3635093  0.1470807  22.90212
+#&gt; 6 ln_tau_V  0.000000         NA         NA        NA
+#&gt; 7    range 14.286488 21.0333830  0.7975133 255.92517
+#&gt; 8      phi 14.155975  0.6919032 12.8628002  15.57916</div><div class='input'>
 <span class='co'># Run extra optimization steps to help convergence:</span>
 <span class='va'>m1</span> <span class='op'>&lt;-</span> <span class='fu'><a href='run_extra_optimization.html'>run_extra_optimization</a></span><span class='op'>(</span><span class='va'>m</span>, nlminb_loops <span class='op'>=</span> <span class='fl'>0</span>, newton_steps <span class='op'>=</span> <span class='fl'>1</span><span class='op'>)</span>
 <span class='fu'><a href='https://rdrr.io/r/base/Extremes.html'>max</a></span><span class='op'>(</span><span class='va'>m</span><span class='op'>$</span><span class='va'>gradients</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; [1] 0.000457957</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/Extremes.html'>max</a></span><span class='op'>(</span><span class='va'>m1</span><span class='op'>$</span><span class='va'>gradients</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; [1] 1.466514e-09</div><div class='input'>
+</div><div class='output co'>#&gt; [1] 7.412425e-05</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/Extremes.html'>max</a></span><span class='op'>(</span><span class='va'>m1</span><span class='op'>$</span><span class='va'>gradients</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; [1] 7.401035e-09</div><div class='input'>
 <span class='co'># Bernoulli:</span>
 <span class='va'>pcod_binom</span> <span class='op'>&lt;-</span> <span class='va'>d</span>
 <span class='va'>pcod_binom</span><span class='op'>$</span><span class='va'>present</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/ifelse.html'>ifelse</a></span><span class='op'>(</span><span class='va'>pcod_binom</span><span class='op'>$</span><span class='va'>density</span> <span class='op'>&gt;</span> <span class='fl'>0</span>, <span class='fl'>1L</span>, <span class='fl'>0L</span><span class='op'>)</span>
@@ -452,6 +473,9 @@ distribution change by incorporating local trends. In press at Ecography.
 #&gt; Matern range parameter: 27.46
 #&gt; Spatial SD (sigma_O): 2.51
 #&gt; Spatiotemporal SD (sigma_E): 0.22
+#&gt; Spatiotemporal SD (sigma_E): 0.22
+#&gt; Spatiotemporal SD (sigma_E): 0.22
+#&gt; Spatiotemporal SD (sigma_E): 0.22
 #&gt; ML criterion at convergence: 470.433</div><div class='input'>
 <span class='co'># Gaussian:</span>
 <span class='va'>pcod_gaus</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/subset.html'>subset</a></span><span class='op'>(</span><span class='va'>d</span>, <span class='va'>density</span> <span class='op'>&gt;</span> <span class='fl'>0</span> <span class='op'>&amp;</span> <span class='va'>year</span> <span class='op'>&gt;=</span> <span class='fl'>2013</span><span class='op'>)</span>
@@ -475,6 +499,8 @@ distribution change by incorporating local trends. In press at Ecography.
 #&gt; Matern range parameter: 0.22
 #&gt; Dispersion parameter: 1.35
 #&gt; Spatial SD (sigma_O): 0.01
+#&gt; Spatiotemporal SD (sigma_E): 0.01
+#&gt; Spatiotemporal SD (sigma_E): 0.01
 #&gt; Spatiotemporal SD (sigma_E): 0.01
 #&gt; ML criterion at convergence: 599.014</div><div class='input'>
 <span class='co'># With splines via mgcv.</span>
@@ -502,6 +528,8 @@ distribution change by incorporating local trends. In press at Ecography.
 #&gt; Dispersion parameter: 1.32
 #&gt; Spatial SD (sigma_O): 0.01
 #&gt; Spatiotemporal SD (sigma_E): 0.01
+#&gt; Spatiotemporal SD (sigma_E): 0.01
+#&gt; Spatiotemporal SD (sigma_E): 0.01
 #&gt; ML criterion at convergence: 589.528</div><div class='input'>
 <span class='co'># \donttest{</span>
 <span class='co'># Fit a spatial only model:</span>
@@ -522,7 +550,7 @@ distribution change by incorporating local trends. In press at Ecography.
 #&gt; 
 #&gt; Matern range parameter: 0.03
 #&gt; Dispersion parameter: 14.78
-#&gt; Spatial SD (sigma_O): 1676.98
+#&gt; Spatial SD (sigma_O): 1676.96
 #&gt; Spatiotemporal SD (sigma_E): not estimated
 #&gt; ML criterion at convergence: 2974.181</div><div class='input'>
 <span class='co'># Spatial-trend example:</span>
@@ -530,12 +558,16 @@ distribution change by incorporating local trends. In press at Ecography.
   spde <span class='op'>=</span> <span class='va'>pcod_spde</span>, family <span class='op'>=</span> <span class='fu'><a href='Families.html'>tweedie</a></span><span class='op'>(</span>link <span class='op'>=</span> <span class='st'>"log"</span><span class='op'>)</span>,
   spatial_trend <span class='op'>=</span> <span class='cn'>TRUE</span>, time <span class='op'>=</span> <span class='st'>"year"</span><span class='op'>)</span>
 <span class='fu'><a href='https://generics.r-lib.org/reference/tidy.html'>tidy</a></span><span class='op'>(</span><span class='va'>m</span>, effects <span class='op'>=</span> <span class='st'>"ran_par"</span><span class='op'>)</span>
-</div><div class='output co'>#&gt;      term   estimate  std.error
-#&gt; 1 sigma_O  2.5786216  1.3024488
-#&gt; 2 sigma_E  0.8739983  0.5275146
-#&gt; 3 sigma_Z  0.3300048  0.1877423
-#&gt; 4   range 24.7819984 17.9633699
-#&gt; 5     phi 15.5051233  0.7261014</div><div class='input'>
+</div><div class='output co'>#&gt;       term   estimate  std.error
+#&gt; 1  sigma_O  2.5786216  1.3024489
+#&gt; 2  sigma_E  0.8739983  0.5275146
+#&gt; 3  sigma_E  0.8739983  0.5275146
+#&gt; 4  sigma_E  0.8739983  0.5275146
+#&gt; 5  sigma_E  0.8739983  0.5275146
+#&gt; 6  sigma_Z  0.3300048  0.1877423
+#&gt; 7 ln_tau_V  0.0000000         NA
+#&gt; 8    range 24.7819978 17.9633703
+#&gt; 9      phi 15.5051233  0.7261014</div><div class='input'>
 <span class='co'># Time-varying effects of depth and depth squared:</span>
 <span class='va'>m</span> <span class='op'>&lt;-</span> <span class='fu'>sdmTMB</span><span class='op'>(</span><span class='va'>density</span> <span class='op'>~</span> <span class='fl'>0</span> <span class='op'>+</span> <span class='fu'><a href='https://rdrr.io/r/base/factor.html'>as.factor</a></span><span class='op'>(</span><span class='va'>year</span><span class='op'>)</span>,
   time_varying <span class='op'>=</span> <span class='op'>~</span> <span class='fl'>0</span> <span class='op'>+</span> <span class='va'>depth_scaled</span> <span class='op'>+</span> <span class='va'>depth_scaled2</span>,
@@ -568,29 +600,32 @@ distribution change by incorporating local trends. In press at Ecography.
 #&gt; Dispersion parameter: 13.78
 #&gt; Spatial SD (sigma_O): 5.23
 #&gt; Spatiotemporal SD (sigma_E): 3.65
+#&gt; Spatiotemporal SD (sigma_E): 3.65
+#&gt; Spatiotemporal SD (sigma_E): 3.65
+#&gt; Spatiotemporal SD (sigma_E): 3.65
 #&gt; ML criterion at convergence: 2943.572</div><div class='input'>
 <span class='co'># See the b_rw_t estimates; these are the time-varying (random walk) effects.</span>
 <span class='co'># These could be added to tidy.sdmTMB() eventually.</span>
 <span class='fu'><a href='https://rdrr.io/r/base/summary.html'>summary</a></span><span class='op'>(</span><span class='va'>m</span><span class='op'>$</span><span class='va'>sd_report</span><span class='op'>)</span><span class='op'>[</span><span class='fl'>1</span><span class='op'>:</span><span class='fl'>19</span>,<span class='op'>]</span>
 </div><div class='output co'>#&gt;            Estimate  Std. Error
-#&gt; b_j       4.0090872  0.31751960
-#&gt; b_j       3.6751811  0.30409948
-#&gt; b_j       4.0278776  0.31422339
-#&gt; b_j       3.4204687  0.33726406
-#&gt; ln_tau_O -2.1297412 13.60884306
-#&gt; ln_tau_E -1.7704078 13.59323378
-#&gt; ln_kappa -0.7894472  6.89097094
+#&gt; b_j       4.0090869  0.31751958
+#&gt; b_j       3.6751809  0.30409946
+#&gt; b_j       4.0278775  0.31422337
+#&gt; b_j       3.4204686  0.33726404
+#&gt; ln_tau_O -2.1297489 13.60894756
+#&gt; ln_tau_E -1.7704156 13.59333829
+#&gt; ln_kappa -0.7894433  6.89102319
 #&gt; thetaf    0.3172205  0.06427312
-#&gt; ln_phi    2.6232966  0.04895034
-#&gt; ln_tau_V -1.5247832  0.84952336
-#&gt; ln_tau_V -0.2008949  0.45430295
-#&gt; b_rw_t   -0.7777383  0.14304717
-#&gt; b_rw_t   -0.7505321  0.12626466
-#&gt; b_rw_t   -0.7338111  0.13539467
-#&gt; b_rw_t   -1.0153736  0.23736181
-#&gt; b_rw_t   -1.7649953  0.25180630
+#&gt; ln_phi    2.6232965  0.04895034
+#&gt; ln_tau_V -1.5247834  0.84952350
+#&gt; ln_tau_V -0.2008950  0.45430294
+#&gt; b_rw_t   -0.7777383  0.14304716
+#&gt; b_rw_t   -0.7505321  0.12626465
+#&gt; b_rw_t   -0.7338111  0.13539466
+#&gt; b_rw_t   -1.0153735  0.23736182
+#&gt; b_rw_t   -1.7649952  0.25180629
 #&gt; b_rw_t   -0.7903728  0.12822862
-#&gt; b_rw_t   -1.5261893  0.21146329
+#&gt; b_rw_t   -1.5261893  0.21146328
 #&gt; b_rw_t   -2.0694461  0.34416970</div><div class='input'>
 <span class='co'># Linear breakpoint model on depth:</span>
 <span class='va'>m_pos</span> <span class='op'>&lt;-</span> <span class='fu'>sdmTMB</span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/Log.html'>log</a></span><span class='op'>(</span><span class='va'>density</span><span class='op'>)</span> <span class='op'>~</span> <span class='fl'>0</span> <span class='op'>+</span> <span class='fu'><a href='https://rdrr.io/r/base/factor.html'>as.factor</a></span><span class='op'>(</span><span class='va'>year</span><span class='op'>)</span> <span class='op'>+</span>
@@ -616,7 +651,42 @@ distribution change by incorporating local trends. In press at Ecography.
 #&gt; Dispersion parameter: 1.33
 #&gt; Spatial SD (sigma_O): 0.01
 #&gt; Spatiotemporal SD (sigma_E): 0.01
-#&gt; ML criterion at convergence: 592.503</div><div class='input'><span class='co'># }</span>
+#&gt; Spatiotemporal SD (sigma_E): 0.01
+#&gt; Spatiotemporal SD (sigma_E): 0.01
+#&gt; ML criterion at convergence: 592.503</div><div class='input'>
+<span class='co'># Linear covariate on log(sigma_epsilon):</span>
+<span class='co'># First we will center the years around their mean</span>
+<span class='co'># to help with convergence.</span>
+<span class='va'>d</span><span class='op'>$</span><span class='va'>year_centered</span> <span class='op'>&lt;-</span> <span class='va'>d</span><span class='op'>$</span><span class='va'>year</span> <span class='op'>-</span> <span class='fu'><a href='https://rdrr.io/r/base/mean.html'>mean</a></span><span class='op'>(</span><span class='va'>d</span><span class='op'>$</span><span class='va'>year</span><span class='op'>)</span>
+<span class='va'>m</span> <span class='op'>&lt;-</span> <span class='fu'>sdmTMB</span><span class='op'>(</span><span class='va'>density</span> <span class='op'>~</span> <span class='fl'>0</span> <span class='op'>+</span> <span class='va'>depth_scaled</span> <span class='op'>+</span> <span class='va'>depth_scaled2</span> <span class='op'>+</span> <span class='fu'><a href='https://rdrr.io/r/base/factor.html'>as.factor</a></span><span class='op'>(</span><span class='va'>year</span><span class='op'>)</span>,
+  data <span class='op'>=</span> <span class='va'>d</span>, time <span class='op'>=</span> <span class='st'>"year"</span>, spde <span class='op'>=</span> <span class='va'>pcod_spde</span>, family <span class='op'>=</span> <span class='fu'><a href='Families.html'>tweedie</a></span><span class='op'>(</span>link <span class='op'>=</span> <span class='st'>"log"</span><span class='op'>)</span>,
+  epsilon_predictor <span class='op'>=</span> <span class='st'>"year_centered"</span><span class='op'>)</span>
+<span class='fu'><a href='https://rdrr.io/r/base/print.html'>print</a></span><span class='op'>(</span><span class='va'>m</span><span class='op'>)</span> <span class='co'># sigma_E varies with time now</span>
+</div><div class='output co'>#&gt; Spatial model fit by ML ['sdmTMB']
+#&gt; Formula: density ~ 0 + depth_scaled + depth_scaled2 + as.factor(year)
+#&gt; Time column: "year"
+#&gt; SPDE: pcod_spde
+#&gt; Data: d
+#&gt; Family: tweedie(link = 'log')
+#&gt;                     coef.est coef.se
+#&gt; depth_scaled           -1.58    0.20
+#&gt; depth_scaled2          -1.11    0.10
+#&gt; as.factor(year)2011     3.66    0.36
+#&gt; as.factor(year)2013     3.87    0.34
+#&gt; as.factor(year)2015     3.78    0.34
+#&gt; as.factor(year)2017     3.06    0.35
+#&gt; 
+#&gt; Matern range parameter: 14.75
+#&gt; Dispersion parameter: 14.15
+#&gt; Spatial SD (sigma_O): 2.60
+#&gt; Spatiotemporal SD (sigma_E): 1.93
+#&gt; Spatiotemporal SD (sigma_E): 1.82
+#&gt; Spatiotemporal SD (sigma_E): 1.71
+#&gt; Spatiotemporal SD (sigma_E): 1.61
+#&gt; ML criterion at convergence: 2955.172</div><div class='input'><span class='co'># coefficient is not yet in tidy.sdmTMB:</span>
+<span class='fu'><a href='https://rdrr.io/r/base/list.html'>as.list</a></span><span class='op'>(</span><span class='va'>m</span><span class='op'>$</span><span class='va'>sd_report</span>, <span class='st'>"Estimate"</span>, report <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span><span class='op'>$</span><span class='va'>b_epsilon</span>
+</div><div class='output co'>#&gt; [1] -0.02969456</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/list.html'>as.list</a></span><span class='op'>(</span><span class='va'>m</span><span class='op'>$</span><span class='va'>sd_report</span>, <span class='st'>"Std. Error"</span>, report <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span><span class='op'>$</span><span class='va'>b_epsilon</span>
+</div><div class='output co'>#&gt; [1] 0.1175937</div><div class='input'><span class='co'># }</span>
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
