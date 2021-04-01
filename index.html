@@ -118,15 +118,15 @@
 <p>sdmTMB:</p>
 <ul>
 <li>Fits GLMMs with spatial, spatiotemporal, spatial and spatiotemporal, or AR1 spatiotemporal Gaussian Markov random fields with TMB. It can also fit spatially varying local trends through time as a random field.</li>
-<li>Uses formula interfaces for fixed effects and any time-varying effects (dynamic regression) (e.g. <code>formula = y ~ 1 + x1, time_varying = ~ 0 + x2</code>), where <code>y</code> is the response, <code>1</code> represents an intercept, <code>0</code> omits an intercept, <code>x1</code> is a covariate with a constant effect, and <code>x2</code> is a covariate with a time-varying effect.</li>
+<li>Uses formula interfaces for fixed effects and any time-varying effects (dynamic regression) (e.g. <code>formula = y ~ 1 + x1 + (1 | g), time_varying = ~ 0 + x2</code>), where <code>y</code> is the response, <code>1</code> represents an intercept, <code>0</code> omits an intercept, <code>x1</code> is a covariate with a constant effect, <code>(1 | g)</code> is a random intercept across groups <code>g</code>, and <code>x2</code> is a covariate with a time-varying effect.</li>
 <li>Can handle formulas with splines from mgcv. E.g., <code>y ~ s(x, k = 4)</code>.</li>
 <li>Can handle linear breakpoint or logistic threshold fixed effects: <code>y ~ breakpt(x1)</code> or <code>y ~ logistic(x2)</code>.</li>
 <li>Uses a <code><a href="https://rdrr.io/r/stats/family.html">family(link)</a></code> format similar to <code><a href="https://rdrr.io/r/stats/glm.html">glm()</a></code>, lme4, or glmmTMB. This includes Gaussian, Poisson, negative binomial, gamma, binomial, lognormal, Student-t, and Tweedie distributions with identity, log, inverse, and logit links. E.g., <code>family = tweedie(link = "log")</code>.</li>
 <li>Has <code><a href="https://rdrr.io/r/stats/predict.html">predict()</a></code> and <code><a href="https://rdrr.io/r/stats/residuals.html">residuals()</a></code> methods. The residuals are randomized-quantile residuals similar to those implemented in the <a href="https://cran.r-project.org/package=DHARMa">DHARMa</a> package. The <code><a href="https://rdrr.io/r/stats/predict.html">predict()</a></code> function can take a <code>newdata</code> argument similar to <code><a href="https://rdrr.io/r/stats/lm.html">lm()</a></code> or <code><a href="https://rdrr.io/r/stats/glm.html">glm()</a></code> etc. The predictions are bilinear interpolated predictive-process predictions (i.e., they make smooth pretty maps).</li>
+<li>Has a simulation function <code><a href="reference/sdmTMB_sim.html">sdmTMB_sim()</a></code> for simulation testing models and <code><a href="reference/sdmTMB_cv.html">sdmTMB_cv()</a></code> for cross-validation testing of model accuracy or comparing across model configurations.</li>
 <li>Includes functionality for estimating the centre of gravity or total biomass by time step for index standardization.</li>
-<li>Implements multi-phase estimation for speed.</li>
-<li>Can optionally allow for anisotropy in the random fields (spatial correlation that is directionally dependent).</li>
-<li>Can generate an SPDE predictive-process mesh based on a clustering algorithm and R-INLA or can take any standard R-INLA mesh created externally as input.</li>
+<li>Can optionally allow for anisotropy in the random fields (spatial correlation that is directionally dependent) and barriers (e.g., land for ocean species) to spatial correlation.</li>
+<li>Can generate an SPDE predictive-process mesh or can take any standard R-INLA mesh created externally as input.</li>
 </ul>
 </div>
 <div id="examples" class="section level2">

@@ -93,7 +93,7 @@
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Threshold modeling with sdmTMB</h1>
             
-            <h4 class="date">2021-03-31</h4>
+            <h4 class="date">2021-04-01</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/seananderson/sdmTMB/blob/master/vignettes/threshold-models.Rmd"><code>vignettes/threshold-models.Rmd</code></a></small>
       <div class="hidden name"><code>threshold-models.Rmd</code></div>
@@ -164,7 +164,9 @@
 <span class="co">#&gt; Dispersion parameter: 12.33</span>
 <span class="co">#&gt; Spatial SD (sigma_O): 2.02</span>
 <span class="co">#&gt; Spatiotemporal SD (sigma_E): 1.40</span>
-<span class="co">#&gt; ML criterion at convergence: 6435.001</span></code></pre></div>
+<span class="co">#&gt; ML criterion at convergence: 6435.001</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; See ?tidy.sdmTMB to extract these values as a data frame.</span></code></pre></div>
 <p>We can visualize the effect:</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">nd</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span><span class="op">(</span>
@@ -214,7 +216,9 @@
 <span class="co">#&gt; Dispersion parameter: 12.14</span>
 <span class="co">#&gt; Spatial SD (sigma_O): 1.82</span>
 <span class="co">#&gt; Spatiotemporal SD (sigma_E): 1.70</span>
-<span class="co">#&gt; ML criterion at convergence: 6397.346</span></code></pre></div>
+<span class="co">#&gt; ML criterion at convergence: 6397.346</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; See ?tidy.sdmTMB to extract these values as a data frame.</span></code></pre></div>
 <p>We can visualize the linear breakpoint effect:</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">p</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/predict.html">predict</a></span><span class="op">(</span><span class="va">m</span>, newdata <span class="op">=</span> <span class="va">nd</span>, se_fit <span class="op">=</span> <span class="cn">TRUE</span>, re_form <span class="op">=</span> <span class="cn">NA</span>, xy_cols <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"X"</span>, <span class="st">"Y"</span><span class="op">)</span><span class="op">)</span>

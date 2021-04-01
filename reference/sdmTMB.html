@@ -180,7 +180,9 @@ models and relative abundance index standardization.</p>
       <td><p>Model formula. See the Details section below for how to specify
 offsets and threshold parameters. For index standardization, you may wish
 to include <code>0 + as.factor(year)</code> (or whatever the time column is called)
-in the formula.</p></td>
+in the formula. IID random intercepts are possible using <span class="pkg">lme4</span>
+syntax, e.g., <code>+ (1 | g)</code> where <code>g</code> is a column with factor levels.
+Splines are possible via mgcv. See examples below.</p></td>
     </tr>
     <tr>
       <th>data</th>
@@ -377,7 +379,7 @@ example of index standardization in the relevant
 parameters. The vector of values supplied to the <code>penalties</code> argument
 represents standard deviations of normal distributions centered on zero with
 one value per fixed effect. These can be used for regularization, e.g.,
-Normal(0, 1) for ridge regression. These shoud not include <code>offset</code> terms and
+Normal(0, 1) for ridge regression. These should not include <code>offset</code> terms and
 care should be taken if used with splines. You can fit the model once without
 penalties and inspect the element <code><a href='https://rdrr.io/r/utils/head.html'>head(your_model$tmb_data$X_ij)</a></code> if you
 want to see how the formula is translated to the fixed effect model matrix.
@@ -424,7 +426,9 @@ distribution change by incorporating local trends. In press at Ecography.
 #&gt; Dispersion parameter: 14.16
 #&gt; Spatial SD (sigma_O): 2.65
 #&gt; Spatiotemporal SD (sigma_E): 1.84
-#&gt; ML criterion at convergence: 2955.205</div><div class='input'><span class='fu'><a href='https://generics.r-lib.org/reference/tidy.html'>tidy</a></span><span class='op'>(</span><span class='va'>m</span>, conf.int <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>
+#&gt; ML criterion at convergence: 2955.205
+#&gt; 
+#&gt; See ?tidy.sdmTMB to extract these values as a data frame.</div><div class='input'><span class='fu'><a href='https://generics.r-lib.org/reference/tidy.html'>tidy</a></span><span class='op'>(</span><span class='va'>m</span>, conf.int <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>
 </div><div class='output co'>#&gt;                  term  estimate  std.error  conf.low  conf.high
 #&gt; 1        depth_scaled -1.576331 0.19996474 -1.968255 -1.1844072
 #&gt; 2       depth_scaled2 -1.108996 0.09901702 -1.303066 -0.9149261
@@ -433,10 +437,10 @@ distribution change by incorporating local trends. In press at Ecography.
 #&gt; 5 as.factor(year)2015  3.781370 0.33823528  3.118441  4.4442988
 #&gt; 6 as.factor(year)2017  3.051183 0.35024411  2.364717  3.7376490</div><div class='input'><span class='fu'><a href='https://generics.r-lib.org/reference/tidy.html'>tidy</a></span><span class='op'>(</span><span class='va'>m</span>, effects <span class='op'>=</span> <span class='st'>"ran_par"</span>, conf.int <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>
 </div><div class='output co'>#&gt;      term  estimate std.error   conf.low conf.high
-#&gt; 1 sigma_O  2.649743        NA  0.1916715  36.63110
-#&gt; 2 sigma_E  1.835337        NA  0.1470807  22.90212
-#&gt; 3   range 14.286488        NA  0.7975133 255.92517
-#&gt; 4     phi 14.155975        NA 12.8628002  15.57916</div><div class='input'>
+#&gt; 1   range 14.286488        NA  0.7975133 255.92517
+#&gt; 2     phi 14.155975        NA 12.8628002  15.57916
+#&gt; 3 sigma_O  2.649743        NA  0.1916715  36.63110
+#&gt; 4 sigma_E  1.835337        NA  0.1470807  22.90212</div><div class='input'>
 <span class='co'># Run extra optimization steps to help convergence:</span>
 <span class='va'>m1</span> <span class='op'>&lt;-</span> <span class='fu'><a href='run_extra_optimization.html'>run_extra_optimization</a></span><span class='op'>(</span><span class='va'>m</span>, nlminb_loops <span class='op'>=</span> <span class='fl'>0</span>, newton_steps <span class='op'>=</span> <span class='fl'>1</span><span class='op'>)</span>
 <span class='fu'><a href='https://rdrr.io/r/base/Extremes.html'>max</a></span><span class='op'>(</span><span class='va'>m</span><span class='op'>$</span><span class='va'>gradients</span><span class='op'>)</span>
@@ -466,7 +470,9 @@ distribution change by incorporating local trends. In press at Ecography.
 #&gt; Matern range parameter: 27.46
 #&gt; Spatial SD (sigma_O): 2.51
 #&gt; Spatiotemporal SD (sigma_E): 0.22
-#&gt; ML criterion at convergence: 470.433</div><div class='input'>
+#&gt; ML criterion at convergence: 470.433
+#&gt; 
+#&gt; See ?tidy.sdmTMB to extract these values as a data frame.</div><div class='input'>
 <span class='co'># Gaussian:</span>
 <span class='va'>pcod_gaus</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/subset.html'>subset</a></span><span class='op'>(</span><span class='va'>d</span>, <span class='va'>density</span> <span class='op'>&gt;</span> <span class='fl'>0</span> <span class='op'>&amp;</span> <span class='va'>year</span> <span class='op'>&gt;=</span> <span class='fl'>2013</span><span class='op'>)</span>
 <span class='va'>pcod_spde_gaus</span> <span class='op'>&lt;-</span> <span class='fu'><a href='make_mesh.html'>make_mesh</a></span><span class='op'>(</span><span class='va'>pcod_gaus</span>, <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"X"</span>, <span class='st'>"Y"</span><span class='op'>)</span>, cutoff <span class='op'>=</span> <span class='fl'>30</span><span class='op'>)</span>
@@ -490,7 +496,9 @@ distribution change by incorporating local trends. In press at Ecography.
 #&gt; Dispersion parameter: 1.35
 #&gt; Spatial SD (sigma_O): 0.01
 #&gt; Spatiotemporal SD (sigma_E): 0.01
-#&gt; ML criterion at convergence: 599.014</div><div class='input'>
+#&gt; ML criterion at convergence: 599.014
+#&gt; 
+#&gt; See ?tidy.sdmTMB to extract these values as a data frame.</div><div class='input'>
 <span class='co'># With splines via mgcv.</span>
 <span class='co'># Make sure to pre-specify an appropriate basis dimension (`k`) since</span>
 <span class='co'># the smoothers are not penalized in the current implementation.</span>
@@ -516,7 +524,48 @@ distribution change by incorporating local trends. In press at Ecography.
 #&gt; Dispersion parameter: 1.32
 #&gt; Spatial SD (sigma_O): 0.01
 #&gt; Spatiotemporal SD (sigma_E): 0.01
-#&gt; ML criterion at convergence: 589.528</div><div class='input'>
+#&gt; ML criterion at convergence: 589.528
+#&gt; 
+#&gt; See ?tidy.sdmTMB to extract these values as a data frame.</div><div class='input'>
+<span class='co'># With IID random intercepts:</span>
+<span class='fu'><a href='https://rdrr.io/r/base/Random.html'>set.seed</a></span><span class='op'>(</span><span class='fl'>1</span><span class='op'>)</span>
+<span class='va'>x</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/stats/Uniform.html'>runif</a></span><span class='op'>(</span><span class='fl'>500</span>, <span class='op'>-</span><span class='fl'>1</span>, <span class='fl'>1</span><span class='op'>)</span>
+<span class='va'>y</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/stats/Uniform.html'>runif</a></span><span class='op'>(</span><span class='fl'>500</span>, <span class='op'>-</span><span class='fl'>1</span>, <span class='fl'>1</span><span class='op'>)</span>
+<span class='va'>loc</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/data.frame.html'>data.frame</a></span><span class='op'>(</span>x <span class='op'>=</span> <span class='va'>x</span>, y <span class='op'>=</span> <span class='va'>y</span><span class='op'>)</span>
+<span class='va'>spde</span> <span class='op'>&lt;-</span> <span class='fu'><a href='make_mesh.html'>make_mesh</a></span><span class='op'>(</span><span class='va'>loc</span>, <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"x"</span>, <span class='st'>"y"</span><span class='op'>)</span>, n_knots <span class='op'>=</span> <span class='fl'>50</span>, type <span class='op'>=</span> <span class='st'>"kmeans"</span><span class='op'>)</span>
+<span class='va'>s</span> <span class='op'>&lt;-</span> <span class='fu'><a href='sdmTMB_sim.html'>sdmTMB_sim</a></span><span class='op'>(</span>x <span class='op'>=</span> <span class='va'>x</span>, y <span class='op'>=</span> <span class='va'>y</span>, betas <span class='op'>=</span> <span class='fl'>0</span>, time <span class='op'>=</span> <span class='fl'>1L</span>,
+  phi <span class='op'>=</span> <span class='fl'>0.1</span>, range <span class='op'>=</span> <span class='fl'>1.4</span>, sigma_O <span class='op'>=</span> <span class='fl'>0.2</span>, sigma_E <span class='op'>=</span> <span class='fl'>0</span>, mesh <span class='op'>=</span> <span class='va'>spde</span><span class='op'>)</span>
+<span class='va'>s</span><span class='op'>$</span><span class='va'>g</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/gl.html'>gl</a></span><span class='op'>(</span><span class='fl'>50</span>, <span class='fl'>10</span><span class='op'>)</span>
+<span class='va'>iid_re_vals</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/stats/Normal.html'>rnorm</a></span><span class='op'>(</span><span class='fl'>50</span>, <span class='fl'>0</span>, <span class='fl'>0.3</span><span class='op'>)</span>
+<span class='va'>s</span><span class='op'>$</span><span class='va'>observed</span> <span class='op'>&lt;-</span> <span class='va'>s</span><span class='op'>$</span><span class='va'>observed</span> <span class='op'>+</span> <span class='va'>iid_re_vals</span><span class='op'>[</span><span class='va'>s</span><span class='op'>$</span><span class='va'>g</span><span class='op'>]</span>
+<span class='va'>m</span> <span class='op'>&lt;-</span> <span class='fu'>sdmTMB</span><span class='op'>(</span><span class='va'>observed</span> <span class='op'>~</span> <span class='fl'>1</span> <span class='op'>+</span> <span class='op'>(</span><span class='fl'>1</span> <span class='op'>|</span> <span class='va'>g</span><span class='op'>)</span>, spde <span class='op'>=</span> <span class='va'>spde</span>, data <span class='op'>=</span> <span class='va'>s</span><span class='op'>)</span>
+<span class='fu'><a href='https://rdrr.io/r/base/print.html'>print</a></span><span class='op'>(</span><span class='va'>m</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; Spatial model fit by ML ['sdmTMB']
+#&gt; Formula: observed ~ 1 + (1 | g)
+#&gt; Time column: NULL
+#&gt; SPDE: spde
+#&gt; Data: s
+#&gt; Family: gaussian(link = 'identity')
+#&gt;             coef.est coef.se
+#&gt; (Intercept)     0.16    0.38
+#&gt; 
+#&gt;               Std. Dev.
+#&gt; g (Intercept)      0.28
+#&gt; 
+#&gt; Matern range parameter: 2.39
+#&gt; Dispersion parameter: 0.10
+#&gt; Spatial SD (sigma_O): 0.29
+#&gt; Spatiotemporal SD (sigma_E): not estimated
+#&gt; ML criterion at convergence: -273.194
+#&gt; 
+#&gt; See ?tidy.sdmTMB to extract these values as a data frame.</div><div class='input'><span class='fu'><a href='https://generics.r-lib.org/reference/tidy.html'>tidy</a></span><span class='op'>(</span><span class='va'>m</span>, <span class='st'>"ran_pars"</span>, conf.int <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span> <span class='co'># see tau_G</span>
+</div><div class='output co'>#&gt;      term  estimate std.error   conf.low conf.high
+#&gt; 1   range 2.3892920        NA 1.11612804 5.1147504
+#&gt; 2     phi 0.1005214        NA 0.09371961 0.1078168
+#&gt; 3 sigma_O 0.2883875        NA 0.15444212 0.5385018
+#&gt; 5   tau_G 0.2819940        NA 0.23071648 0.3446682</div><div class='input'><span class='va'>theta</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>as.list</a></span><span class='op'>(</span><span class='va'>m</span><span class='op'>$</span><span class='va'>sd_report</span>, <span class='st'>"Estimate"</span><span class='op'>)</span>
+<span class='fu'><a href='https://r-spatial.github.io/sf/reference/plot.html'>plot</a></span><span class='op'>(</span><span class='va'>iid_re_vals</span>, <span class='va'>theta</span><span class='op'>$</span><span class='va'>RE</span><span class='op'>)</span>
+</div><div class='img'><img src='sdmTMB-2.png' alt='' width='700' height='433' /></div><div class='input'>
 <span class='co'># \donttest{</span>
 <span class='co'># Fit a spatial only model:</span>
 <span class='va'>m</span> <span class='op'>&lt;-</span> <span class='fu'>sdmTMB</span><span class='op'>(</span>
@@ -538,19 +587,21 @@ distribution change by incorporating local trends. In press at Ecography.
 #&gt; Dispersion parameter: 14.78
 #&gt; Spatial SD (sigma_O): 1676.96
 #&gt; Spatiotemporal SD (sigma_E): not estimated
-#&gt; ML criterion at convergence: 2974.181</div><div class='input'>
+#&gt; ML criterion at convergence: 2974.181
+#&gt; 
+#&gt; See ?tidy.sdmTMB to extract these values as a data frame.</div><div class='input'>
 <span class='co'># Spatial-trend example:</span>
 <span class='va'>m</span> <span class='op'>&lt;-</span> <span class='fu'>sdmTMB</span><span class='op'>(</span><span class='va'>density</span> <span class='op'>~</span> <span class='va'>depth_scaled</span>, data <span class='op'>=</span> <span class='va'>d</span>,
   spde <span class='op'>=</span> <span class='va'>pcod_spde</span>, family <span class='op'>=</span> <span class='fu'><a href='Families.html'>tweedie</a></span><span class='op'>(</span>link <span class='op'>=</span> <span class='st'>"log"</span><span class='op'>)</span>,
   spatial_trend <span class='op'>=</span> <span class='cn'>TRUE</span>, time <span class='op'>=</span> <span class='st'>"year"</span><span class='op'>)</span>
 <span class='fu'><a href='https://generics.r-lib.org/reference/tidy.html'>tidy</a></span><span class='op'>(</span><span class='va'>m</span>, effects <span class='op'>=</span> <span class='st'>"ran_par"</span><span class='op'>)</span>
 </div><div class='output co'>#&gt;       term   estimate std.error
-#&gt; 1  sigma_O  2.5786216        NA
-#&gt; 2  sigma_E  0.8739983        NA
-#&gt; 3  sigma_Z  0.3300048        NA
-#&gt; 4 ln_tau_V  0.0000000        NA
-#&gt; 5    range 24.7819978        NA
-#&gt; 6      phi 15.5051233        NA</div><div class='input'>
+#&gt; 1    range 24.7819978        NA
+#&gt; 2      phi 15.5051233        NA
+#&gt; 3  sigma_O  2.5786216        NA
+#&gt; 4  sigma_E  0.8739983        NA
+#&gt; 5  sigma_Z  0.3300048        NA
+#&gt; 6 ln_tau_V  0.0000000        NA</div><div class='input'>
 <span class='co'># Time-varying effects of depth and depth squared:</span>
 <span class='va'>m</span> <span class='op'>&lt;-</span> <span class='fu'>sdmTMB</span><span class='op'>(</span><span class='va'>density</span> <span class='op'>~</span> <span class='fl'>0</span> <span class='op'>+</span> <span class='fu'><a href='https://rdrr.io/r/base/factor.html'>as.factor</a></span><span class='op'>(</span><span class='va'>year</span><span class='op'>)</span>,
   time_varying <span class='op'>=</span> <span class='op'>~</span> <span class='fl'>0</span> <span class='op'>+</span> <span class='va'>depth_scaled</span> <span class='op'>+</span> <span class='va'>depth_scaled2</span>,
@@ -583,7 +634,9 @@ distribution change by incorporating local trends. In press at Ecography.
 #&gt; Dispersion parameter: 13.78
 #&gt; Spatial SD (sigma_O): 5.23
 #&gt; Spatiotemporal SD (sigma_E): 3.65
-#&gt; ML criterion at convergence: 2943.572</div><div class='input'>
+#&gt; ML criterion at convergence: 2943.572
+#&gt; 
+#&gt; See ?tidy.sdmTMB to extract these values as a data frame.</div><div class='input'>
 <span class='co'># See the b_rw_t estimates; these are the time-varying (random walk) effects.</span>
 <span class='co'># These could be added to tidy.sdmTMB() eventually.</span>
 <span class='fu'><a href='https://rdrr.io/r/base/summary.html'>summary</a></span><span class='op'>(</span><span class='va'>m</span><span class='op'>$</span><span class='va'>sd_report</span><span class='op'>)</span><span class='op'>[</span><span class='fl'>1</span><span class='op'>:</span><span class='fl'>19</span>,<span class='op'>]</span>
@@ -631,7 +684,9 @@ distribution change by incorporating local trends. In press at Ecography.
 #&gt; Dispersion parameter: 1.33
 #&gt; Spatial SD (sigma_O): 0.01
 #&gt; Spatiotemporal SD (sigma_E): 0.01
-#&gt; ML criterion at convergence: 592.503</div><div class='input'>
+#&gt; ML criterion at convergence: 592.503
+#&gt; 
+#&gt; See ?tidy.sdmTMB to extract these values as a data frame.</div><div class='input'>
 <span class='co'># Linear covariate on log(sigma_epsilon):</span>
 <span class='co'># First we will center the years around their mean</span>
 <span class='co'># to help with convergence.</span>
@@ -661,7 +716,9 @@ distribution change by incorporating local trends. In press at Ecography.
 #&gt; Spatiotemporal SD (sigma_E): 1.82
 #&gt; Spatiotemporal SD (sigma_E): 1.71
 #&gt; Spatiotemporal SD (sigma_E): 1.61
-#&gt; ML criterion at convergence: 2955.172</div><div class='input'><span class='co'># coefficient is not yet in tidy.sdmTMB:</span>
+#&gt; ML criterion at convergence: 2955.172
+#&gt; 
+#&gt; See ?tidy.sdmTMB to extract these values as a data frame.</div><div class='input'><span class='co'># coefficient is not yet in tidy.sdmTMB:</span>
 <span class='fu'><a href='https://rdrr.io/r/base/list.html'>as.list</a></span><span class='op'>(</span><span class='va'>m</span><span class='op'>$</span><span class='va'>sd_report</span>, <span class='st'>"Estimate"</span>, report <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span><span class='op'>$</span><span class='va'>b_epsilon</span>
 </div><div class='output co'>#&gt; [1] -0.02969456</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/list.html'>as.list</a></span><span class='op'>(</span><span class='va'>m</span><span class='op'>$</span><span class='va'>sd_report</span>, <span class='st'>"Std. Error"</span>, report <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span><span class='op'>$</span><span class='va'>b_epsilon</span>
 </div><div class='output co'>#&gt; [1] 0.1175937</div><div class='input'><span class='co'># }</span>

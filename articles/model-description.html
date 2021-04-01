@@ -120,37 +120,51 @@
 <p><span class="math display">\[
 \begin{align}
   \mathbb{E}(y_{\boldsymbol{s},t}) &amp;= \mu_{\boldsymbol{s},t},\\
-  \mu_{\boldsymbol{s},t} &amp;= g^{-1} 
+  \mu_{\boldsymbol{s},t} &amp;= f^{-1}
   \left( \boldsymbol{X} \boldsymbol{\beta} + \omega_s + \epsilon_{\boldsymbol{s},t} \right),\\
   \boldsymbol{\omega} &amp;\sim \operatorname{MVNormal} \left( \boldsymbol{0}, \boldsymbol{\Sigma}_\omega \right),\\
   \boldsymbol{\epsilon}_t &amp;\sim \operatorname{MVNormal} \left( \boldsymbol{0}, \boldsymbol{\Sigma}_{\epsilon} \right).
 \end{align}
-\]</span> where <span class="math inline">\(g\)</span> is a link function and <span class="math inline">\(g^{-1}\)</span> is the inverse link.</p>
+\]</span> where <span class="math inline">\(f\)</span> is a link function (e.g., log or logit) and <span class="math inline">\(f^{-1}\)</span> is its inverse link.</p>
 <ul>
-<li><p><span class="math inline">\(\boldsymbol{X} \boldsymbol{\beta}\)</span> is defined by the <code>formula</code> argument</p></li>
-<li><p><span class="math inline">\(\omega_s\)</span> are included if <code>include_spatial = TRUE</code></p></li>
+<li><p><span class="math inline">\(\boldsymbol{X} \boldsymbol{\beta}\)</span> is defined by the <code>formula</code> argument and represents the “fixed effect” model matrix and a corresponding vector of coefficients</p></li>
+<li><p><span class="math inline">\(\omega_s\)</span> are included if <code>include_spatial = TRUE</code> or if there is no spatiotemporal component (<code>time = NULL</code>)</p></li>
 <li><p><span class="math inline">\(\epsilon_{\boldsymbol{s},t}\)</span> are included if there are multiple time elements and <code>spatial_only = FALSE</code> (the default if there are multiple time elements)</p></li>
 </ul>
+</div>
+<div id="random-or-multi-level-intercepts" class="section level2">
+<h2 class="hasAnchor">
+<a href="#random-or-multi-level-intercepts" class="anchor"></a>Random or multi-level intercepts</h2>
+<p><span class="math display">\[
+\begin{align}
+  \mu_{\boldsymbol{s},t} &amp;= f^{-1} \left( \ldots + \alpha_{g} + \ldots \right),\\
+  \alpha_g &amp;\sim \operatorname{Normal} \left(0, \sigma_\alpha^2 \right),\\
+\end{align}
+\]</span></p>
+<p>where <span class="math inline">\(\alpha_g\)</span> is an example optional “random” intercept—an intercept centered on zero that varies by level <span class="math inline">\(g\)</span> and is constrained by <span class="math inline">\(\sigma_\alpha\)</span>. This is defined by the <code>formula</code> argument via the <code>(1 | g)</code> syntax as in lme4 or glmmTMB.</p>
 </div>
 <div id="time-varying-regression-parameters" class="section level2">
 <h2 class="hasAnchor">
 <a href="#time-varying-regression-parameters" class="anchor"></a>Time-varying regression parameters</h2>
 <p><span class="math display">\[
 \begin{align}
-  \mu_{\boldsymbol{s},t} &amp;= g^{-1} \left( \ldots + \gamma_{t} x_{\boldsymbol{s},t} + \ldots \right),\\
-  \gamma_{t} &amp;\sim \operatorname{Normal} \left(\gamma_{t-1}, \sigma^2_{\gamma} \right).
+  \mu_{\boldsymbol{s},t} &amp;= f^{-1} \left( \ldots + \gamma_{t} x_{\boldsymbol{s},t} + \ldots \right),\\
+  \gamma_{t=1} &amp;\sim \operatorname{Uniform} \left(-\infty, \infty \right),\\
+  \gamma_{t&gt;1} &amp;\sim \operatorname{Normal} \left(\gamma_{t-1}, \sigma^2_{\gamma} \right),
 \end{align}
 \]</span></p>
+<p>where <span class="math inline">\(\gamma_t\)</span> is an example optional time-varying regression parameter and $x_{,t} is the corresponding predictor value. This is defined via the <code>time_varying</code> argument. E.g., <code>~ 0 + x</code>. The first value is given an implicit uniform prior. I.e., the same variable should not appear in the fixed effect formula since the initial value is estimated as part of the time-varying formula.</p>
 </div>
 <div id="spatial-regression-parameters" class="section level2">
 <h2 class="hasAnchor">
 <a href="#spatial-regression-parameters" class="anchor"></a>Spatial regression parameters</h2>
 <p><span class="math display">\[
 \begin{align}
-  \mu_{\boldsymbol{s},t} &amp;= g^{-1} \left( \ldots + \zeta_s x_t + \ldots \right),\\
-  \boldsymbol{\zeta} &amp;\sim \operatorname{MVNormal} \left( \boldsymbol{0}, \boldsymbol{\Sigma}_\zeta \right).
+  \mu_{\boldsymbol{s},t} &amp;= f^{-1} \left( \ldots + \zeta_s x_t + \ldots \right),\\
+  \boldsymbol{\zeta} &amp;\sim \operatorname{MVNormal} \left( \boldsymbol{0}, \boldsymbol{\Sigma}_\zeta \right),
 \end{align}
 \]</span></p>
+<p>where <span class="math inline">\(\zeta_s\)</span> is a regression parameter that varies spatially and <span class="math inline">\(x_t\)</span> is a predictor that is constant for a given time <span class="math inline">\(t\)</span>. Currently, <span class="math inline">\(x_t\)</span> must be the time variable itself. If you are interested in using a different predictor, contact the developers.</p>
 </div>
 <div id="ar1-spatiotemporal-random-fields" class="section level2">
 <h2 class="hasAnchor">
@@ -158,12 +172,13 @@
 <p>Dropping the optional <span class="math inline">\(\omega_s\)</span> for simplicity:</p>
 <p><span class="math display">\[
 \begin{align}
-\mu_{\boldsymbol{s},t} &amp;= g^{-1} \left( \boldsymbol{X} \boldsymbol{\beta} + \delta_{\boldsymbol{s},t} \right),\\
+\mu_{\boldsymbol{s},t} &amp;= f^{-1} \left( \boldsymbol{X} \boldsymbol{\beta} + \delta_{\boldsymbol{s},t} \right),\\
 \boldsymbol{\delta}_{t=1} &amp;\sim \operatorname{MVNormal} (\boldsymbol{0}, \boldsymbol{\Sigma}_{\epsilon}),\\
-\boldsymbol{\delta}_{t&gt;1} &amp;= \phi \boldsymbol{\delta}_{t-1} + \sqrt{1 - \phi^2} \boldsymbol{\epsilon}_t,  \:
-\boldsymbol{\epsilon}_t \sim \operatorname{MVNormal} \left(\boldsymbol{0}, \boldsymbol{\Sigma}_{\epsilon} \right).
+\boldsymbol{\delta}_{t&gt;1} &amp;= \rho \boldsymbol{\delta}_{t-1} + \sqrt{1 - \rho^2} \boldsymbol{\epsilon}_t,  \:
+\boldsymbol{\epsilon}_t \sim \operatorname{MVNormal} \left(\boldsymbol{0}, \boldsymbol{\Sigma}_{\epsilon} \right),
 \end{align}
 \]</span></p>
+<p>where <span class="math inline">\(\rho\)</span> is the correlation between subsequent spatiotemporal random fields. The <span class="math inline">\(\rho \boldsymbol{\delta}_{t-1} + \sqrt{1 - \rho^2}\)</span> structure ensures a stationary AR1 process.</p>
 </div>
 <div id="offset-terms" class="section level2">
 <h2 class="hasAnchor">
@@ -172,9 +187,9 @@
 <p>These are included in the linear predictor as</p>
 <p><span class="math display">\[
 \begin{align}
-  \mu_{\boldsymbol{s},t} &amp;= g^{-1} \left( \ldots + O_{\boldsymbol{s},t} + \ldots \right),
+  \mu_{\boldsymbol{s},t} &amp;= f^{-1} \left( \ldots + O_{\boldsymbol{s},t} + \ldots \right),
 \end{align}
-\]</span> where <span class="math inline">\(O_{\boldsymbol{s},t}\)</span> is an offset term—a <strong>log transformed</strong> variable without a coefficient. Offsets only make sense if the link is log.</p>
+\]</span> where <span class="math inline">\(O_{\boldsymbol{s},t}\)</span> is an offset term—a <strong>log transformed</strong> variable without a coefficient (assuming a log link).</p>
 </div>
 <div id="threshold-models" class="section level2">
 <h2 class="hasAnchor">
@@ -190,7 +205,7 @@
 <a href="#logistic-threshold-models" class="anchor"></a>Logistic threshold models</h3>
 <p>The form is</p>
 <p><span class="math display">\[
-s(x)=\tau + \psi\ { \left[ 1+{ e }^{ -\ln\ \left(19\right) \cdot \left( x-s50 \right) 
+s(x)=\tau + \psi\ { \left[ 1+{ e }^{ -\ln\ \left(19\right) \cdot \left( x-s50 \right)
      / \left(s95 - s50 \right) } \right] }^{-1},
 \]</span> where <span class="math inline">\(\psi\)</span> is a scaling parameter (controlling the height of the y-axis for the response, and is unconstrained), <span class="math inline">\(\tau\)</span> is an intercept, <span class="math inline">\(s50\)</span> is a parameter controlling the point at which the function reaches 50% of the maximum (<span class="math inline">\(\psi\)</span>), and <span class="math inline">\(s95\)</span> is a parameter controlling the point at which the function reaches 95%. The parameter <span class="math inline">\(s50\)</span> is unconstrained, and <span class="math inline">\(s95\)</span> is constrained to be larger than <span class="math inline">\(s50\)</span>.</p>
 <p>These models can be fit by including <code>+ logistic(x)</code> in the model formula, where <code>x</code> is a covariate.</p>

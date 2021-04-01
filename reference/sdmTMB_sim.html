@@ -275,7 +275,7 @@ data is in list element 1 and input values in element 2.</p></td>
   phi <span class='op'>=</span> <span class='fl'>0.2</span>, range <span class='op'>=</span> <span class='fl'>0.8</span>, sigma_O <span class='op'>=</span> <span class='fl'>0</span>, sigma_E <span class='op'>=</span> <span class='fl'>0.3</span>,
   seed <span class='op'>=</span> <span class='fl'>123</span>, family <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/stats/family.html'>gaussian</a></span><span class='op'>(</span><span class='op'>)</span>
 <span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='warning'>Warning: Since 'seed!=0', parallel model is disabled and serial model is selected</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Since 'seed!=0', parallel model is disabled and serial model is selected</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Since 'seed!=0', parallel model is disabled and serial model is selected</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Since 'seed!=0', parallel model is disabled and serial model is selected</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Since 'seed!=0', parallel model is disabled and serial model is selected</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Since 'seed!=0', parallel model is disabled and serial model is selected</span></div><div class='input'>
+
 <span class='va'>mesh</span> <span class='op'>&lt;-</span> <span class='fu'><a href='make_mesh.html'>make_mesh</a></span><span class='op'>(</span><span class='va'>s</span>, xy_cols <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"x"</span>, <span class='st'>"y"</span><span class='op'>)</span>, cutoff <span class='op'>=</span> <span class='fl'>0.1</span><span class='op'>)</span>
 <span class='va'>m</span> <span class='op'>&lt;-</span> <span class='fu'><a href='sdmTMB.html'>sdmTMB</a></span><span class='op'>(</span>
   data <span class='op'>=</span> <span class='va'>s</span>, formula <span class='op'>=</span> <span class='va'>observed</span> <span class='op'>~</span> <span class='va'>x1</span>,
@@ -287,10 +287,10 @@ data is in list element 1 and input values in element 2.</p></td>
 #&gt; 1 (Intercept) 0.4150763 0.06837053 0.2810725 0.5490801
 #&gt; 2          x1 0.6948517 0.01776395 0.6600350 0.7296684</div><div class='input'><span class='fu'><a href='https://generics.r-lib.org/reference/tidy.html'>tidy</a></span><span class='op'>(</span><span class='va'>m</span>, <span class='st'>"ran_pars"</span>, conf.int <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>
 </div><div class='output co'>#&gt;      term  estimate std.error  conf.low conf.high
-#&gt; 1 sigma_E 0.3096089        NA 0.2566540 0.3734900
-#&gt; 2   range 0.6200721        NA 0.3784356 1.0159968
-#&gt; 3     phi 0.2111023        NA 0.1766060 0.2523366
-#&gt; 4     rho 0.4973067 0.3164485 0.2313428 0.6941057</div><div class='input'><span class='co'># }</span>
+#&gt; 1   range 0.6200721        NA 0.3784356 1.0159968
+#&gt; 2     phi 0.2111023        NA 0.1766060 0.2523366
+#&gt; 3 sigma_E 0.3096089        NA 0.2566540 0.3734900
+#&gt; 4     rho 0.4973067        NA 0.2313428 0.6941057</div><div class='input'><span class='co'># }</span>
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
