@@ -110,6 +110,8 @@
 <p>Assuming you have a <a href="https://support.rstudio.com/hc/en-us/articles/200486498-Package-Development-Prerequisites">C++ compiler</a> installed, you can install sdmTMB:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># install.packages("remotes")</span>
+<span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html">install.packages</a></span><span class="op">(</span><span class="st">"Matrix"</span>, type <span class="op">=</span> <span class="st">"source"</span><span class="op">)</span>
+<span class="fu">remotes</span><span class="fu">::</span><span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html">install_github</a></span><span class="op">(</span><span class="st">"kaskr/adcomp/TMB"</span><span class="op">)</span>
 <span class="fu">remotes</span><span class="fu">::</span><span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html">install_github</a></span><span class="op">(</span><span class="st">"pbs-assess/sdmTMB"</span><span class="op">)</span></code></pre></div>
 </div>
 <div id="functionality" class="section level2">
