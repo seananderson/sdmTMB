@@ -162,9 +162,10 @@
 <span class="co">#&gt; $ depth_scaled  &lt;dbl&gt; 1.56081222, 0.56976987, 0.36336929, 0.12570465, 0.122036…</span>
 <span class="co">#&gt; $ depth_scaled2 &lt;dbl&gt; 2.436134789, 0.324637708, 0.132037240, 0.015801658, 0.01…</span>
 <span class="co">#&gt; $ year          &lt;int&gt; 2003, 2003, 2003, 2003, 2003, 2003, 2003, 2003, 2003, 20…</span></code></pre></div>
-<p>Now make the predictions on new data:</p>
+<p>Now make the predictions on new data.</p>
+<p>We will set the <code>area</code> argument to 4 km<sup>2</sup> since our grid cells are 2 km x 2 km. If some grid cells were not fully in the survey domain (or were on land), we could feed a vector of grid areas to the <code>area</code> argument that matched the number of grid cells.</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">predictions</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/predict.html">predict</a></span><span class="op">(</span><span class="va">m</span>, newdata <span class="op">=</span> <span class="va">qcs_grid</span>, return_tmb_object <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span class="va">predictions</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/predict.html">predict</a></span><span class="op">(</span><span class="va">m</span>, newdata <span class="op">=</span> <span class="va">qcs_grid</span>, return_tmb_object <span class="op">=</span> <span class="cn">TRUE</span>, area <span class="op">=</span> <span class="fl">4</span><span class="op">)</span></code></pre></div>
 <p>Let’s make a small function to make maps.</p>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">plot_map</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">dat</span>, <span class="va">column</span><span class="op">)</span> <span class="op">{</span>
@@ -197,25 +198,18 @@
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">ggtitle</a></span><span class="op">(</span><span class="st">"Spatiotemporal random effects only"</span><span class="op">)</span> <span class="op">+</span>
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_gradient.html">scale_fill_gradient2</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
 <p><img src="index-standardization_files/figure-html/plot-spatiotemporal-effects-1.png" width="768"></p>
-<p>When we ran our <code>predict.sdmTBM()</code> function, it also returned a report from TMB in the output because we included <code>return_tmb_object = TRUE</code>. We can then run our <code><a href="../reference/get_index.html">get_index()</a></code> function to extract the total biomass calculations and standard errors:</p>
+<p>When we ran our <code>predict.sdmTBM()</code> function, it also returned a report from TMB in the output because we included <code>return_tmb_object = TRUE</code>. We can then run our <code><a href="../reference/get_index.html">get_index()</a></code> function to extract the total biomass calculations and standard errors.</p>
 <div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
-<code class="sourceCode R"> <span class="co"># not bias correcting for vignette-building speed:</span>
-<span class="va">ind</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_index.html">get_index</a></span><span class="op">(</span><span class="va">predictions</span>, bias_correct <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span class="co"># not bias correcting for vignette-building speed:</span>
+<span class="va">index</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_index.html">get_index</a></span><span class="op">(</span><span class="va">predictions</span>, bias_correct <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></code></pre></div>
 <div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="co"># scale the biomass by the area and adjust units;</span>
-<span class="va">scale</span> <span class="op">&lt;-</span> <span class="fl">2</span> <span class="op">*</span> <span class="fl">2</span> <span class="op">/</span> <span class="fl">1000</span> <span class="co"># 2 x 2 km grid and converted from kg to tonnes</span>
-<span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span><span class="op">(</span><span class="va">ind</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span><span class="va">year</span>, <span class="va">est</span><span class="op">*</span><span class="va">scale</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_path.html">geom_line</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span>
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_ribbon.html">geom_ribbon</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span>ymin <span class="op">=</span> <span class="va">lwr</span><span class="op">*</span><span class="va">scale</span>, ymax <span class="op">=</span> <span class="va">upr</span><span class="op">*</span><span class="va">scale</span><span class="op">)</span>, alpha <span class="op">=</span> <span class="fl">0.4</span><span class="op">)</span> <span class="op">+</span>
+<code class="sourceCode R"><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span><span class="op">(</span><span class="va">index</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span><span class="va">year</span>, <span class="va">est</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_path.html">geom_line</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_ribbon.html">geom_ribbon</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span>ymin <span class="op">=</span> <span class="va">lwr</span>, ymax <span class="op">=</span> <span class="va">upr</span><span class="op">)</span>, alpha <span class="op">=</span> <span class="fl">0.4</span><span class="op">)</span> <span class="op">+</span>
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">xlab</a></span><span class="op">(</span><span class="st">'Year'</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">ylab</a></span><span class="op">(</span><span class="st">'Biomass estimate (metric tonnes)'</span><span class="op">)</span></code></pre></div>
 <p><img src="index-standardization_files/figure-html/plot-index-1.png" width="672"></p>
 <p>These are our biomass estimates:</p>
 <div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span><span class="va">ind</span>, 
-  est <span class="op">=</span> <span class="va">est</span> <span class="op">*</span> <span class="va">scale</span>,
-  lwr <span class="op">=</span> <span class="va">lwr</span> <span class="op">*</span> <span class="va">scale</span>,
-  upr <span class="op">=</span> <span class="va">upr</span> <span class="op">*</span> <span class="va">scale</span>,
-  cv <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/MathFun.html">sqrt</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/Log.html">exp</a></span><span class="op">(</span><span class="va">se</span><span class="op">^</span><span class="fl">2</span><span class="op">)</span> <span class="op">-</span> <span class="fl">1</span><span class="op">)</span>
-  <span class="op">)</span> <span class="op">%&gt;%</span> 
+<code class="sourceCode R"><span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span><span class="va">index</span>, cv <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/MathFun.html">sqrt</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/Log.html">exp</a></span><span class="op">(</span><span class="va">se</span><span class="op">^</span><span class="fl">2</span><span class="op">)</span> <span class="op">-</span> <span class="fl">1</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span> 
   <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span><span class="op">(</span><span class="op">-</span><span class="va">log_est</span>, <span class="op">-</span><span class="va">max_gradient</span>, <span class="op">-</span><span class="va">bad_eig</span>, <span class="op">-</span><span class="va">se</span><span class="op">)</span> <span class="op">%&gt;%</span>
   <span class="fu">knitr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html">kable</a></span><span class="op">(</span>format <span class="op">=</span> <span class="st">"pandoc"</span>, digits <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">0</span>, <span class="fl">0</span>, <span class="fl">0</span>, <span class="fl">2</span><span class="op">)</span><span class="op">)</span></code></pre></div>
 <table class="table">
@@ -229,70 +223,92 @@
 <tbody>
 <tr class="odd">
 <td align="right">2003</td>
-<td align="right">661</td>
-<td align="right">461</td>
-<td align="right">946</td>
+<td align="right">660609</td>
+<td align="right">461278</td>
+<td align="right">946075</td>
 <td align="right">0.18</td>
 </tr>
 <tr class="even">
 <td align="right">2004</td>
-<td align="right">1352</td>
-<td align="right">1003</td>
-<td align="right">1823</td>
+<td align="right">1352136</td>
+<td align="right">1002971</td>
+<td align="right">1822855</td>
 <td align="right">0.15</td>
 </tr>
 <tr class="odd">
 <td align="right">2005</td>
-<td align="right">1332</td>
-<td align="right">928</td>
-<td align="right">1911</td>
+<td align="right">1331649</td>
+<td align="right">927702</td>
+<td align="right">1911486</td>
 <td align="right">0.19</td>
 </tr>
 <tr class="even">
 <td align="right">2007</td>
-<td align="right">317</td>
-<td align="right">231</td>
-<td align="right">436</td>
+<td align="right">317351</td>
+<td align="right">230784</td>
+<td align="right">436389</td>
 <td align="right">0.16</td>
 </tr>
 <tr class="odd">
 <td align="right">2009</td>
-<td align="right">499</td>
-<td align="right">358</td>
-<td align="right">696</td>
+<td align="right">499248</td>
+<td align="right">358191</td>
+<td align="right">695853</td>
 <td align="right">0.17</td>
 </tr>
 <tr class="even">
 <td align="right">2011</td>
-<td align="right">992</td>
-<td align="right">752</td>
-<td align="right">1310</td>
+<td align="right">992276</td>
+<td align="right">751832</td>
+<td align="right">1309617</td>
 <td align="right">0.14</td>
 </tr>
 <tr class="odd">
 <td align="right">2013</td>
-<td align="right">1016</td>
-<td align="right">741</td>
-<td align="right">1392</td>
+<td align="right">1015516</td>
+<td align="right">740745</td>
+<td align="right">1392210</td>
 <td align="right">0.16</td>
 </tr>
 <tr class="even">
 <td align="right">2015</td>
-<td align="right">1074</td>
-<td align="right">806</td>
-<td align="right">1431</td>
+<td align="right">1073664</td>
+<td align="right">805749</td>
+<td align="right">1430662</td>
 <td align="right">0.15</td>
 </tr>
 <tr class="odd">
 <td align="right">2017</td>
-<td align="right">529</td>
-<td align="right">383</td>
-<td align="right">730</td>
+<td align="right">528919</td>
+<td align="right">383349</td>
+<td align="right">729767</td>
 <td align="right">0.17</td>
 </tr>
 </tbody>
 </table>
-</div>
+<p>We can also calculate an index for part of the survey domain. We’ll make an index for everything south of UTM 5700 by subsetting our prediction grid. For more complicated spatial polygons you could intersect the polygon on the prediction grid using something like <code><a href="https://r-spatial.github.io/sf/reference/geos_binary_pred.html">sf::st_intersects()</a></code>.</p>
+<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">qcs_grid_south</span> <span class="op">&lt;-</span> <span class="va">qcs_grid</span><span class="op">[</span><span class="va">qcs_grid</span><span class="op">$</span><span class="va">Y</span> <span class="op">&lt;</span> <span class="fl">5700</span>, <span class="op">]</span>
+<span class="va">predictions_south</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/predict.html">predict</a></span><span class="op">(</span><span class="va">m</span>, newdata <span class="op">=</span> <span class="va">qcs_grid_south</span>, 
+  return_tmb_object <span class="op">=</span> <span class="cn">TRUE</span>, area <span class="op">=</span> <span class="fl">2</span> <span class="op">*</span> <span class="fl">2</span><span class="op">)</span>
+<span class="va">index_south</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_index.html">get_index</a></span><span class="op">(</span><span class="va">predictions_south</span><span class="op">)</span>
+<span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="va">index_south</span><span class="op">)</span>
+<span class="co">#&gt;   year      est       lwr      upr  log_est        se max_gradient bad_eig</span>
+<span class="co">#&gt; 1 2003 185740.6 109731.97 314398.4 12.13211 0.2685305  0.005347066   FALSE</span>
+<span class="co">#&gt; 2 2004 436311.8 291882.29 652208.2 12.98611 0.2051092  0.005347066   FALSE</span>
+<span class="co">#&gt; 3 2005 289067.0 184739.70 452310.5 12.57441 0.2284279  0.005347066   FALSE</span>
+<span class="co">#&gt; 4 2007 130547.5  83008.93 205311.1 11.77949 0.2310190  0.005347066   FALSE</span>
+<span class="co">#&gt; 5 2009 226420.5 145660.83 351956.3 12.33015 0.2250618  0.005347066   FALSE</span>
+<span class="co">#&gt; 6 2011 328543.1 222636.61 484828.6 12.70242 0.1985380  0.005347066   FALSE</span></code></pre></div>
+<p>We can visually compare the two indexes:</p>
+<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span><span class="va">index</span>, region <span class="op">=</span> <span class="st">"all"</span><span class="op">)</span> <span class="op">%&gt;%</span> 
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/bind.html">bind_rows</a></span><span class="op">(</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span><span class="va">index_south</span>, region <span class="op">=</span> <span class="st">"south"</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span> 
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span><span class="va">year</span>, <span class="va">est</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> 
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_path.html">geom_line</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span>colour <span class="op">=</span> <span class="va">region</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_ribbon.html">geom_ribbon</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span>ymin <span class="op">=</span> <span class="va">lwr</span>, ymax <span class="op">=</span> <span class="va">upr</span>, fill <span class="op">=</span> <span class="va">region</span><span class="op">)</span>, alpha <span class="op">=</span> <span class="fl">0.4</span><span class="op">)</span></code></pre></div>
+<p><img src="index-standardization_files/figure-html/south-index-plot-1.png" width="672"></p>
+  </div>
 
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
 
