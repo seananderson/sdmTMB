@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">sdmTMB</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.12.9001</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.14.9000</span>
       </span>
     </div>
 
@@ -290,7 +290,16 @@ data is in list element 1 and input values in element 2.</p></td>
 #&gt; 1   range 0.6200721        NA 0.3784356 1.0159968
 #&gt; 2     phi 0.2111023        NA 0.1766060 0.2523366
 #&gt; 3 sigma_E 0.3096089        NA 0.2566540 0.3734900
-#&gt; 4     rho 0.4973067        NA 0.2313428 0.6941057</div><div class='input'><span class='co'># }</span>
+#&gt; 4     rho 0.4973067        NA 0.2313428 0.6941057</div><div class='input'>
+<span class='co'>#' # example with time-varying sigma_E (spatiotemporal variation)</span>
+<span class='va'>s</span> <span class='op'>&lt;-</span> <span class='fu'>sdmTMB_sim</span><span class='op'>(</span>
+x <span class='op'>=</span> <span class='va'>x</span>, y <span class='op'>=</span> <span class='va'>y</span>, mesh <span class='op'>=</span> <span class='va'>mesh</span>, X <span class='op'>=</span> <span class='va'>X</span>,
+betas <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>0.5</span>, <span class='fl'>0.7</span><span class='op'>)</span>, time_steps <span class='op'>=</span> <span class='va'>time_steps</span>, rho <span class='op'>=</span> <span class='fl'>0</span>,
+phi <span class='op'>=</span> <span class='fl'>0.2</span>, range <span class='op'>=</span> <span class='fl'>0.8</span>, sigma_O <span class='op'>=</span> <span class='fl'>0</span>,
+sigma_E <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/seq.html'>seq</a></span><span class='op'>(</span><span class='fl'>0.2</span>,<span class='fl'>1</span>,length.out<span class='op'>=</span><span class='va'>time_steps</span><span class='op'>)</span>,
+seed <span class='op'>=</span> <span class='fl'>123</span>, family <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/stats/family.html'>gaussian</a></span><span class='op'>(</span><span class='op'>)</span><span class='op'>)</span>
+
+<span class='co'># }</span>
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">

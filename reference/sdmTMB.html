@@ -74,7 +74,7 @@ models and relative abundance index standardization." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">sdmTMB</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.12.9001</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.14.9000</span>
       </span>
     </div>
 
@@ -168,6 +168,7 @@ models and relative abundance index standardization.</p>
   newton_steps <span class='op'>=</span> <span class='fl'>0</span>,
   mgcv <span class='op'>=</span> <span class='cn'>TRUE</span>,
   previous_fit <span class='op'>=</span> <span class='cn'>NULL</span>,
+  map_rf <span class='op'>=</span> <span class='cn'>FALSE</span>,
   quadratic_roots <span class='op'>=</span> <span class='cn'>FALSE</span>,
   epsilon_predictor <span class='op'>=</span> <span class='cn'>NULL</span>
 <span class='op'>)</span></pre>
@@ -302,6 +303,13 @@ convergence.</p></td>
 optimization with. Can greatly speed up fitting. Note that the data and
 model must be set up <em>exactly</em> the same way! However, the <code>weights</code> argument
 can change, which can be useful for cross-validation.</p></td>
+    </tr>
+    <tr>
+      <th>map_rf</th>
+      <td><p>Map all the random fields to 0 to turn the model into a
+classical GLM or GLMM without spatial or spatiotemporal components?
+Note this is not accounted for in <code><a href='https://rdrr.io/r/base/print.html'>print()</a></code> or <code><a href='tidy.sdmTMB.html'>tidy.sdmTMB()</a></code>;
+some parameters will still appear but their values can be ignored.</p></td>
     </tr>
     <tr>
       <th>quadratic_roots</th>

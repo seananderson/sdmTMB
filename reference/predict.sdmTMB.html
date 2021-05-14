@@ -73,7 +73,7 @@ original or new data." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">sdmTMB</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.12.9001</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.14.9000</span>
       </span>
     </div>
 
@@ -152,6 +152,7 @@ original or new data.</p>
   return_tmb_object <span class='op'>=</span> <span class='cn'>FALSE</span>,
   area <span class='op'>=</span> <span class='fl'>1</span>,
   re_form <span class='op'>=</span> <span class='cn'>NULL</span>,
+  re_form_iid <span class='op'>=</span> <span class='cn'>NULL</span>,
   <span class='va'>...</span>
 <span class='op'>)</span></pre>
 
@@ -195,10 +196,18 @@ rows of data.</p></td>
     </tr>
     <tr>
       <th>re_form</th>
-      <td><p><code>NULL</code> to specify individual-level predictions. <code>~0</code> or <code>NA</code>
-for population-level predictions. Note that unlike lme4 or glmmTMB, this
-only affects what the standard errors are calculated on if <code>se_fit = TRUE</code>.
-Otherwise, predictions at various levels are returned in all cases.</p></td>
+      <td><p><code>NULL</code> to specify including all spatial/spatiotemporal random
+effects in predictions. <code>~0</code> or <code>NA</code> for population-level predictions. Note
+that unlike lme4 or glmmTMB, this only affects what the standard errors are
+calculated on if <code>se_fit = TRUE</code>. This does not affect <code><a href='get_index.html'>get_index()</a></code>
+calculations.</p></td>
+    </tr>
+    <tr>
+      <th>re_form_iid</th>
+      <td><p><code>NULL</code> to specify including all random intercepts in the
+predictions. <code>~0</code> or <code>NA</code> for population-level predictions. No other
+options (e.g., some but not all random intercepts) are implemented yet.
+Only affects predictions with <code>newdata</code>. This also affects <code><a href='get_index.html'>get_index()</a></code>.</p></td>
     </tr>
     <tr>
       <th>...</th>
