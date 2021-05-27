@@ -101,6 +101,9 @@
       <a href="../articles/model-description.html">Model description</a>
     </li>
     <li>
+      <a href="../articles/pretty-plots.html">Making pretty maps with sdmTMB output</a>
+    </li>
+    <li>
       <a href="../articles/spatial-trend-models.html">Fitting spatial trend models with sdmTMB</a>
     </li>
     <li>
@@ -191,17 +194,17 @@ exception of <code>weights</code>, which are used to define the folds.</p></td>
 <span class='va'>m_cv</span><span class='op'>$</span><span class='va'>fold_loglik</span>
 </div><div class='output co'>#&gt; [1] -3318.609 -3436.644</div><div class='input'><span class='va'>m_cv</span><span class='op'>$</span><span class='va'>sum_loglik</span>
 </div><div class='output co'>#&gt; [1] -6755.254</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='va'>m_cv</span><span class='op'>$</span><span class='va'>data</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span style='color: #949494;'># A tibble: 6 x 15</span><span>
+</div><div class='output co'>#&gt; <span style='color: #949494;'># A tibble: 6 x 15</span>
 #&gt;    year     X     Y depth density present   lat   lon depth_mean depth_sd
-#&gt;   </span><span style='color: #949494;font-style: italic;'>&lt;int&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span>   </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span>   </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span>      </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span>    </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span>
-#&gt; </span><span style='color: #BCBCBC;'>1</span><span>  </span><span style='text-decoration: underline;'>2</span><span>003  446. </span><span style='text-decoration: underline;'>5</span><span>793.   201   113.        1  52.3 -</span><span style='color: #BB0000;'>130.</span><span>       5.16    0.445
-#&gt; </span><span style='color: #BCBCBC;'>2</span><span>  </span><span style='text-decoration: underline;'>2</span><span>003  446. </span><span style='text-decoration: underline;'>5</span><span>800.   212    41.7       1  52.3 -</span><span style='color: #BB0000;'>130.</span><span>       5.16    0.445
-#&gt; </span><span style='color: #BCBCBC;'>3</span><span>  </span><span style='text-decoration: underline;'>2</span><span>003  449. </span><span style='text-decoration: underline;'>5</span><span>802.   220     0         0  52.4 -</span><span style='color: #BB0000;'>130.</span><span>       5.16    0.445
-#&gt; </span><span style='color: #BCBCBC;'>4</span><span>  </span><span style='text-decoration: underline;'>2</span><span>003  437. </span><span style='text-decoration: underline;'>5</span><span>802.   197    15.7       1  52.4 -</span><span style='color: #BB0000;'>130.</span><span>       5.16    0.445
-#&gt; </span><span style='color: #BCBCBC;'>5</span><span>  </span><span style='text-decoration: underline;'>2</span><span>003  421. </span><span style='text-decoration: underline;'>5</span><span>771.   256     0         0  52.1 -</span><span style='color: #BB0000;'>130.</span><span>       5.16    0.445
-#&gt; </span><span style='color: #BCBCBC;'>6</span><span>  </span><span style='text-decoration: underline;'>2</span><span>003  418. </span><span style='text-decoration: underline;'>5</span><span>772.   293     0         0  52.1 -</span><span style='color: #BB0000;'>130.</span><span>       5.16    0.445
-#&gt; </span><span style='color: #949494;'># … with 5 more variables: depth_scaled &lt;dbl&gt;, depth_scaled2 &lt;dbl&gt;,</span><span>
-#&gt; </span><span style='color: #949494;'>#   cv_fold &lt;int&gt;, cv_predicted &lt;dbl&gt;, cv_loglik &lt;dbl&gt;</span><span></div><div class='input'><span class='va'>m_cv</span><span class='op'>$</span><span class='va'>models</span><span class='op'>[[</span><span class='fl'>1</span><span class='op'>]</span><span class='op'>]</span>
+#&gt;   <span style='color: #949494; font-style: italic;'>&lt;int&gt;</span> <span style='color: #949494; font-style: italic;'>&lt;dbl&gt;</span> <span style='color: #949494; font-style: italic;'>&lt;dbl&gt;</span> <span style='color: #949494; font-style: italic;'>&lt;dbl&gt;</span>   <span style='color: #949494; font-style: italic;'>&lt;dbl&gt;</span>   <span style='color: #949494; font-style: italic;'>&lt;dbl&gt;</span> <span style='color: #949494; font-style: italic;'>&lt;dbl&gt;</span> <span style='color: #949494; font-style: italic;'>&lt;dbl&gt;</span>      <span style='color: #949494; font-style: italic;'>&lt;dbl&gt;</span>    <span style='color: #949494; font-style: italic;'>&lt;dbl&gt;</span>
+#&gt; <span style='color: #BCBCBC;'>1</span>  <span style='text-decoration: underline;'>2</span>003  446. <span style='text-decoration: underline;'>5</span>793.   201   113.        1  52.3 -<span style='color: #BB0000;'>130.</span>       5.16    0.445
+#&gt; <span style='color: #BCBCBC;'>2</span>  <span style='text-decoration: underline;'>2</span>003  446. <span style='text-decoration: underline;'>5</span>800.   212    41.7       1  52.3 -<span style='color: #BB0000;'>130.</span>       5.16    0.445
+#&gt; <span style='color: #BCBCBC;'>3</span>  <span style='text-decoration: underline;'>2</span>003  449. <span style='text-decoration: underline;'>5</span>802.   220     0         0  52.4 -<span style='color: #BB0000;'>130.</span>       5.16    0.445
+#&gt; <span style='color: #BCBCBC;'>4</span>  <span style='text-decoration: underline;'>2</span>003  437. <span style='text-decoration: underline;'>5</span>802.   197    15.7       1  52.4 -<span style='color: #BB0000;'>130.</span>       5.16    0.445
+#&gt; <span style='color: #BCBCBC;'>5</span>  <span style='text-decoration: underline;'>2</span>003  421. <span style='text-decoration: underline;'>5</span>771.   256     0         0  52.1 -<span style='color: #BB0000;'>130.</span>       5.16    0.445
+#&gt; <span style='color: #BCBCBC;'>6</span>  <span style='text-decoration: underline;'>2</span>003  418. <span style='text-decoration: underline;'>5</span>772.   293     0         0  52.1 -<span style='color: #BB0000;'>130.</span>       5.16    0.445
+#&gt; <span style='color: #949494;'># … with 5 more variables: depth_scaled &lt;dbl&gt;, depth_scaled2 &lt;dbl&gt;,</span>
+#&gt; <span style='color: #949494;'>#   cv_fold &lt;int&gt;, cv_predicted &lt;dbl&gt;, cv_loglik &lt;dbl&gt;</span></div><div class='input'><span class='va'>m_cv</span><span class='op'>$</span><span class='va'>models</span><span class='op'>[[</span><span class='fl'>1</span><span class='op'>]</span><span class='op'>]</span>
 </div><div class='output co'>#&gt; Spatial model fit by ML ['sdmTMB']
 #&gt; Formula: formula
 #&gt; Time column: time
@@ -219,7 +222,7 @@ exception of <code>weights</code>, which are used to define the folds.</p></td>
 #&gt; ML criterion at convergence: 3291.025
 #&gt; 
 #&gt; See ?tidy.sdmTMB to extract these values as a data frame.</div><div class='input'><span class='va'>m_cv</span><span class='op'>$</span><span class='va'>max_gradients</span>
-</div><div class='output co'>#&gt; [1] 0.0004420159 0.0001048449</div></span></pre>
+</div><div class='output co'>#&gt; [1] 0.0004420159 0.0001048449</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

@@ -4,7 +4,8 @@ pkgdown_sha: ~
 articles:
   index-standardization: index-standardization.html
   model-description: model-description.html
+  pretty-plots: pretty-plots.html
   spatial-trend-models: spatial-trend-models.html
   threshold-models: threshold-models.html
-last_built: 2021-05-14T18:27Z
+last_built: 2021-05-27T01:22Z
 

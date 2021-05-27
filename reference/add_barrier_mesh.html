@@ -101,6 +101,9 @@
       <a href="../articles/model-description.html">Model description</a>
     </li>
     <li>
+      <a href="../articles/pretty-plots.html">Making pretty maps with sdmTMB output</a>
+    </li>
+    <li>
       <a href="../articles/spatial-trend-models.html">Fitting spatial trend models with sdmTMB</a>
     </li>
     <li>
@@ -198,7 +201,7 @@ Non-stationary Gaussian models with physical barriers.
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://r-spatial.github.io/sf/'>sf</a></span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='message'>Linking to GEOS 3.8.1, GDAL 3.1.4, PROJ 6.3.1</span></div><div class='input'><span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://dplyr.tidyverse.org'>dplyr</a></span><span class='op'>)</span>
+</div><div class='output co'>#&gt; <span class='message'>Linking to GEOS 3.8.1, GDAL 3.2.1, PROJ 7.2.1</span></div><div class='input'><span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://dplyr.tidyverse.org'>dplyr</a></span><span class='op'>)</span>
 </div><div class='output co'>#&gt; <span class='message'></span>
 #&gt; <span class='message'>Attaching package: ‘dplyr’</span></div><div class='output co'>#&gt; <span class='message'>The following objects are masked from ‘package:stats’:</span>
 #&gt; <span class='message'></span>
@@ -210,7 +213,7 @@ Non-stationary Gaussian models with physical barriers.
 <span class='co'># We will use `bc_coast` from the package data,</span>
 <span class='co'># but you can recreate it with the following.</span>
 
-<span class='co'># For applied situations on finer scales, you may with to use scale = "small".</span>
+<span class='co'># For applied situations on finer scales, you may with to use scale = "large".</span>
 <span class='co'># For that, first: remotes::install_github("ropensci/rnaturalearthhires")</span>
 <span class='co'># map_data &lt;- rnaturalearth::ne_countries(</span>
 <span class='co'>#   scale = "medium",</span>
