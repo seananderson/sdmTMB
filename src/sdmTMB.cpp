@@ -270,7 +270,8 @@ Type objective_function<Type>::operator()()
   DATA_VECTOR(area_i); // area per prediction grid cell for index standardization
 
   DATA_INTEGER(enable_priors);
-  DATA_VECTOR(penalties);
+  DATA_VECTOR(prior_mean);
+  DATA_MATRIX(prior_cov);
   DATA_INTEGER(ar1_fields);
   DATA_INTEGER(include_spatial);
   DATA_INTEGER(random_walk);
@@ -344,7 +345,7 @@ Type objective_function<Type>::operator()()
   // ------------------ End of parameters --------------------------------------
 
   int n_i = y_i.size();   // number of observations
-  int n_j = X_ij.cols();  // number of fixed-effect params
+  //int n_j = X_ij.cols();  // number of fixed-effect params
   int n_RE = RE_indexes.cols();  // number of random effect intercepts
 
   // Type nll_data = 0;     // likelihood of data
@@ -365,16 +366,21 @@ Type objective_function<Type>::operator()()
     s_max = b_threshold(2);
   }
   // ------------------ Priors -------------------------------------------------
-
+  // construct special object for MVN distribution, always has mean 0
+  MVNORM_t<Type> neg_log_dmvnorm(prior_cov);
   if (enable_priors) {
     // jnll -= dnorm(ln_tau_O, Type(0.0), Type(1.0), true);
     // jnll -= dnorm(ln_tau_E, Type(0.0), Type(1.0), true);
     // jnll -= dnorm(ln_kappa, Type(0.0), Type(2.0), true);
     // jnll -= dnorm(ln_phi, Type(0.0), Type(1.0), true);
-    for (int j = 0; j < n_j; j++) {
-      if (!isNA(penalties(j)))
-        jnll -= dnorm(b_j(j), Type(0.0), penalties(j), true);
-    }
+
+    //for (int j = 0; j < n_j; j++) {
+    //  if (!isNA(penalties(j)))
+    //    jnll -= dnorm(b_j(j), Type(0.0), penalties(j), true);
+    //}
+    // apply nll on residual. note that other univariate densities are positive log-likelihoods
+    // but the dmvnorm is negative. We're accumulating the neg LL, which is why this is a + sign
+    jnll += neg_log_dmvnorm(b_j - prior_mean);
     // if (spatial_trend) {
     //   jnll -= dnorm(ln_tau_O_trend, Type(0.0), Type(1.0), true);
     // }

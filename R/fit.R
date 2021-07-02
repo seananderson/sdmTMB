@@ -41,9 +41,10 @@ NULL
 #'   Phases are usually faster and more stable.
 #' @param anisotropy Logical: allow for anisotropy? See [plot_anisotropy()].
 #' @param control Optimization control options. See [sdmTMBcontrol()].
-#' @param penalties Optional vector of penalties (priors) on the fixed effects.
-#'   See the Regularization Details section below.
-#' below.
+#' @param prior_mean Vector of location parameters (means of a normal distribution)
+#' for fixed effects. Defaults to location = 0
+#' @param prior_cov Replaces 'penalties', and is the prior covariance matrix for fixed effects.
+#' Defaults to a diagonal identity matrix. See the Regularization Details section below.
 #' @param ar1_fields Estimate the spatiotemporal random fields as a
 #'   stationary AR1 process?
 #' @param include_spatial Should a separate spatial random field be estimated?
@@ -160,7 +161,7 @@ NULL
 #' **Regularization**
 #'
 #' You can achieve regularization via penalties (priors) on the fixed effect
-#' parameters. The vector of values supplied to the `penalties` argument
+#' parameters. The vector of values supplied to the `prior_mean` and `prior_cov` argument
 #' represents standard deviations of normal distributions centered on zero with
 #' one value per fixed effect. These can be used for regularization, e.g.,
 #' Normal(0, 1) for ridge regression. These should not include `offset` terms and
@@ -292,7 +293,8 @@ sdmTMB <- function(formula, data, spde, time = NULL,
   family = gaussian(link = "identity"),
   time_varying = NULL, weights = NULL, extra_time = NULL, reml = FALSE,
   silent = TRUE, multiphase = TRUE, anisotropy = FALSE,
-  control = sdmTMBcontrol(), penalties = NULL, ar1_fields = FALSE,
+  control = sdmTMBcontrol(), prior_mean = NA,
+  prior_cov = NA, ar1_fields = FALSE,
   include_spatial = TRUE, spatial_trend = FALSE,
   spatial_only = identical(length(unique(data[[time]])), 1L),
   nlminb_loops = 1,
@@ -419,11 +421,20 @@ sdmTMB <- function(formula, data, spde, time = NULL,
     }
   }
 
-  if (!is.null(penalties)) {
-    assert_that(ncol(X_ij) == length(penalties),
+  use_priors = FALSE
+  if (!is.na(prior_mean[1])) {
+    assert_that(ncol(X_ij) == length(prior_mean),
       msg = paste0("The number of fixed effects does not match the number of ",
-        "penalty terms. Ensure that offset terms are not in penalty vector and ",
+        "elements in prior_mean. Ensure that offset terms are not included and ",
         "that any spline terms are properly accounted for."))
+    use_priors = TRUE
+  }
+  if (!is.na(prior_cov[1])) {
+    assert_that(ncol(X_ij) == ncol(prior_cov),
+                msg = paste0("The number of fixed effects does not match the number of ",
+                             "elements in prior_cov. Ensure that offset terms are not included and ",
+                             "that any spline terms are properly accounted for."))
+    use_priors = TRUE
   }
 
   if (identical(family$link, "log") && min(y_i, na.rm = TRUE) < 0) {
@@ -495,8 +506,9 @@ sdmTMB <- function(formula, data, spde, time = NULL,
     normalize_in_r = 0L, # not used
     calc_time_totals = 0L,
     random_walk = !is.null(time_varying),
-    enable_priors = as.integer(!is.null(penalties)),
-    penalties = if (!is.null(penalties)) penalties else rep(NA_real_, ncol(X_ij)),
+    enable_priors = as.integer(use_priors),
+    prior_mean = if (!is.na(prior_mean[1])) prior_mean else rep(0, ncol(X_ij)),
+    prior_cov = if (!is.na(prior_cov[1])) prior_cov else diag(ncol(X_ij)),
     include_spatial = as.integer(include_spatial),
     proj_mesh  = Matrix::Matrix(0, 1, 1, doDiag = FALSE), # dummy
     proj_X_ij  = matrix(0, ncol = 1, nrow = 1), # dummy

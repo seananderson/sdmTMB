@@ -76,23 +76,24 @@ test_that("Regularization works", {
     spde = make_mesh(d, c("X", "Y"), n_knots = 50, type = "kmeans"),
     family = tweedie(link = "log"))
 
-  # Bypassing via NAs:
+  # Check weakly informative priors:
   m2 <- sdmTMB(data = d,
     formula = density ~ 0 + depth_scaled + as.factor(year),
     spde = make_mesh(d, c("X", "Y"), n_knots = 50, type = "kmeans"),
     family = tweedie(link = "log"),
-    penalties = c(NA, NA, NA))
-  expect_equal(m1$sd_report, m2$sd_report)
+    prior_mean = c(0,0,0), prior_cov = diag(rep(100,3)))
+  expect_equal(m1$sd_report, m2$sd_report, tolerance = 0.01)
 
-  # Ridge regression on depth term:
+  # Check super informative prior on depth term (weak informative priors on others):
   m2 <- sdmTMB(data = d,
     formula = density ~ 0 + depth_scaled + as.factor(year),
     spde = make_mesh(d, c("X", "Y"), n_knots = 50, type = "kmeans"),
     family = tweedie(link = "log"),
-    penalties = c(1, NA, NA))
+    prior_mean = c(-0.5, 3.3, 2.5),
+    prior_cov = diag(c(0.001, 10, 10)))
   b1 <- tidy(m1)
   b2 <- tidy(m2)
-  expect_lt(b2$estimate[1], b1$estimate[2])
+  expect_lt(b1$estimate[1], b2$estimate[1])
   expect_lt(b2$std.error[1], b1$std.error[2])
 })
 

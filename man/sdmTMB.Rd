@@ -18,7 +18,8 @@ sdmTMB(
   multiphase = TRUE,
   anisotropy = FALSE,
   control = sdmTMBcontrol(),
-  penalties = NULL,
+  prior_mean = NA,
+  prior_cov = NA,
   ar1_fields = FALSE,
   include_spatial = TRUE,
   spatial_trend = FALSE,
@@ -80,9 +81,11 @@ Phases are usually faster and more stable.}
 
 \item{control}{Optimization control options. See \code{\link[=sdmTMBcontrol]{sdmTMBcontrol()}}.}
 
-\item{penalties}{Optional vector of penalties (priors) on the fixed effects.
-See the Regularization Details section below.
-below.}
+\item{prior_mean}{Vector of location parameters (means of a normal distribution)
+for fixed effects. Defaults to location = 0}
+
+\item{prior_cov}{Replaces 'penalties', and is the prior covariance matrix for fixed effects.
+Defaults to a diagonal identity matrix. See the Regularization Details section below.}
 
 \item{ar1_fields}{Estimate the spatiotemporal random fields as a
 stationary AR1 process?}
@@ -208,7 +211,7 @@ example of index standardization in the relevant
 \strong{Regularization}
 
 You can achieve regularization via penalties (priors) on the fixed effect
-parameters. The vector of values supplied to the \code{penalties} argument
+parameters. The vector of values supplied to the \code{prior_mean} and \code{prior_cov} argument
 represents standard deviations of normal distributions centered on zero with
 one value per fixed effect. These can be used for regularization, e.g.,
 Normal(0, 1) for ridge regression. These should not include \code{offset} terms and
